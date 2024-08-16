@@ -69,10 +69,23 @@ class TextField(tk.Text):
 root = tk.Tk()
 root.title = "Text Editor"
 root.geometry("1280x720")
+
 status_label = tk.Label(root, text="--- INSERT MODE ---", anchor='w', relief=tk.SUNKEN)
 status_label.pack(side=tk.BOTTOM, fill=tk.X)
+
+menu_bar = tk.Menu(root)
+root.config(menu=menu_bar)
+
+file_menu = tk.Menu(menu_bar, tearoff=False)
+file_menu.add_command(label="Open File")
+file_menu.add_command(label="Save File")
+file_menu.add_command(label="Close File")
+
+menu_bar.add_cascade(label="File", menu=file_menu)
+
 text_field = TextField(root, status_label)
 text_field.pack(expand=True, fill=tk.BOTH, padx=30)
 text_field.focus()
+
 root.mainloop()
 
