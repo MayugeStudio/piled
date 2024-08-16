@@ -27,7 +27,7 @@ class TextField(tk.Text):
                 wrap="word",
                 undo=True,
                 insertbackground="#eeeeee",
-                background="#222b2b",
+                background="#22222b",
                 foreground="#eeeeee",
                 font=EDITOR_FONT,
                 )
