@@ -3,14 +3,16 @@ from enum import Enum, auto
 
 
 # [x]: Basic movement 
-# [ ]: Font family and Font size
+# [x]: Font family and Font size
 # [ ]: Be able to open text-file
 # [ ]: Be able to save text-file 
 # [ ]: Highlight keywords
 # [ ]: Be able to keep track of stdout, stdin, and stderr
 # [ ]: Be able to jump an error has been caused location of file.
 # [ ]: Be able to put Todo area
-# [ ]: Dark mode
+# [x]: Dark mode
+
+EDITOR_FONT = ('MS Gothic', 20)
 
 class Direction(Enum):
     UP = auto()
@@ -20,7 +22,15 @@ class Direction(Enum):
 
 class TextField(tk.Text):
     def __init__(self, master, status_label):
-        super().__init__(master, wrap="word", undo=True)
+        super().__init__(
+                master,
+                wrap="word",
+                undo=True,
+                insertbackground="#eeeeee",
+                background="#222b2b",
+                foreground="#eeeeee",
+                font=EDITOR_FONT,
+                )
         self.status_label = status_label
         self.bind("<Control-Key-k>", self.on_pressed_movement_key(Direction.UP))
         self.bind("<Control-Key-j>", self.on_pressed_movement_key(Direction.DOWN))
@@ -68,7 +78,7 @@ root.geometry("1280x720")
 status_label = tk.Label(root, text="--- INSERT MODE ---", anchor='w', relief=tk.SUNKEN)
 status_label.pack(side=tk.BOTTOM, fill=tk.X)
 text_field = TextField(root, status_label)
-text_field.pack(expand="yes", fill="both")
+text_field.pack(expand=True, fill=tk.BOTH, padx=30)
 text_field.focus()
 root.mainloop()
 
