@@ -48,8 +48,6 @@ class TextField(tk.Text):
             Direction.RIGHT: lambda r, c: (r, c+1),
         }
 
-        self.press_ctrl = False
-
     def on_pressed_movement_key(self, direction):
         def inner(event):
             self.update_cursor(direction)
@@ -57,14 +55,10 @@ class TextField(tk.Text):
         return inner
 
     def on_ctrl_press(self, event):
-        if not self.press_ctrl:
-            self.status_label.config(text="---  MOVE  MODE ---")
-            self.press_ctrl = True
+        self.status_label.config(text="---  MOVE  MODE ---")
 
     def on_ctrl_release(self, event):
-        if self.press_ctrl:
-            self.status_label.config(text="--- INSERT MODE ---")
-            self.press_ctrl = False
+        self.status_label.config(text="--- INSERT MODE ---")
 
     def update_cursor(self, direction):
         row, col = list(map(int, self.index(tk.INSERT).split('.')))
