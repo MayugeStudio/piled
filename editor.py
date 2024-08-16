@@ -2,7 +2,7 @@ import tkinter as tk
 from enum import Enum, auto
 
 
-# [ ]: Basic movement 
+# [x]: Basic movement 
 # [ ]: Font family and Font size
 # [ ]: Be able to open text-file
 # [ ]: Be able to save text-file 
