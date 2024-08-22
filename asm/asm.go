@@ -1,9 +1,28 @@
-package main
+package asm
 
 import "fmt"
 import "strings"
 
 type Register int8
+
+const (
+	R_ACC Register = iota << 1
+	R_IDX
+	R_TMP
+	R_RET
+	R_0
+	R_1
+	R_2
+	R_3
+	R_4
+	R_5
+	R_6
+	R_7
+	R_PC
+	R_SP
+	R_BP
+	R_FL
+)
 
 // Location
 type Location struct {
@@ -18,7 +37,7 @@ func (l Location) String() string {
 // AsmToken
 type AsmToken struct {
 	value string
-	loc Location
+	loc   Location
 }
 
 func (t AsmToken) String() string {
@@ -27,7 +46,7 @@ func (t AsmToken) String() string {
 
 type OpCode struct{}
 
-func tokenizeSource(source string) (tokens []AsmToken, err error) {
+func TokenizeSource(source string) (tokens []AsmToken, err error) {
 	if len(source) == 0 {
 		return
 	}
@@ -39,37 +58,31 @@ func tokenizeSource(source string) (tokens []AsmToken, err error) {
 			continue
 		}
 		val := ""
+		start_col := 0
 		line_length := len(line)
 		for col := 0; col < line_length; col++ {
 			char := line[col]
-			isEndOfLine := col == line_length - 1
+			isSpace := char == ' '
+			isColon := char == ':'
+			isComma := char == ','
 
-			if char != ' ' {
+			isEndOfLine := col == line_length-1
+
+			if !isSpace && !isColon && !isComma {
 				val += string(char)
 			}
 
 			if char == ' ' || isEndOfLine {
 				token := AsmToken{
 					value: val,
-					loc: Location{row: row, col: col},
+					loc:   Location{row: row, col: start_col},
 				}
+				start_col = col+1
 				tokens = append(tokens, token)
 				val = ""
 			}
 		}
 	}
 	return
-}
-
-func main() {
-	source := "MOV: ACC $10"
-	fmt.Printf("raw source: %s\n", source)
-	tokens, err := tokenizeSource(source)
-	if err != nil {
-		fmt.Println("Error!")
-	}
-	for _, token := range tokens {
-		fmt.Println(token)
-	}
 }
 
