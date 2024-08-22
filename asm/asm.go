@@ -3,25 +3,16 @@ package asm
 import "fmt"
 import "strings"
 
-type Register int8
+type MachineCode int8
+
+type Register MachineCode // NOTE: Register is also Operand
 
 const (
-	R_ACC Register = iota << 1
-	R_IDX
-	R_TMP
+	R_ACC Register = 1 << iota
 	R_RET
 	R_0
 	R_1
-	R_2
-	R_3
-	R_4
-	R_5
-	R_6
-	R_7
 	R_PC
-	R_SP
-	R_BP
-	R_FL
 )
 
 // Location
