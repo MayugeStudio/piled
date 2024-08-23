@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"MayugeStudio/piled/asm"
+
+	"fmt"
 )
 
 func main() {

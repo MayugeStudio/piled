@@ -11,6 +11,7 @@ type wantToken struct {
 	row   int
 	col   int
 }
+
 func ToToken(t *testing.T, want wantToken) AsmToken {
 	t.Helper()
 	return AsmToken{
@@ -33,10 +34,10 @@ func Test_TokenizeSource(t *testing.T) {
 		wantErr bool
 		want    []wantToken
 	}{
-		{ "single-line", "MOV: ACC, 420", noErr, []wantToken{{"MOV", 0, 0}, {"ACC", 0, 5}, {"420", 0, 10}}},
-		{ "multiple-line", "MOV: R1, 69\nMOV: R0, R1", noErr, []wantToken{{"MOV", 0, 0}, {"R1", 0, 5}, {"69", 0, 9}, {"MOV", 1, 0}, {"R0", 1, 5}, {"R1", 1, 9}}},
-		{ "allow-empty-line", "MOV: R1, 69\n\nMOV: R0, R1", noErr, []wantToken{{"MOV", 0, 0}, {"R1", 0, 5}, {"69", 0, 9}, {"MOV", 2, 0}, {"R0", 2, 5}, {"R1", 2, 9}}},
-		{ "allow-empty-source", "", noErr, []wantToken{}},
+		{"single-line", "MOV: ACC, 420", noErr, []wantToken{{"MOV", 0, 0}, {"ACC", 0, 5}, {"420", 0, 10}}},
+		{"multiple-line", "MOV: R1, 69\nMOV: R0, R1", noErr, []wantToken{{"MOV", 0, 0}, {"R1", 0, 5}, {"69", 0, 9}, {"MOV", 1, 0}, {"R0", 1, 5}, {"R1", 1, 9}}},
+		{"allow-empty-line", "MOV: R1, 69\n\nMOV: R0, R1", noErr, []wantToken{{"MOV", 0, 0}, {"R1", 0, 5}, {"69", 0, 9}, {"MOV", 2, 0}, {"R0", 2, 5}, {"R1", 2, 9}}},
+		{"allow-empty-source", "", noErr, []wantToken{}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
