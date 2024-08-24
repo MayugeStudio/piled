@@ -4,7 +4,6 @@ import "fmt"
 import "strings"
 import "strconv"
 
-// Location
 type Location struct {
 	row int
 	col int
@@ -14,7 +13,6 @@ func (l Location) String() string {
 	return fmt.Sprintf("%d:%d", l.row, l.col)
 }
 
-// AsmToken
 type AsmToken struct {
 	value string
 	loc   Location
@@ -23,10 +21,6 @@ type AsmToken struct {
 func (t AsmToken) String() string {
 	return fmt.Sprintf("%s: `%s`", t.loc, t.value)
 }
-
-////// Instruction //////
-
-// OPCode //
 
 type OPCodeKind int8
 
@@ -64,7 +58,6 @@ type OperandKind int8
 const (
 	OperandKind_INVALID OperandKind = iota
 	OperandKind_IMM
-	OperandKind_MOV
 	OperandKind_ACC
 	OperandKind_RET
 	OperandKind_0
@@ -79,8 +72,6 @@ func ParseRawOperandKind(s string) (OperandKind, error) {
 		return OperandKind_IMM, nil
 	}
 	switch s {
-	case "MOV":
-		return OperandKind_MOV, nil
 	case "ACC":
 		return OperandKind_ACC, nil
 	case "RET":
@@ -100,18 +91,24 @@ func ParseRawOperandKind(s string) (OperandKind, error) {
 	}
 }
 
-// Operand
 type Operand struct {
 	loc   Location
 	kind  OperandKind
 	value int8
 }
 
-// OP
+func (o Operand) String() string {
+	return fmt.Sprintf("[kind=`%d`, value=`%d`]", o.kind, o.value)
+}
+
 type Inst struct {
 	loc     Location
 	kind    OPCodeKind
 	operand [2]Operand
+}
+
+func (i Inst) String() string {
+	return fmt.Sprintf("kind=%d, operand=`%s`", i.kind, i.operand)
 }
 
 ////// Tokenizer //////
@@ -161,6 +158,7 @@ func LexTokensAsInsts(tokens []AsmToken) (ops []Inst, err error) {
 		var inst Inst
 		token := tokens[i]
 		opcode_kind, err := ParseRawOPCode(token.value)
+		inst.kind = opcode_kind
 		if err != nil {
 			return nil, err
 		}
@@ -203,3 +201,78 @@ func LexTokensAsInsts(tokens []AsmToken) (ops []Inst, err error) {
 	}
 	return
 }
+
+type Registers map[OperandKind]int8
+
+
+func (r *Registers) SetByOperand(a Operand, value int8) {
+	r.SetByKind(a.kind, value)
+}
+
+func (r *Registers) SetByKind(kind OperandKind, value int8) {
+	(*r)[kind] = value
+}
+
+func (r *Registers) GetByOperand(operand Operand) int8 {
+	if operand.kind == OperandKind_IMM {
+		return operand.value
+	}
+	return (*r)[operand.kind]
+}
+
+func (r *Registers) GetByKind(kind OperandKind) int8 {
+	return (*r)[kind]
+}
+
+func InterpretInsts(insts []Inst) error {
+	var registers Registers = Registers{
+		OperandKind_ACC: 0,
+		OperandKind_RET: 0,
+		OperandKind_0:   0,
+		OperandKind_1:   0,
+		OperandKind_2:   0,
+		OperandKind_3:   0,
+		OperandKind_PC:  0,
+	}
+
+	insts_length := int8(len(insts))
+
+	for registers[OperandKind_PC] < insts_length {
+		inst := insts[registers[OperandKind_PC]]
+		op_a := inst.operand[0]
+		op_b := inst.operand[1]
+
+		switch inst.kind {
+		case OP_MOV:
+			val := registers.GetByOperand(op_b)
+			registers.SetByOperand(op_a, val)
+		case OP_ADD:
+			val_a := registers.GetByOperand(op_a)
+			val_b := registers.GetByOperand(op_b)
+			result := val_a + val_b
+			registers.SetByOperand(op_a, result)
+		case OP_SUB:
+			val_a := registers.GetByOperand(op_a)
+			val_b := registers.GetByOperand(op_b)
+			result := val_a - val_b
+			registers.SetByOperand(op_a, result)
+		case OP_MUL:
+			val_a := registers.GetByOperand(op_a)
+			val_b := registers.GetByOperand(op_b)
+			result := val_a * val_b
+			registers.SetByOperand(op_a, result)
+		case OP_DIV:
+			val_a := registers.GetByOperand(op_a)
+			val_b := registers.GetByOperand(op_b)
+			result := val_a / val_b
+			registers.SetByOperand(op_a, result)
+		case OP_DUMP:
+			n := registers.GetByOperand(op_a)
+			fmt.Println(n)
+		}
+		pc := registers.GetByKind(OperandKind_PC)
+		registers.SetByKind(OperandKind_PC, pc+1)
+	}
+	return nil
+}
+

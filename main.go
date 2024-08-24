@@ -8,23 +8,28 @@ import (
 )
 
 func main() {
-	source := "MOV: ACC, 34\nADD: ACC, 35\nDUMP: ACC"
+	reset := "MOV: ACC, 0\n"
+	dump := "DUMP: ACC\n"
+	source := ""
+	source += "MOV: ACC, 34\nADD: ACC, 35\n" + dump + reset
+	source += "MOV: ACC, 150\nSUB: ACC, 50\n" + dump + reset
+	source += "MOV: ACC, 25\nMUL: ACC, 2\n" + dump + reset
+	source += "MOV: ACC, 14\nDIV: ACC, 2\n" + dump + reset
+
 	fmt.Printf("raw source:\n%s\n", source)
 	tokens, err := asm.TokenizeSource(source)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error in TokenizeSource!", err)
+		fmt.Fprintln(os.Stderr, "ERROR: In `TokenizeSource`", err)
 		os.Exit(1)
 	}
 	insts, err := asm.LexTokensAsInsts(tokens)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error in LexTokensAsInsts!", err)
+		fmt.Fprintln(os.Stderr, "ERROR: In `LexTokensAsInsts`", err)
 		os.Exit(1)
 	}
-
-	for _, token := range tokens {
-		fmt.Println(token)
-	}
-	for _, inst := range insts {
-		fmt.Println(inst)
+	err = asm.InterpretInsts(insts)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "ERROR: In `InterpretInst`", err)
+		os.Exit(1)
 	}
 }
