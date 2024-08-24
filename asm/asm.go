@@ -14,12 +14,12 @@ func (l Location) String() string {
 }
 
 type AsmToken struct {
-	value string
-	loc   Location
+	Value string
+	Loc   Location
 }
 
 func (t AsmToken) String() string {
-	return fmt.Sprintf("%s: `%s`", t.loc, t.value)
+	return fmt.Sprintf("%s: `%s`", t.Loc, t.Value)
 }
 
 type OPCodeKind int8
@@ -92,23 +92,23 @@ func ParseRawOperandKind(s string) (OperandKind, error) {
 }
 
 type Operand struct {
-	loc   Location
-	kind  OperandKind
-	value int8
+	Loc   Location
+	Kind  OperandKind
+	Value int8
 }
 
 func (o Operand) String() string {
-	return fmt.Sprintf("[kind=`%d`, value=`%d`]", o.kind, o.value)
+	return fmt.Sprintf("[kind=`%d`, value=`%d`]", o.Kind, o.Value)
 }
 
 type Inst struct {
-	loc     Location
-	kind    OPCodeKind
-	operand [2]Operand
+	Loc     Location
+	Kind    OPCodeKind
+	Operand [2]Operand
 }
 
 func (i Inst) String() string {
-	return fmt.Sprintf("kind=%d, operand=`%s`", i.kind, i.operand)
+	return fmt.Sprintf("kind=%d, operand=`%s`", i.Kind, i.Operand)
 }
 
 ////// Tokenizer //////
@@ -141,8 +141,8 @@ func TokenizeSource(source string) (tokens []AsmToken, err error) {
 
 			if char == ' ' || isEndOfLine {
 				token := AsmToken{
-					value: val,
-					loc:   Location{Row: row, Col: start_col},
+					Value: val,
+					Loc:   Location{Row: row, Col: start_col},
 				}
 				start_col = col + 1
 				tokens = append(tokens, token)
@@ -157,8 +157,8 @@ func LexTokensAsInsts(tokens []AsmToken) (ops []Inst, err error) {
 	for i := 0; i < len(tokens); i++ {
 		var inst Inst
 		token := tokens[i]
-		opcode_kind, err := ParseRawOPCode(token.value)
-		inst.kind = opcode_kind
+		opcode_kind, err := ParseRawOPCode(token.Value)
+		inst.Kind = opcode_kind
 		if err != nil {
 			return nil, err
 		}
@@ -178,22 +178,22 @@ func LexTokensAsInsts(tokens []AsmToken) (ops []Inst, err error) {
 		for n := 0; n < operand_num; n++ {
 			i++
 			operand := tokens[i]
-			operand_kind, err := ParseRawOperandKind(operand.value)
+			operand_kind, err := ParseRawOperandKind(operand.Value)
 			if err != nil {
 				return nil, err
 			}
 
 			var value int
 			if operand_kind == OperandKind_IMM {
-				value, err = strconv.Atoi(operand.value)
+				value, err = strconv.Atoi(operand.Value)
 				if err != nil {
 					return nil, err
 				}
 			}
-			inst.operand[n] = Operand{
-				loc:   operand.loc,
-				kind:  operand_kind,
-				value: int8(value),
+			inst.Operand[n] = Operand{
+				Loc:   operand.Loc,
+				Kind:  operand_kind,
+				Value: int8(value),
 			}
 		}
 
@@ -206,7 +206,7 @@ type Registers map[OperandKind]int8
 
 
 func (r *Registers) SetByOperand(a Operand, value int8) {
-	r.SetByKind(a.kind, value)
+	r.SetByKind(a.Kind, value)
 }
 
 func (r *Registers) SetByKind(kind OperandKind, value int8) {
@@ -214,10 +214,10 @@ func (r *Registers) SetByKind(kind OperandKind, value int8) {
 }
 
 func (r *Registers) GetByOperand(operand Operand) int8 {
-	if operand.kind == OperandKind_IMM {
-		return operand.value
+	if operand.Kind == OperandKind_IMM {
+		return operand.Value
 	}
-	return (*r)[operand.kind]
+	return (*r)[operand.Kind]
 }
 
 func (r *Registers) GetByKind(kind OperandKind) int8 {
@@ -239,10 +239,10 @@ func InterpretInsts(insts []Inst) error {
 
 	for registers[OperandKind_PC] < insts_length {
 		inst := insts[registers[OperandKind_PC]]
-		op_a := inst.operand[0]
-		op_b := inst.operand[1]
+		op_a := inst.Operand[0]
+		op_b := inst.Operand[1]
 
-		switch inst.kind {
+		switch inst.Kind {
 		case OP_MOV:
 			val := registers.GetByOperand(op_b)
 			registers.SetByOperand(op_a, val)
@@ -270,7 +270,7 @@ func InterpretInsts(insts []Inst) error {
 			n := registers.GetByOperand(op_a)
 			fmt.Println(n)
 		default:
-			return fmt.Errorf("unknown opcode kind `%d`", inst.kind)
+			return fmt.Errorf("unknown opcode kind `%d`", inst.Kind)
 		}
 		registers.SetByKind(OperandKind_PC, registers.GetByKind(OperandKind_PC)+1)
 	}
