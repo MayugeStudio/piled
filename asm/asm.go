@@ -5,12 +5,12 @@ import "strings"
 import "strconv"
 
 type Location struct {
-	row int
-	col int
+	Row int
+	Col int
 }
 
 func (l Location) String() string {
-	return fmt.Sprintf("%d:%d", l.row, l.col)
+	return fmt.Sprintf("%d:%d", l.Row, l.Col)
 }
 
 type AsmToken struct {
@@ -142,7 +142,7 @@ func TokenizeSource(source string) (tokens []AsmToken, err error) {
 			if char == ' ' || isEndOfLine {
 				token := AsmToken{
 					value: val,
-					loc:   Location{row: row, col: start_col},
+					loc:   Location{Row: row, Col: start_col},
 				}
 				start_col = col + 1
 				tokens = append(tokens, token)
