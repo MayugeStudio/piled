@@ -269,9 +269,10 @@ func InterpretInsts(insts []Inst) error {
 		case OP_DUMP:
 			n := registers.GetByOperand(op_a)
 			fmt.Println(n)
+		default:
+			return fmt.Errorf("unknown opcode kind `%d`", inst.kind)
 		}
-		pc := registers.GetByKind(OperandKind_PC)
-		registers.SetByKind(OperandKind_PC, pc+1)
+		registers.SetByKind(OperandKind_PC, registers.GetByKind(OperandKind_PC)+1)
 	}
 	return nil
 }
