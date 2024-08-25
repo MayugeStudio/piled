@@ -8,16 +8,16 @@ import (
 )
 
 func main() {
-	reset := "MOV: ACC, 0\n"
-	dump := "DUMP: ACC\n"
+	reset := "mov acc, 0\n"
+	dump := "dump acc\n"
 	source := ""
-	source += "MOV: ACC, 34\nADD: ACC, 35\n" + dump + reset
-	source += "MOV: ACC, 150\nSUB: ACC, 50\n" + dump + reset
-	source += "MOV: ACC, 25\nMUL: ACC, 2\n" + dump + reset
-	source += "MOV: ACC, 14\nDIV: ACC, 2\n" + dump + reset
+	source += "mov acc, 34\nadd acc, 35\n" + dump + reset
+	source += "mov acc, 150\nsub acc, 50\n" + dump + reset
+	source += "mov acc, 25\nmul acc, 2\n" + dump + reset
+	source += "mov acc, 14\ndiv acc, 2\n" + dump + reset
 
 	fmt.Printf("raw source:\n%s\n", source)
-	tokens, err := asm.LexSource(source)
+	tokens, err := asm.LexProgram(source)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "ERROR: In `TokenizeSource`", err)
 		os.Exit(1)
