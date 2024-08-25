@@ -27,7 +27,7 @@ func ToTokens(t *testing.T, wants []wantToken) (atokens []AsmToken) {
 	return
 }
 
-func Test_TokenizeSource(t *testing.T) {
+func Test_LexSource(t *testing.T) {
 	tests := []struct {
 		name    string
 		input   string
@@ -41,7 +41,7 @@ func Test_TokenizeSource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			actual, err := TokenizeSource(tt.input)
+			actual, err := LexSource(tt.input)
 			if err != nil && !tt.wantErr {
 				t.Fatalf("This test wants error but no error : actual: `%v`, want `%v`", actual, tt.want)
 			}

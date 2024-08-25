@@ -17,12 +17,12 @@ func main() {
 	source += "MOV: ACC, 14\nDIV: ACC, 2\n" + dump + reset
 
 	fmt.Printf("raw source:\n%s\n", source)
-	tokens, err := asm.TokenizeSource(source)
+	tokens, err := asm.LexSource(source)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "ERROR: In `TokenizeSource`", err)
 		os.Exit(1)
 	}
-	insts, err := asm.LexTokensAsInsts(tokens)
+	insts, err := asm.LexTokens(tokens)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "ERROR: In `LexTokensAsInsts`", err)
 		os.Exit(1)
