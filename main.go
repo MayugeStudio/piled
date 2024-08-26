@@ -8,23 +8,29 @@ import (
 )
 
 func main() {
-	reset := "MOV: ACC, 0\n"
-	dump := "DUMP: ACC\n"
-	source := ""
-	source += "MOV: ACC, 34\nADD: ACC, 35\n" + dump + reset
-	source += "MOV: ACC, 150\nSUB: ACC, 50\n" + dump + reset
-	source += "MOV: ACC, 25\nMUL: ACC, 2\n" + dump + reset
-	source += "MOV: ACC, 14\nDIV: ACC, 2\n" + dump + reset
+	args := os.Args
+	if len(args) < 2 {
+		fmt.Fprintln(os.Stderr, "No input file was provided")
+		os.Exit(1)
+	}
+	
+	filepath := args[1]
 
-	fmt.Printf("raw source:\n%s\n", source)
-	tokens, err := asm.LexSource(source)
+	bytes, err := os.ReadFile(filepath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR: could not open file `%s: %w\n", filepath, err)
+	}
+
+	source := string(bytes)
+
+	tokens, err := asm.LexProgram(source)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "ERROR: In `TokenizeSource`", err)
 		os.Exit(1)
 	}
-	insts, err := asm.LexTokens(tokens)
+	insts, err := asm.LexTokens(filepath, tokens)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "ERROR: In `LexTokensAsInsts`", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)
 	}
 	err = asm.InterpretInsts(insts)

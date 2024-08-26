@@ -15,8 +15,8 @@ type wantToken struct {
 func ToToken(t *testing.T, want wantToken) AsmToken {
 	t.Helper()
 	return AsmToken{
-		value: want.value,
-		loc:   Location{want.row, want.col},
+		Value: want.value,
+		Loc:   Location{want.row, want.col},
 	}
 }
 

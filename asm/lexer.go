@@ -15,19 +15,37 @@ func (t AsmToken) String() string {
 	return fmt.Sprintf("%s: `%s`", t.Loc, t.Value)
 }
 
+type LexerError struct {
+	Filename string
+	Loc      Location
+	Err      error
+}
+
+func (l LexerError) Error() string {
+	return fmt.Sprintf("%s:%d:%d: %s", l.Filename, l.Loc.Row, l.Loc.Col, l.Err)
+}
+
+func NewLexerError(filename string, loc Location, err error) *LexerError {
+	return &LexerError{
+		Filename: filename,
+		Loc: loc,
+		Err: err,
+	}
+}
+
 func ParseRawOPCode(s string) (InstKind, error) {
 	switch s {
-	case "MOV":
+	case "mov":
 		return INST_MOV, nil
-	case "ADD":
+	case "add":
 		return INST_ADD, nil
-	case "SUB":
+	case "sub":
 		return INST_SUB, nil
-	case "MUL":
+	case "mul":
 		return INST_MUL, nil
-	case "DIV":
+	case "div":
 		return INST_DIV, nil
-	case "DUMP":
+	case "dump":
 		return INST_DUMP, nil
 	default:
 		return INST_INVALID, fmt.Errorf("unknown opcode name `%s`", s)
@@ -40,25 +58,26 @@ func ParseRawOperandKind(s string) (OPKind, error) {
 		return OP_IMM, nil
 	}
 	switch s {
-	case "ACC":
+	case "acc":
 		return OP_ACC, nil
-	case "RET":
+	case "ret":
 		return OP_RET, nil
-	case "R_0":
+	case "r0":
 		return OP_R0, nil
-	case "R_1":
+	case "r1":
 		return OP_R1, nil
-	case "R_2":
+	case "r2":
 		return OP_R2, nil
-	case "R_3":
+	case "r3":
 		return OP_R3, nil
-	case "R_PC":
+	case "pc":
 		return OP_PC, nil
 	default:
 		return OP_INVALID, fmt.Errorf("unknown operand `%s`", s)
 	}
 }
-func LexSource(source string) ([]AsmToken, error) {
+
+func LexProgram(source string) ([]AsmToken, error) { // TODO: Make LexProgram return list of Inst
 	tokens := make([]AsmToken, 0, 0)
 	if len(source) == 0 {
 		return nil, nil
@@ -76,19 +95,18 @@ func LexSource(source string) ([]AsmToken, error) {
 		for col := 0; col < line_length; col++ {
 			char := line[col]
 			isSpace := char == ' '
-			isColon := char == ':'
 			isComma := char == ','
 
 			isEndOfLine := col == line_length-1
 
-			if !isSpace && !isColon && !isComma {
+			if !isSpace && !isComma {
 				val += string(char)
 			}
 
 			if char == ' ' || isEndOfLine {
 				token := AsmToken{
 					Value: val,
-					Loc:   Location{Row: row, Col: start_col},
+					Loc:   Location{Row: row+1, Col: start_col+1},
 				}
 				start_col = col + 1
 				tokens = append(tokens, token)
@@ -99,15 +117,15 @@ func LexSource(source string) ([]AsmToken, error) {
 	return tokens, nil
 }
 
-func LexTokens(tokens []AsmToken) (ops []Inst, err error) {
+func LexTokens(programPath string, tokens []AsmToken) (ops []Inst, err error) {
 	for i := 0; i < len(tokens); i++ {
-		var inst Inst
 		token := tokens[i]
 		opcode_kind, err := ParseRawOPCode(token.Value)
-		inst.Kind = opcode_kind
 		if err != nil {
-			return nil, err
+			return nil, NewLexerError(programPath, token.Loc, err)
 		}
+		var inst Inst
+		inst.Kind = opcode_kind
 
 		operand_num := 0
 		switch opcode_kind {
@@ -126,14 +144,14 @@ func LexTokens(tokens []AsmToken) (ops []Inst, err error) {
 			operand := tokens[i]
 			operand_kind, err := ParseRawOperandKind(operand.Value)
 			if err != nil {
-				return nil, err
+				return nil, NewLexerError(programPath, operand.Loc, err)
 			}
 
 			var value int
 			if operand_kind == OP_IMM {
 				value, err = strconv.Atoi(operand.Value)
 				if err != nil {
-					return nil, err
+					return nil, NewLexerError(programPath, operand.Loc, err)
 				}
 			}
 			inst.Operand[n] = Operand{
