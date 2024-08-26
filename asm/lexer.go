@@ -12,10 +12,6 @@ type Token struct {
 	Loc   Location
 }
 
-func (t Token) String() string {
-	return fmt.Sprintf("%s: `%s`", t.Loc, t.Value)
-}
-
 type LexerError struct {
 	Filename string
 	Loc      Location

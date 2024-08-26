@@ -1,7 +1,5 @@
 package asm
 
-import "fmt"
-
 type InstKind int8
 type OPKind int8
 
@@ -31,10 +29,6 @@ type Operand struct {
 	Value int8
 }
 
-func (o Operand) String() string {
-	return fmt.Sprintf("[kind=`%d`, value=`%d`]", o.Kind, o.Value)
-}
-
 func (o Operand) IsImmediate() bool {
 	return o.Kind == OP_IMM
 }
@@ -51,10 +45,6 @@ type Inst struct {
 	Loc     Location
 	Kind    InstKind
 	Operand [2]Operand
-}
-
-func (i Inst) String() string {
-	return fmt.Sprintf("kind=%d, operand=`%s`", i.Kind, i.Operand)
 }
 
 func NewInst(loc Location, kind InstKind) Inst {
