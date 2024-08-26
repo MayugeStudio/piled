@@ -41,8 +41,8 @@ func (o Operand) IsImmediate() bool {
 
 func NewOperand(loc Location, kind OPKind, value int8) Operand {
 	return Operand{
-		Loc: loc,
-		Kind: kind,
+		Loc:   loc,
+		Kind:  kind,
 		Value: value,
 	}
 }
@@ -63,5 +63,3 @@ func NewInst(loc Location, kind InstKind) Inst {
 		Kind: kind,
 	}
 }
-
-

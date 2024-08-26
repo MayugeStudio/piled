@@ -1,9 +1,9 @@
 package asm
 
 import (
-	"strings"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type Token struct {
@@ -28,8 +28,8 @@ func (l LexerError) Error() string {
 func NewLexerError(filename string, loc Location, err error) *LexerError {
 	return &LexerError{
 		Filename: filename,
-		Loc: loc,
-		Err: err,
+		Loc:      loc,
+		Err:      err,
 	}
 }
 
@@ -51,7 +51,6 @@ func ParseRawInst(s string) (InstKind, error) {
 		return INST_INVALID, fmt.Errorf("unknown opcode name `%s`", s)
 	}
 }
-
 
 func ParseRawOPKind(s string) (OPKind, error) {
 	if _, err := strconv.Atoi(s); err == nil {
@@ -119,7 +118,7 @@ func LexProgram(programPath string, source string) ([]Inst, error) {
 			if char == ' ' || isEndOfLine {
 				token := Token{
 					Value: val,
-					Loc:   Location{Row: row+1, Col: start_col+1},
+					Loc:   Location{Row: row + 1, Col: start_col + 1},
 				}
 				start_col = col + 1
 				tokens = append(tokens, token)
@@ -162,4 +161,3 @@ func LexProgram(programPath string, source string) ([]Inst, error) {
 	}
 	return insts, nil
 }
-

@@ -13,7 +13,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, "No input file was provided")
 		os.Exit(1)
 	}
-	
+
 	filepath := args[1]
 
 	bytes, err := os.ReadFile(filepath)
