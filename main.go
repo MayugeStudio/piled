@@ -23,12 +23,7 @@ func main() {
 
 	source := string(bytes)
 
-	tokens, err := asm.LexProgram(source)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "ERROR: In `TokenizeSource`", err)
-		os.Exit(1)
-	}
-	insts, err := asm.LexTokens(filepath, tokens)
+	insts, err := asm.LexProgram(filepath, source)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)

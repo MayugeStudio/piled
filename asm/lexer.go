@@ -77,7 +77,7 @@ func ParseRawOperandKind(s string) (OPKind, error) {
 	}
 }
 
-func LexProgram(source string) ([]AsmToken, error) { // TODO: Make LexProgram return list of Inst
+func LexProgram(programPath string, source string) ([]Inst, error) {
 	tokens := make([]AsmToken, 0, 0)
 	if len(source) == 0 {
 		return nil, nil
@@ -114,10 +114,8 @@ func LexProgram(source string) ([]AsmToken, error) { // TODO: Make LexProgram re
 			}
 		}
 	}
-	return tokens, nil
-}
 
-func LexTokens(programPath string, tokens []AsmToken) (ops []Inst, err error) {
+	insts := make([]Inst, 0, 0)
 	for i := 0; i < len(tokens); i++ {
 		token := tokens[i]
 		opcode_kind, err := ParseRawOPCode(token.Value)
@@ -161,8 +159,8 @@ func LexTokens(programPath string, tokens []AsmToken) (ops []Inst, err error) {
 			}
 		}
 
-		ops = append(ops, inst)
+		insts = append(insts, inst)
 	}
-	return
+	return insts, nil
 }
 
