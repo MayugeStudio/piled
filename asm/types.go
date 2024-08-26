@@ -2,37 +2,6 @@ package asm
 
 import "fmt"
 
-type Operand struct {
-	Loc   Location
-	Kind  OPKind
-	Value int8
-}
-
-func (o Operand) String() string {
-	return fmt.Sprintf("[kind=`%d`, value=`%d`]", o.Kind, o.Value)
-}
-
-func (o Operand) IsImmediate() bool {
-	return o.Kind == OP_IMM
-}
-
-type Inst struct {
-	Loc     Location
-	Kind    InstKind
-	Operand [2]Operand
-}
-
-func (i Inst) String() string {
-	return fmt.Sprintf("kind=%d, operand=`%s`", i.Kind, i.Operand)
-}
-
-func NewInst(loc Location, kind InstKind) Inst {
-	return Inst{
-		Loc:  loc,
-		Kind: kind,
-	}
-}
-
 type InstKind int8
 type OPKind int8
 
@@ -55,4 +24,44 @@ const (
 	INST_DIV
 	INST_DUMP
 )
+
+type Operand struct {
+	Loc   Location
+	Kind  OPKind
+	Value int8
+}
+
+func (o Operand) String() string {
+	return fmt.Sprintf("[kind=`%d`, value=`%d`]", o.Kind, o.Value)
+}
+
+func (o Operand) IsImmediate() bool {
+	return o.Kind == OP_IMM
+}
+
+func NewOperand(loc Location, kind OPKind, value int8) Operand {
+	return Operand{
+		Loc: loc,
+		Kind: kind,
+		Value: value,
+	}
+}
+
+type Inst struct {
+	Loc     Location
+	Kind    InstKind
+	Operand [2]Operand
+}
+
+func (i Inst) String() string {
+	return fmt.Sprintf("kind=%d, operand=`%s`", i.Kind, i.Operand)
+}
+
+func NewInst(loc Location, kind InstKind) Inst {
+	return Inst{
+		Loc:  loc,
+		Kind: kind,
+	}
+}
+
 

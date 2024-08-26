@@ -6,12 +6,12 @@ import (
 	"strconv"
 )
 
-type AsmToken struct {
+type Token struct {
 	Value string
 	Loc   Location
 }
 
-func (t AsmToken) String() string {
+func (t Token) String() string {
 	return fmt.Sprintf("%s: `%s`", t.Loc, t.Value)
 }
 
@@ -33,7 +33,7 @@ func NewLexerError(filename string, loc Location, err error) *LexerError {
 	}
 }
 
-func ParseRawOPCode(s string) (InstKind, error) {
+func ParseRawInst(s string) (InstKind, error) {
 	switch s {
 	case "mov":
 		return INST_MOV, nil
@@ -53,7 +53,7 @@ func ParseRawOPCode(s string) (InstKind, error) {
 }
 
 
-func ParseRawOperandKind(s string) (OPKind, error) {
+func ParseRawOPKind(s string) (OPKind, error) {
 	if _, err := strconv.Atoi(s); err == nil {
 		return OP_IMM, nil
 	}
@@ -77,12 +77,25 @@ func ParseRawOperandKind(s string) (OPKind, error) {
 	}
 }
 
+func OperandCount(kind InstKind) int {
+	switch kind {
+	case INST_MOV, INST_ADD, INST_SUB, INST_MUL, INST_DIV:
+		return 2
+	case INST_DUMP:
+		return 1
+	case INST_INVALID:
+		panic("unreachable INST_INVALID")
+	default:
+		panic("unreachable DEFAULT")
+	}
+}
+
 func LexProgram(programPath string, source string) ([]Inst, error) {
-	tokens := make([]AsmToken, 0, 0)
 	if len(source) == 0 {
 		return nil, nil
 	}
 
+	tokens := make([]Token, 0, 0)
 	lines := strings.Split(source, "\n")
 
 	for row, line := range lines {
@@ -104,7 +117,7 @@ func LexProgram(programPath string, source string) ([]Inst, error) {
 			}
 
 			if char == ' ' || isEndOfLine {
-				token := AsmToken{
+				token := Token{
 					Value: val,
 					Loc:   Location{Row: row+1, Col: start_col+1},
 				}
@@ -118,29 +131,19 @@ func LexProgram(programPath string, source string) ([]Inst, error) {
 	insts := make([]Inst, 0, 0)
 	for i := 0; i < len(tokens); i++ {
 		token := tokens[i]
-		opcode_kind, err := ParseRawOPCode(token.Value)
+		inst_kind, err := ParseRawInst(token.Value)
 		if err != nil {
 			return nil, NewLexerError(programPath, token.Loc, err)
 		}
-		var inst Inst
-		inst.Kind = opcode_kind
 
-		operand_num := 0
-		switch opcode_kind {
-		case INST_MOV, INST_ADD, INST_SUB, INST_MUL, INST_DIV:
-			operand_num = 2
-		case INST_DUMP:
-			operand_num = 1
-		case INST_INVALID:
-			panic("unreachable INST_INVALID")
-		default:
-			panic("unreachable DEFAULT")
-		}
+		inst := NewInst(token.Loc, inst_kind)
 
-		for n := 0; n < operand_num; n++ {
+		operandCound := OperandCount(inst_kind)
+
+		for n := 0; n < operandCound; n++ {
 			i++
 			operand := tokens[i]
-			operand_kind, err := ParseRawOperandKind(operand.Value)
+			operand_kind, err := ParseRawOPKind(operand.Value)
 			if err != nil {
 				return nil, NewLexerError(programPath, operand.Loc, err)
 			}
@@ -152,11 +155,7 @@ func LexProgram(programPath string, source string) ([]Inst, error) {
 					return nil, NewLexerError(programPath, operand.Loc, err)
 				}
 			}
-			inst.Operand[n] = Operand{
-				Loc:   operand.Loc,
-				Kind:  operand_kind,
-				Value: int8(value),
-			}
+			inst.Operand[n] = NewOperand(operand.Loc, operand_kind, int8(value))
 		}
 
 		insts = append(insts, inst)
