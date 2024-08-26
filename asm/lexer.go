@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"os"
 )
 
 type Token struct {
@@ -33,7 +34,7 @@ func NewLexerError(filename string, loc Location, err error) *LexerError {
 	}
 }
 
-func ParseRawInst(s string) (InstKind, error) {
+func GetInstKind(s string) (InstKind, error) {
 	switch s {
 	case "mov":
 		return INST_MOV, nil
@@ -52,7 +53,7 @@ func ParseRawInst(s string) (InstKind, error) {
 	}
 }
 
-func ParseRawOPKind(s string) (OPKind, error) {
+func GetOPKind(s string) (OPKind, error) {
 	if _, err := strconv.Atoi(s); err == nil {
 		return OP_IMM, nil
 	}
@@ -89,48 +90,54 @@ func OperandCount(kind InstKind) int {
 	}
 }
 
-func LexProgram(programPath string, source string) ([]Inst, error) {
-	if len(source) == 0 {
-		return nil, nil
+func lexLine(line string, row int) []Token {
+	val := ""
+	start_col := 0
+	line_length := len(line)
+	tokens := make([]Token, 0, 0)
+	for col := 0; col < line_length; col++ {
+		char := line[col]
+		isEndOfLine := col == line_length-1
+		isSpace := char == ' '
+		isComma := char == ','
+
+		if !isSpace && !isComma {
+			val += string(char)
+		}
+
+		if isSpace || isEndOfLine {
+			token := Token{
+				Value: val,
+				Loc: Location{
+					Row: row + 1,
+					Col: start_col + 1,
+				},
+			}
+			start_col = col + 1
+			tokens = append(tokens, token)
+			val = ""
+		}
 	}
 
+	return tokens
+}
+
+func lexSource(source string) []Token {
 	tokens := make([]Token, 0, 0)
 	lines := strings.Split(source, "\n")
 
 	for row, line := range lines {
-		if len(line) == 0 {
-			continue
-		}
-		val := ""
-		start_col := 0
-		line_length := len(line)
-		for col := 0; col < line_length; col++ {
-			char := line[col]
-			isSpace := char == ' '
-			isComma := char == ','
-
-			isEndOfLine := col == line_length-1
-
-			if !isSpace && !isComma {
-				val += string(char)
-			}
-
-			if char == ' ' || isEndOfLine {
-				token := Token{
-					Value: val,
-					Loc:   Location{Row: row + 1, Col: start_col + 1},
-				}
-				start_col = col + 1
-				tokens = append(tokens, token)
-				val = ""
-			}
-		}
+		result := lexLine(line, row)
+		tokens = append(tokens, result...)
 	}
+	return tokens
+}
 
+func lexTokens(programPath string, tokens []Token) ([]Inst, error) {
 	insts := make([]Inst, 0, 0)
 	for i := 0; i < len(tokens); i++ {
 		token := tokens[i]
-		inst_kind, err := ParseRawInst(token.Value)
+		inst_kind, err := GetInstKind(token.Value)
 		if err != nil {
 			return nil, NewLexerError(programPath, token.Loc, err)
 		}
@@ -142,7 +149,7 @@ func LexProgram(programPath string, source string) ([]Inst, error) {
 		for n := 0; n < operandCound; n++ {
 			i++
 			operand := tokens[i]
-			operand_kind, err := ParseRawOPKind(operand.Value)
+			operand_kind, err := GetOPKind(operand.Value)
 			if err != nil {
 				return nil, NewLexerError(programPath, operand.Loc, err)
 			}
@@ -158,6 +165,21 @@ func LexProgram(programPath string, source string) ([]Inst, error) {
 		}
 
 		insts = append(insts, inst)
+	}
+	return insts, nil
+}
+
+func LexProgram(programPath string) ([]Inst, error) {
+	bytes, err := os.ReadFile(programPath)
+	if err != nil {
+		return nil, fmt.Errorf("could not open file `%s: %w\n", programPath, err)
+	}
+
+	tokens := lexSource(string(bytes))
+	
+	insts, err := lexTokens(programPath, tokens)
+	if err != nil {
+		return nil, err
 	}
 	return insts, nil
 }

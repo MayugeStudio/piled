@@ -16,14 +16,7 @@ func main() {
 
 	filepath := args[1]
 
-	bytes, err := os.ReadFile(filepath)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "ERROR: could not open file `%s: %w\n", filepath, err)
-	}
-
-	source := string(bytes)
-
-	insts, err := asm.LexProgram(filepath, source)
+	insts, err := asm.LexProgram(filepath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)
