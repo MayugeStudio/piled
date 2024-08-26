@@ -28,9 +28,9 @@ func main() {
 		fmt.Fprintln(os.Stderr, "ERROR: In `TokenizeSource`", err)
 		os.Exit(1)
 	}
-	insts, err := asm.LexTokens(tokens)
+	insts, err := asm.LexTokens(filepath, tokens)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "ERROR: In `LexTokensAsInsts`", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)
 	}
 	err = asm.InterpretInsts(insts)

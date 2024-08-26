@@ -15,6 +15,24 @@ func (t AsmToken) String() string {
 	return fmt.Sprintf("%s: `%s`", t.Loc, t.Value)
 }
 
+type LexerError struct {
+	Filename string
+	Loc      Location
+	Err      error
+}
+
+func (l LexerError) Error() string {
+	return fmt.Sprintf("%s:%d:%d: %s", l.Filename, l.Loc.Row, l.Loc.Col, l.Err)
+}
+
+func NewLexerError(filename string, loc Location, err error) *LexerError {
+	return &LexerError{
+		Filename: filename,
+		Loc: loc,
+		Err: err,
+	}
+}
+
 func ParseRawOPCode(s string) (InstKind, error) {
 	switch s {
 	case "mov":
@@ -59,7 +77,7 @@ func ParseRawOperandKind(s string) (OPKind, error) {
 	}
 }
 
-func LexProgram(source string) ([]AsmToken, error) {
+func LexProgram(source string) ([]AsmToken, error) { // TODO: Make LexProgram return list of Inst
 	tokens := make([]AsmToken, 0, 0)
 	if len(source) == 0 {
 		return nil, nil
@@ -88,7 +106,7 @@ func LexProgram(source string) ([]AsmToken, error) {
 			if char == ' ' || isEndOfLine {
 				token := AsmToken{
 					Value: val,
-					Loc:   Location{Row: row, Col: start_col},
+					Loc:   Location{Row: row+1, Col: start_col+1},
 				}
 				start_col = col + 1
 				tokens = append(tokens, token)
@@ -99,15 +117,15 @@ func LexProgram(source string) ([]AsmToken, error) {
 	return tokens, nil
 }
 
-func LexTokens(tokens []AsmToken) (ops []Inst, err error) {
+func LexTokens(programPath string, tokens []AsmToken) (ops []Inst, err error) {
 	for i := 0; i < len(tokens); i++ {
-		var inst Inst
 		token := tokens[i]
 		opcode_kind, err := ParseRawOPCode(token.Value)
-		inst.Kind = opcode_kind
 		if err != nil {
-			return nil, err
+			return nil, NewLexerError(programPath, token.Loc, err)
 		}
+		var inst Inst
+		inst.Kind = opcode_kind
 
 		operand_num := 0
 		switch opcode_kind {
@@ -126,14 +144,14 @@ func LexTokens(tokens []AsmToken) (ops []Inst, err error) {
 			operand := tokens[i]
 			operand_kind, err := ParseRawOperandKind(operand.Value)
 			if err != nil {
-				return nil, err
+				return nil, NewLexerError(programPath, operand.Loc, err)
 			}
 
 			var value int
 			if operand_kind == OP_IMM {
 				value, err = strconv.Atoi(operand.Value)
 				if err != nil {
-					return nil, err
+					return nil, NewLexerError(programPath, operand.Loc, err)
 				}
 			}
 			inst.Operand[n] = Operand{
