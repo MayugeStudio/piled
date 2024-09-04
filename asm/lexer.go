@@ -2,9 +2,9 @@ package asm
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
-	"os"
 )
 
 type Token struct {
@@ -172,7 +172,7 @@ func LexProgram(programPath string) ([]Inst, error) {
 	}
 
 	tokens := lexSource(string(bytes))
-	
+
 	insts, err := lexTokens(programPath, tokens)
 	if err != nil {
 		return nil, err
