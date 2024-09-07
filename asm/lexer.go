@@ -73,7 +73,7 @@ func LexProgram(programPath string) ([]*OP, error) {
 
 	ops, err := lexSourceIntoOPs(source)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s:%s", programPath, err)
 	}
 
 	return ops, nil
