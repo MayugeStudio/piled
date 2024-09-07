@@ -1,5 +1,5 @@
-piled: main.go
-	go build
+piled.out: main.go
+	go build . -o piled.out
 
 fmt:
 	go fmt ./...
