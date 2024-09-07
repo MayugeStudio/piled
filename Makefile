@@ -1,3 +1,6 @@
+piled: main.go
+	go build
+
 fmt:
 	go fmt ./...
 
@@ -6,3 +9,6 @@ cover:
 	go tool cover -html=cover.out -o cover.html
 	explorer.exe cover.html
 
+ex: piled
+	./piled examples/basic-inst.piled
+	

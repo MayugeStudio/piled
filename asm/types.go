@@ -1,55 +1,80 @@
 package asm
 
-type InstKind int8
-type OPKind int8
-
-const (
-	OP_INVALID OPKind = iota
-	OP_IMM
-	OP_ACC
-	OP_RET
-	OP_R0
-	OP_R1
-	OP_R2
-	OP_R3
-	OP_PC
-
-	INST_INVALID InstKind = iota
-	INST_MOV
-	INST_ADD
-	INST_SUB
-	INST_MUL
-	INST_DIV
-	INST_DUMP
+import (
+	"strconv"
+	"fmt"
 )
 
-type Operand struct {
+type OPType int
+
+const (
+	OP_PUSH_INT OPType = iota + 1
+	OP_ADD
+	OP_SUB
+	OP_MUL
+	OP_DIV
+	OP_PRINT
+	OP_INVALID
+)
+
+type Location struct {
+	Row int
+	Col int
+}
+
+func newLocation(row, col int) Location {
+	return Location{row, col}
+}
+
+type OP struct {
+	Type  OPType
 	Loc   Location
-	Kind  OPKind
-	Value int8
+	Value int
 }
 
-func (o Operand) IsImmediate() bool {
-	return o.Kind == OP_IMM
-}
-
-func NewOperand(loc Location, kind OPKind, value int8) Operand {
-	return Operand{
-		Loc:   loc,
-		Kind:  kind,
-		Value: value,
+func nameToOPType(name string) (OPType, error) {
+	switch name {
+	case "+":
+		return OP_ADD, nil
+	case "-":
+		return OP_SUB, nil
+	case "*":
+		return OP_MUL, nil
+	case "/":
+		return OP_DIV, nil
+	case "print":
+		return OP_PRINT, nil
+	default:
+		{
+			_, err := strconv.Atoi(name)
+			if err != nil {
+				return OP_INVALID, fmt.Errorf("unknown builtin word `%s`", name)
+			}
+			return OP_PUSH_INT, nil
+		}
 	}
 }
 
-type Inst struct {
-	Loc     Location
-	Kind    InstKind
-	Operand [2]Operand
-}
+func newOP(value string, loc Location) (*OP, error) {
+	opType, err := nameToOPType(value)
+	if err != nil {
+		return nil, err
+	}
+	if opType == OP_PUSH_INT {
+		v, err := strconv.Atoi(value)
+		if err != nil {
+			return nil, fmt.Errorf("unknown builtin word `%s`", value)
+		}
 
-func NewInst(loc Location, kind InstKind) Inst {
-	return Inst{
+		return &OP{
+			Type: opType,
+			Loc:  loc,
+			Value: v,
+		}, nil
+	}
+	return &OP{
+		Type: opType,
 		Loc:  loc,
-		Kind: kind,
-	}
+	}, nil
 }
+
