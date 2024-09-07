@@ -62,17 +62,6 @@ func GenerateLines(ops []*OP) (string, error) {
 			b.WriteString("    pop rbx\n")
 			b.WriteString("    sub rbx, rax\n")
 			b.WriteString("    push rbx\n")
-		case OP_MUL:
-			b.WriteString("    pop rax\n")
-			b.WriteString("    pop rbx\n")
-			b.WriteString("    mul rax, rbx\n")
-			b.WriteString("    push rax\n")
-		case OP_DIV:
-			b.WriteString("    pop rcx\n")
-			b.WriteString("    pop rax\n")
-			b.WriteString("    div rcx\n")
-			b.WriteString("    xor rdx, rdx\n")
-			b.WriteString("    push rax\n")
 		case OP_PRINT:
 			b.WriteString("    pop rdi\n")
 			b.WriteString("    call dump\n")

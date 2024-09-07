@@ -11,8 +11,6 @@ const (
 	OP_PUSH_INT OPType = iota + 1
 	OP_ADD
 	OP_SUB
-	OP_MUL
-	OP_DIV
 	OP_PRINT
 	OP_INVALID
 )
@@ -38,10 +36,6 @@ func nameToOPType(name string) (OPType, error) {
 		return OP_ADD, nil
 	case "-":
 		return OP_SUB, nil
-	case "*":
-		return OP_MUL, nil
-	case "/":
-		return OP_DIV, nil
 	case "print":
 		return OP_PRINT, nil
 	default:
