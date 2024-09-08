@@ -75,7 +75,7 @@ func lexSourceIntoOPs(filename string, source string) ([]*OP, error) {
 			}
 
 			if isSpace || isEndOfLine {
-				loc := newLocation(row+1, start_col+1)
+				loc := Location{Row: row+1, Col: start_col+1}
 				op, err := lexWord(filename, val, loc)
 				if err != nil {
 					return nil, err

@@ -20,10 +20,6 @@ type Location struct {
 	Col int
 }
 
-func newLocation(row, col int) Location {
-	return Location{row, col}
-}
-
 type OP struct {
 	Type     OPType
 	Loc      Location
