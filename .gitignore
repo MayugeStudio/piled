@@ -1,7 +1,7 @@
 .mypy_cache/
 .mypy.ini
 piled
-piled.out
+*.out
 cover.out
 cover.html
 memo.md
