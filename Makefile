@@ -1,4 +1,4 @@
-piled.out: main.go
+piled.out: main.go asm/generator.go asm/lexer.go asm/types.go
 	go build -o piled.out .
 
 fmt:
@@ -9,6 +9,6 @@ cover:
 	go tool cover -html=cover.out -o cover.html
 	explorer.exe cover.html
 
-ex: piled
-	./piled examples/basic-inst.piled
+ex: piled.out
+	./piled.out examples/basic-inst.piled
 	
