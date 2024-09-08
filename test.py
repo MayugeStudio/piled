@@ -7,7 +7,7 @@ import os
 
 def run_cmd(cmd: list[str], silent=True) -> subprocess.CompletedProcess:
     if not silent:
-        print(" ".join(cmd))
+        print("[CMD]" + " ".join(cmd))
     return subprocess.run(cmd, capture_output=True)
 
 def parse_expected_file(filepath: str) -> dict:
@@ -29,44 +29,35 @@ def parse_expected_file(filepath: str) -> dict:
     return result
 
 def test_compile(fp: str) -> None:
-    print("[COMPILE]")
-    print(f"Compiling {fp} ...")
-    out = run_cmd(["./piled.out", fp])
-    print(f"Compiled successfully")
+    run_cmd(["./piled.out", fp], silent=False)
 
 def chmod_x_all(fp: str) -> None:
     binary_file = fp.removesuffix(".piled") + ".out"
-    run_cmd(["chmod", "+x", binary_file], )
+    run_cmd(["chmod", "+x", binary_file])
 
 def test_run(fp: str) -> None:
     binary_file = fp.removesuffix(".piled") + ".out"
     expected_file = fp.removesuffix(".piled") + ".expected"
     expected = parse_expected_file(expected_file)['int']  # TODO: Not implemented other than int
-    print("[RUN]")
-    actual = run_cmd([binary_file], silent=True)
+    actual = run_cmd([binary_file], silent=False)
     actual_stdout = list(filter(lambda x: len(x) > 0, actual.stdout.decode().split("\n")))
     actual_stderr = list(filter(lambda x: len(x) > 0, actual.stderr.decode().split("\n")))
 
     if len(actual_stdout) != len(expected):
-        print(f"[ERROR]: {fp}")
-        print("length of output is not equal")
-        print(f"    actual   -> {actual_stdout}")
-        print(f"    expected -> {expected}")
-        print(f"    actual-length   -> {len(actual_stdout)}")
-        print(f"    expected-length -> {len(expected)}")
+        print(f"[ERROR]: length of output is not equal")
+        print(f"  actual   -> {actual_stdout}")
+        print(f"  expected -> {expected}")
+        print(f"  actual-length   -> {len(actual_stdout)}")
+        print(f"  expected-length -> {len(expected)}")
 
     for i in range(len(actual_stdout)):
         if actual_stdout[i] != expected[i]:
-            print(f"[ERROR]: {fp}")
-            print(f"element {i+1} is not valid")
-            print(f"    actual   -> {actual_stdout}")
-            print(f"    expected -> {expected}")
-
-    print(f"Verifing {binary_file} ...")
-    print(f"Verified successfully")
+            print(f"[ERROR]: element {i+1} is not valid")
+            print(f"  actual   -> {actual_stdout}")
+            print(f"  expected -> {expected}")
 
 def clean_up(tests: list[str]) -> None:
-    print("[INFO] Cleaning tests directory ...")
+    print("[INFO] Cleaning `tests` directory")
     for filepath in tests:
         filename_without_ext = filepath.removesuffix(".piled")
         assembly_file = filename_without_ext + ".asm"
@@ -78,12 +69,11 @@ def main() -> None:
     tests_dir = "./tests/*.piled"
     tests = glob.glob(tests_dir)
     for filepath in sorted(tests):
-        print(f"----- {os.path.basename(filepath)} -----")
+        print(f"[INFO] Testing {filepath}")
         test_compile(filepath)
         chmod_x_all(filepath)
         test_run(filepath)
-        print(f"[PASS]")
-        print()
+        print("--" * 30)
     clean_up(tests)
 
 
