@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const DebugMode = true
+const DebugMode = false
 
 func main() {
 	args := os.Args
@@ -62,6 +62,6 @@ func main() {
 
 	err = os.Rename(outFilename, outBinaryFilename)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "ERROR: Failed to rename %s to %s\n", outFilename, outFilename + ".out")
+		fmt.Fprintf(os.Stderr, "ERROR: Failed to rename %s to %s\n", outFilename, outFilename+".out")
 	}
 }

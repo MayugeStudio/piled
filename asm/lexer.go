@@ -3,6 +3,7 @@ package asm
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -32,6 +33,29 @@ func readFile(programPath string) (string, error) {
 	return string(bytes), nil
 }
 
+func lexWord(filename string, value string, loc Location) (*OP, error) {
+	opType, err := nameToOPType(value)
+	if err != nil {
+		return nil, newLexerError(filename, loc, err)
+	}
+	if opType == OP_PUSH_INT {
+		v, err := strconv.Atoi(value)
+		if err != nil {
+			return nil, err
+		}
+
+		return &OP{
+			Type:  opType,
+			Loc:   loc,
+			Value: v,
+		}, nil
+	}
+	return &OP{
+		Type: opType,
+		Loc:  loc,
+	}, nil
+}
+
 func lexSourceIntoOPs(filename string, source string) ([]*OP, error) {
 	ops := make([]*OP, 0)
 	lines := strings.Split(source, "\n")
@@ -51,9 +75,10 @@ func lexSourceIntoOPs(filename string, source string) ([]*OP, error) {
 			}
 
 			if isSpace || isEndOfLine {
-				op, err := newOP(val, newLocation(row+1, start_col+1))
+				loc := newLocation(row+1, start_col+1)
+				op, err := lexWord(filename, val, loc)
 				if err != nil {
-					return nil, newLexerError(filename, newLocation(row+1, start_col+1), err)
+					return nil, err
 				}
 				start_col = col + 1
 				ops = append(ops, op)
