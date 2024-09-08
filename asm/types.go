@@ -5,14 +5,14 @@ import (
 	"strconv"
 )
 
-type OPType int
+type TokenType int
 
 const (
-	OP_PUSH_INT OPType = iota + 1
-	OP_ADD
-	OP_SUB
-	OP_PRINT
-	OP_INVALID
+	Token_PUSH_INT TokenType = iota + 1
+	Token_ADD
+	Token_SUB
+	Token_PRINT
+	Token_INVALID
 )
 
 type Location struct {
@@ -20,27 +20,27 @@ type Location struct {
 	Col int
 }
 
-type OP struct {
-	Type     OPType
+type Token struct {
+	Type     TokenType
 	Loc      Location
 	Value    int
 }
 
-func nameToOPType(name string) (OPType, error) {
+func nameToTokenType(name string) (TokenType, error) {
 	switch name {
 	case "+":
-		return OP_ADD, nil
+		return Token_ADD, nil
 	case "-":
-		return OP_SUB, nil
+		return Token_SUB, nil
 	case "print":
-		return OP_PRINT, nil
+		return Token_PRINT, nil
 	default:
 		{
 			_, err := strconv.Atoi(name)
 			if err != nil {
-				return OP_INVALID, fmt.Errorf("unknown word `%s`", name)
+				return Token_INVALID, fmt.Errorf("unknown word `%s`", name)
 			}
-			return OP_PUSH_INT, nil
+			return Token_PUSH_INT, nil
 		}
 	}
 }

@@ -33,31 +33,31 @@ func readFile(programPath string) (string, error) {
 	return string(bytes), nil
 }
 
-func lexWord(filename string, value string, loc Location) (*OP, error) {
-	opType, err := nameToOPType(value)
+func lexWord(filename string, value string, loc Location) (*Token, error) {
+	opType, err := nameToTokenType(value)
 	if err != nil {
 		return nil, newLexerError(filename, loc, err)
 	}
-	if opType == OP_PUSH_INT {
+	if opType == Token_PUSH_INT {
 		v, err := strconv.Atoi(value)
 		if err != nil {
 			return nil, err
 		}
 
-		return &OP{
+		return &Token{
 			Type:  opType,
 			Loc:   loc,
 			Value: v,
 		}, nil
 	}
-	return &OP{
+	return &Token{
 		Type: opType,
 		Loc:  loc,
 	}, nil
 }
 
-func lexSourceIntoOPs(filename string, source string) ([]*OP, error) {
-	ops := make([]*OP, 0)
+func lexSourceIntoTokens(filename string, source string) ([]*Token, error) {
+	ops := make([]*Token, 0)
 	lines := strings.Split(source, "\n")
 
 	for row, line := range lines {
@@ -89,13 +89,13 @@ func lexSourceIntoOPs(filename string, source string) ([]*OP, error) {
 	return ops, nil
 }
 
-func LexProgram(programPath string) ([]*OP, error) {
+func LexProgram(programPath string) ([]*Token, error) {
 	source, err := readFile(programPath)
 	if err != nil {
 		return nil, err
 	}
 
-	ops, err := lexSourceIntoOPs(programPath, source)
+	ops, err := lexSourceIntoTokens(programPath, source)
 	if err != nil {
 		return nil, err
 	}

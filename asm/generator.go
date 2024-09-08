@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func GenerateLines(ops []*OP) (string, error) {
+func GenerateLines(ops []*Token) (string, error) {
 	b := strings.Builder{}
 	b.WriteString("format ELF64 executable 3\n")
 	b.WriteString("\n")
@@ -19,19 +19,19 @@ func GenerateLines(ops []*OP) (string, error) {
 	b.WriteString("_start:\n")
 	for _, op := range ops {
 		switch op.Type {
-		case OP_PUSH_INT:
+		case Token_PUSH_INT:
 			b.WriteString(fmt.Sprintf("    push %d\n", op.Value))
-		case OP_ADD:
+		case Token_ADD:
 			b.WriteString("    pop rax\n")
 			b.WriteString("    pop rbx\n")
 			b.WriteString("    add rax, rbx\n")
 			b.WriteString("    push rax\n")
-		case OP_SUB:
+		case Token_SUB:
 			b.WriteString("    pop rax\n")
 			b.WriteString("    pop rbx\n")
 			b.WriteString("    sub rbx, rax\n")
 			b.WriteString("    push rbx\n")
-		case OP_PRINT:
+		case Token_PRINT:
 			b.WriteString("    pop rdi\n")
 			b.WriteString("    call dump\n")
 		}
