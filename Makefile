@@ -1,4 +1,4 @@
-piled.out: main.go asm/generator.go asm/lexer.go asm/types.go
+piled.out: main.go asm/generator.go asm/lexer.go
 	go build -o piled.out .
 
 fmt:
