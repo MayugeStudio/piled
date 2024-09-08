@@ -31,6 +31,14 @@ func GenerateLines(ops []*Token) (string, error) {
 			b.WriteString("    pop rbx\n")
 			b.WriteString("    sub rbx, rax\n")
 			b.WriteString("    push rbx\n")
+		case Token_EQUAL:
+			b.WriteString("    mov rcx, 0\n")
+			b.WriteString("    mov rdx, 1\n")
+			b.WriteString("    pop rax\n")
+			b.WriteString("    pop rbx\n")
+			b.WriteString("    cmp rax, rbx\n")
+			b.WriteString("    cmove rcx, rdx\n")
+			b.WriteString("    push rcx\n")
 		case Token_PRINT:
 			b.WriteString("    pop rdi\n")
 			b.WriteString("    call dump\n")

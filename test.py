@@ -49,12 +49,14 @@ def test_run(fp: str) -> None:
         print(f"  expected -> {expected}")
         print(f"  actual-length   -> {len(actual_stdout)}")
         print(f"  expected-length -> {len(expected)}")
+        return
 
     for i in range(len(actual_stdout)):
         if actual_stdout[i] != expected[i]:
             print(f"[ERROR]: element {i+1} is not valid")
             print(f"  actual   -> {actual_stdout}")
             print(f"  expected -> {expected}")
+            return
 
 def clean_up(tests: list[str]) -> None:
     print("[INFO] Cleaning `tests` directory")
