@@ -40,9 +40,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	outFilename := strings.TrimSuffix(filePath, filepath.Ext(filePath)) + ".asm"
+	outFilename := strings.TrimSuffix(filePath, filepath.Ext(filePath))
+	outAsmFilename := outFilename + ".asm"
+	outBinaryFilename := outFilename + ".out"
 
-	err = asm.WriteFileToString(outFilename, outContent)
+	err = asm.WriteFileToString(outAsmFilename, outContent)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ERROR: Failed to write out-content to file: %s\n", err)
 		os.Exit(1)
@@ -50,9 +52,16 @@ func main() {
 
 	fmt.Println("[INFO] Calling flat assembler ...")
 
-	err = exec.Command("fasm", outFilename).Run()
+	err = exec.Command("fasm", outAsmFilename).Run()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ERROR: Failed to run fasm: %s\n", err)
 		os.Exit(1)
+	}
+
+	fmt.Printf("[INFO] Renaming binary-file %s -> %s ...\n", outFilename, outBinaryFilename)
+
+	err = os.Rename(outFilename, outBinaryFilename)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR: Failed to rename %s to %s\n", outFilename, outFilename + ".out")
 	}
 }

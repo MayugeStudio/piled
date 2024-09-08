@@ -32,7 +32,7 @@ func readFile(programPath string) (string, error) {
 	return string(bytes), nil
 }
 
-func lexSourceIntoOPs(source string) ([]*OP, error) {
+func lexSourceIntoOPs(filename string, source string) ([]*OP, error) {
 	ops := make([]*OP, 0)
 	lines := strings.Split(source, "\n")
 
@@ -53,7 +53,7 @@ func lexSourceIntoOPs(source string) ([]*OP, error) {
 			if isSpace || isEndOfLine {
 				op, err := newOP(val, newLocation(row+1, start_col+1))
 				if err != nil {
-					return nil, err
+					return nil, newLexerError(filename, newLocation(row+1, start_col+1), err)
 				}
 				start_col = col + 1
 				ops = append(ops, op)
@@ -70,9 +70,9 @@ func LexProgram(programPath string) ([]*OP, error) {
 		return nil, err
 	}
 
-	ops, err := lexSourceIntoOPs(source)
+	ops, err := lexSourceIntoOPs(programPath, source)
 	if err != nil {
-		return nil, fmt.Errorf("%s:%s", programPath, err)
+		return nil, err
 	}
 
 	return ops, nil

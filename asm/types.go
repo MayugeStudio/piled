@@ -52,7 +52,7 @@ func nameToOPType(name string) (OPType, error) {
 func newOP(value string, loc Location) (*OP, error) {
 	opType, err := nameToOPType(value)
 	if err != nil {
-		return nil, fmt.Errorf("%d:%d: unknown builtin word `%s`", loc.Row, loc.Col, value)
+		return nil, fmt.Errorf("unknown word `%s`", value)
 	}
 	if opType == OP_PUSH_INT {
 		v, err := strconv.Atoi(value)
