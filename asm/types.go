@@ -1,8 +1,8 @@
 package asm
 
 import (
-	"strconv"
 	"fmt"
+	"strconv"
 )
 
 type OPType int
@@ -61,8 +61,8 @@ func newOP(value string, loc Location) (*OP, error) {
 		}
 
 		return &OP{
-			Type: opType,
-			Loc:  loc,
+			Type:  opType,
+			Loc:   loc,
 			Value: v,
 		}, nil
 	}
@@ -71,4 +71,3 @@ func newOP(value string, loc Location) (*OP, error) {
 		Loc:  loc,
 	}, nil
 }
-

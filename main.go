@@ -5,9 +5,9 @@ import (
 
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
-	"os/exec"
 )
 
 const DebugMode = true
@@ -52,7 +52,7 @@ func main() {
 
 	err = exec.Command("fasm", outFilename).Run()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "ERROR: Failed to run fasm: %s\n" , err)
+		fmt.Fprintf(os.Stderr, "ERROR: Failed to run fasm: %s\n", err)
 		os.Exit(1)
 	}
 }

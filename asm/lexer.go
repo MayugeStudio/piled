@@ -6,7 +6,6 @@ import (
 	"strings"
 )
 
-
 type lexerError struct {
 	Filename string
 	Loc      Location
@@ -78,4 +77,3 @@ func LexProgram(programPath string) ([]*OP, error) {
 
 	return ops, nil
 }
-

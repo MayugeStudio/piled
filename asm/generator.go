@@ -1,41 +1,10 @@
 package asm
 
 import (
-	"strings"
 	"fmt"
 	"os"
+	"strings"
 )
-
-func writeDump(b *strings.Builder) {
-    b.WriteString("dump:\n")
-	b.WriteString("    mov     r8, -3689348814741910323\n")
-    b.WriteString("    sub     rsp, 40\n")
-    b.WriteString("    mov     BYTE [rsp+31], 10\n")
-    b.WriteString("    lea     rcx, [rsp+30]\n")
-	b.WriteString(".L2:\n")
-    b.WriteString("    mov     rax, rdi\n")
-    b.WriteString("    mul     r8\n")
-    b.WriteString("    mov     rax, rdi\n")
-    b.WriteString("    shr     rdx, 3\n")
-    b.WriteString("    lea     rsi, [rdx+rdx*4]\n")
-    b.WriteString("    add     rsi, rsi\n")
-    b.WriteString("    sub     rax, rsi\n")
-	b.WriteString("    mov     rsi, rcx\n")
-	b.WriteString("    sub     rcx, 1\n")
-    b.WriteString("    add     eax, 48\n")
-    b.WriteString("    mov     BYTE [rcx+1], al\n")
-    b.WriteString("    mov     rax, rdi\n")
-    b.WriteString("    mov     rdi, rdx\n")
-    b.WriteString("    cmp     rax, 9\n")
-    b.WriteString("    ja      .L2\n")
-    b.WriteString("    lea     rdx, [rsp+32]\n")
-    b.WriteString("    mov     edi, 1\n")
-	b.WriteString("    sub     rdx, rsi\n")
-    b.WriteString("    mov     rax, 1\n")
-	b.WriteString("    syscall\n")
-    b.WriteString("    add     rsp, 40\n")
-    b.WriteString("    ret\n")
-}
 
 func GenerateLines(ops []*OP) (string, error) {
 	b := strings.Builder{}
@@ -80,7 +49,7 @@ func WriteFileToString(filePath string, content string) error {
 	if err != nil {
 		return fmt.Errorf("failed to create output file: %s", err)
 	}
-	
+
 	_, err = file.WriteString(content)
 	if err != nil {
 		return err
@@ -89,3 +58,33 @@ func WriteFileToString(filePath string, content string) error {
 	return nil
 }
 
+func writeDump(b *strings.Builder) {
+	b.WriteString("dump:\n")
+	b.WriteString("    mov     r8, -3689348814741910323\n")
+	b.WriteString("    sub     rsp, 40\n")
+	b.WriteString("    mov     BYTE [rsp+31], 10\n")
+	b.WriteString("    lea     rcx, [rsp+30]\n")
+	b.WriteString(".L2:\n")
+	b.WriteString("    mov     rax, rdi\n")
+	b.WriteString("    mul     r8\n")
+	b.WriteString("    mov     rax, rdi\n")
+	b.WriteString("    shr     rdx, 3\n")
+	b.WriteString("    lea     rsi, [rdx+rdx*4]\n")
+	b.WriteString("    add     rsi, rsi\n")
+	b.WriteString("    sub     rax, rsi\n")
+	b.WriteString("    mov     rsi, rcx\n")
+	b.WriteString("    sub     rcx, 1\n")
+	b.WriteString("    add     eax, 48\n")
+	b.WriteString("    mov     BYTE [rcx+1], al\n")
+	b.WriteString("    mov     rax, rdi\n")
+	b.WriteString("    mov     rdi, rdx\n")
+	b.WriteString("    cmp     rax, 9\n")
+	b.WriteString("    ja      .L2\n")
+	b.WriteString("    lea     rdx, [rsp+32]\n")
+	b.WriteString("    mov     edi, 1\n")
+	b.WriteString("    sub     rdx, rsi\n")
+	b.WriteString("    mov     rax, 1\n")
+	b.WriteString("    syscall\n")
+	b.WriteString("    add     rsp, 40\n")
+	b.WriteString("    ret\n")
+}
