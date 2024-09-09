@@ -17,12 +17,12 @@ type Location struct {
 type TokenType int
 
 const (
-	Token_PUSH_INT TokenType = iota + 1
+	Token_INVALID TokenType = iota
+	Token_PUSH_INT
 	Token_ADD
 	Token_SUB
 	Token_EQUAL
 	Token_PRINT
-	Token_INVALID
 )
 
 type Token struct {
@@ -176,6 +176,7 @@ func GenerateAssemblyCode(ops []*Token) (string, error) {
 	b.WriteString("    syscall\n")
 	b.WriteString("    add     rsp, 40\n")
 	b.WriteString("    ret\n")
+	b.WriteString("\n")
 
 	// Header
 	b.WriteString("entry _start\n")
@@ -249,7 +250,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Lexing 
+	// Lexing
 	ops, err := LexProgram(inputPath, source)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
@@ -274,14 +275,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Calling Fasm
+	// Calling Fasm assembler
 	fmt.Println("[INFO] Calling flat assembler ...")
 	err = exec.Command("fasm", outAsmFilePath).Run()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ERROR: failed to run fasm: %s\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Renaming output file
 	fmt.Printf("[INFO] Renaming binary-file %s -> %s ...\n", outFilePath, outBinaryFilePath)
 	err = os.Rename(outFilePath, outBinaryFilePath)
