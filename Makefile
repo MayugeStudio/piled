@@ -1,4 +1,6 @@
-piled.out: main.go asm/generator.go asm/lexer.go
+.PHONY: fmt test
+
+piled.out: main.go
 	go build -o piled.out .
 
 fmt:
@@ -9,6 +11,6 @@ cover:
 	go tool cover -html=cover.out -o cover.html
 	explorer.exe cover.html
 
-ex: piled.out
-	./piled.out examples/basic-inst.piled
+test: piled.out
+	./test.py
 	
