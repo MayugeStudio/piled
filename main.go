@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
-	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -148,7 +146,7 @@ func main() {
 	programName := args[0] // TODO: Introduce some sort of arguments operating function
 	if len(args) < 2 {
 		fmt.Fprintf(os.Stderr, "Usage: %s <input-file>\n", programName)
-		fmt.Fprintf(os.Stderr, "ERROR: input file was not provided\n")
+		fmt.Fprintf(os.Stderr, "ERROR: input file is not provided\n")
 		os.Exit(1)
 	}
 
@@ -168,5 +166,6 @@ func main() {
 		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
 		os.Exit(1)
 	}
+	fmt.Println(ops)
 }
 
