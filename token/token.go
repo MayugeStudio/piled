@@ -1,20 +1,21 @@
 package token
 
+import "piled/utils"
 
 type TokenType int
 
 const (
-	Token_INVALID TokenType = iota
-	Token_PUSH_INT
-	Token_ADD
-	Token_SUB
-	Token_EQUAL
-	Token_PRINT
+	T_ADD = iota
+	T_SUB
+	T_EQUAL
+	T_PRINT
+	T_LPAREN
+	T_RPAREN
 )
 
 type Token struct {
 	Type  TokenType
-	Loc   Location
+	Loc   utils.Location
 	Value int
 }
 

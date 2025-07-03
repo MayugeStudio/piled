@@ -1,6 +1,13 @@
 package scanner
 
-func LexProgram(programPath string, source string) ([]*Token, error) {
+import (
+	"strings"
+	"fmt"
+	"piled/utils"
+	"piled/token"
+)
+
+func LexProgram(programPath string, source string) ([]*token.Token, error) {
 	ops, err := lexSourceIntoTokens(programPath, source)
 	if err != nil {
 		return nil, err
@@ -8,8 +15,8 @@ func LexProgram(programPath string, source string) ([]*Token, error) {
 	return ops, nil
 }
 
-func lexSourceIntoTokens(filepath string, source string) ([]*Token, error) {
-	ops := make([]*Token, 0)
+func lexSourceIntoTokens(filepath string, source string) ([]*token.Token, error) {
+	ops := make([]*token.Token, 0)
 	lines := strings.Split(source, "\n")
 
 	for row, line := range lines {
@@ -27,8 +34,8 @@ func lexSourceIntoTokens(filepath string, source string) ([]*Token, error) {
 			}
 
 			if isSpace || isEndOfLine {
-				loc := Location{Row: row + 1, Col: start_col + 1}
-				op, err := lexWord(filepath, val, loc)
+				loc := utils.Location{Row: row + 1, Col: start_col + 1}
+				op, err := lexLiteralIntoToken(filepath, val, loc)
 				if err != nil {
 					return nil, err
 				}
@@ -41,25 +48,16 @@ func lexSourceIntoTokens(filepath string, source string) ([]*Token, error) {
 	return ops, nil
 }
 
-func lexWord(filepath string, value string, loc Location) (*Token, error) {
-	opType, err := nameToTokenType(value)
-	switch value {
-		case
-	}
-	if opType == Token_PUSH_INT {
-		v, err := strconv.Atoi(value)
-		if err != nil {
-			return nil, err
+func lexLiteralIntoToken(filepath string, literal string, loc utils.Location) (*token.Token, error) {
+	switch literal {
+		case "(": {
+			return &token.Token{ Type: token.T_LPAREN, Loc: loc }, nil
 		}
-
-		return &Token{
-			Type:  opType,
-			Loc:   loc,
-			Value: v,
-		}, nil
+		case ")": {
+			return &token.Token{ Type: token.T_RPAREN, Loc: loc }, nil
+		}
+		default: {
+			return nil, fmt.Errorf("invalid token: %s", literal)
+		}
 	}
-	return &Token{
-		Type: opType,
-		Loc:  loc,
-	}, nil
 }

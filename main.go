@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
-	"strings"
+	"piled/utils"
+	"piled/scanner"
 )
 
 func main() {
@@ -20,14 +20,14 @@ func main() {
 	inputPath := args[0]
 
 	// Reading input file
-	source, err := readFile(inputPath)
+	source, err := utils.ReadFile(inputPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ERROR: could not read source file from `%s`: %s\n", inputPath, err)
 		os.Exit(1)
 	}
 
 	// Lexing
-	ops, err := LexProgram(inputPath, source)
+	ops, err := scanner.LexProgram(inputPath, source)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
 		os.Exit(1)
