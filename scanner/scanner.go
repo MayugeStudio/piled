@@ -7,15 +7,7 @@ import (
 	"piled/token"
 )
 
-func LexProgram(programPath string, source string) ([]*token.Token, error) {
-	ops, err := lexSourceIntoTokens(programPath, source)
-	if err != nil {
-		return nil, err
-	}
-	return ops, nil
-}
-
-func lexSourceIntoTokens(filepath string, source string) ([]*token.Token, error) {
+func LexProgram(filepath string, source string) ([]*token.Token, error) {
 	ops := make([]*token.Token, 0)
 	lines := strings.Split(source, "\n")
 
