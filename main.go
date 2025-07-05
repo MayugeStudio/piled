@@ -27,7 +27,7 @@ func main() {
 	}
 
 	// Lexing
-	ops, err := scanner.LexProgram(inputPath, source)
+	ops, err := scanner.ScanProgram(source)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
 		os.Exit(1)
