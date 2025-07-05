@@ -1,55 +1,58 @@
 package scanner
 
 import (
-	"strings"
 	"fmt"
-	"piled/utils"
 	"piled/token"
 )
 
-func LexProgram(filepath string, source string) ([]*token.Token, error) {
-	ops := make([]*token.Token, 0)
-	lines := strings.Split(source, "\n")
+type ScanContext struct {
+	line int
+	index int
+	source string
+	current rune
+}
 
-	for row, line := range lines {
-		val := ""
-		start_col := 0
-		line_length := len(line)
-		for col := 0; col < line_length; col++ {
-			char := line[col]
-			isEndOfLine := col == line_length-1
-			isSpace := char == ' '
-			isComma := char == ','
+func isAlpha(c rune) bool {
+	return (c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')
+}
 
-			if !isSpace && !isComma {
-				val += string(char)
+func ScanProgram(source string) ([]*token.Token, error) {
+	result := make([]*token.Token, 0)
+
+	i := 0
+
+	for i < len(source) {
+		b := source[i]
+		switch b {
+			case '(': {
+				token := &token.Token{ Type: token.LPAREN }
+				result = append(result, token)
 			}
-
-			if isSpace || isEndOfLine {
-				loc := utils.Location{Row: row + 1, Col: start_col + 1}
-				op, err := lexLiteralIntoToken(filepath, val, loc)
-				if err != nil {
-					return nil, err
+			case ')': {
+				token := &token.Token{ Type: token.RPAREN }
+				result = append(result, token)
+			}
+			case ' ' : {} // ignore
+			default: {
+				if isAlpha(rune(b)) { 
+					start := i
+					for i + 1 < len(source) {
+						if isAlpha(rune(source[i+1])) {
+							i += 1
+						} else {
+							token := &token.Token{ Type: token.LITERAL, Value: string(source[start:i+1])}
+							result = append(result, token)
+							break
+						}
+					}
+				} else {
+					return nil, fmt.Errorf("got unknown literal: %c", rune(b))
 				}
-				start_col = col + 1
-				ops = append(ops, op)
-				val = ""
 			}
 		}
+		i += 1
 	}
-	return ops, nil
+
+	return result, nil
 }
 
-func lexLiteralIntoToken(filepath string, literal string, loc utils.Location) (*token.Token, error) {
-	switch literal {
-		case "(": {
-			return &token.Token{ Type: token.T_LPAREN, Loc: loc }, nil
-		}
-		case ")": {
-			return &token.Token{ Type: token.T_RPAREN, Loc: loc }, nil
-		}
-		default: {
-			return nil, fmt.Errorf("invalid token: %s", literal)
-		}
-	}
-}
