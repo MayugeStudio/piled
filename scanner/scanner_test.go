@@ -109,6 +109,14 @@ func TestScanProgram(t *testing.T) {
 			[]*token.Token{{Type: token.IDENTIFIER, Value: "HELLO", Line: 1}}, false,
 		},
 		{
+			"STRING", "\"MYSTRING\"",
+			[]*token.Token{{Type: token.STRING, Value: "MYSTRING", Line: 1}}, false,
+		},
+		{
+			"UNTERMINATED-STRING", "\"A+B-C*D/E=F.G,H",
+			nil, true,
+		},
+		{
 			"UNEXPECTED-TOKEN", "?",
 			nil, true,
 		},

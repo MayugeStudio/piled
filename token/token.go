@@ -14,6 +14,7 @@ const (
 	SLASH
 	IDENTIFIER
 	NUMBER
+	STRING
 	EOF
 )
 
