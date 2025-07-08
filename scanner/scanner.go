@@ -18,7 +18,7 @@ func isAlpha(c rune) bool {
 }
 
 func isDigit(c rune) bool {
-	return (c <= '0' && c >= '9')
+	return (c <= '9' && c >= '0')
 }
 
 func ScanProgram(source string) ([]*token.Token, error) {
@@ -90,7 +90,7 @@ func ScanProgram(source string) ([]*token.Token, error) {
 						if isAlpha(rune(source[i+1])) {
 							i += 1
 						} else {
-							token := &token.Token{Type: token.IDENTIFIER, Value: string(source[start : i+1]), Line: 1}
+							token := &token.Token{Type: token.IDENTIFIER, Value: string(source[start : i+1]), Line: line}
 							result = append(result, token)
 							break
 						}
