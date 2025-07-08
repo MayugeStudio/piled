@@ -18,7 +18,7 @@ const (
 )
 
 type Token struct {
-	Type   TokenType
-	Value  any
-	Line   int
+	Type  TokenType
+	Value any
+	Line  int
 }

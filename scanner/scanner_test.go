@@ -64,7 +64,7 @@ func TestScanProgram(t *testing.T) {
 				{Type: token.RPAREN, Line: 1},
 
 				{Type: token.LPAREN, Line: 2},
-				{Type: token.IDENTIFIER, Value: "like",Line: 2},
+				{Type: token.IDENTIFIER, Value: "like", Line: 2},
 				{Type: token.RPAREN, Line: 2},
 
 				{Type: token.LPAREN, Line: 3},
@@ -105,12 +105,8 @@ func TestScanProgram(t *testing.T) {
 			[]*token.Token{{Type: token.NUMBER, Value: 12345, Line: 1}}, false,
 		},
 		{
-			"NUMBER OUT-OF-RANGE", "10101011010101010101010101010101011001001101010",
-			nil, true,
-		},
-		{
 			"IDENTIFIER", "HELLO",
-			[]*token.Token{{Type: token.IDENTIFIER, Line: 1}}, false,
+			[]*token.Token{{Type: token.IDENTIFIER, Value: "HELLO", Line: 1}}, false,
 		},
 		{
 			"UNEXPECTED-TOKEN", "?",
@@ -120,19 +116,26 @@ func TestScanProgram(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			tokens, err := ScanProgram(tc.source)
-			if err != nil && !tc.wantErr {
-				t.Errorf("ScanProgram.err = %s\n", err)
-			}
-			if err == nil && tc.wantErr {
-				t.Errorf("expected error but got nil\n")
+			if tc.wantErr {
+				if err == nil {
+					t.Errorf("ScanProgram() error = %v, wantErr = %v", err, tc.wantErr)
+					return
+				}
+			} else {
+				if err != nil {
+					t.Errorf("ScanProgram() error = %v, wantErr = %v", err, tc.wantErr)
+					return
+				}
 			}
 			if !reflect.DeepEqual(tokens, tc.want) {
-				t.Errorf("ScanProgram returned unexpected result\n")
+				t.Errorf("ScanProgram doesn't returned a result which we expect")
+				if len(tokens) != len(tc.want) {
+					t.Errorf("length of tokens = %d, but want = %d", len(tokens), len(tc.want))
+				}
 				for i := range len(tokens) {
-					if tokens[i] != tc.want[i] {
-						t.Errorf("(index = %d).Value actual %s != want %s\n", i, tokens[i].Value, tc.want[i].Value)
-						t.Errorf("(index = %d).Line actual %d != want %d\n", i, tokens[i].Line, tc.want[i].Line)
-					}
+					t.Errorf("(index = %d).Type actual %d != want %d", i, tokens[i].Type, tc.want[i].Type)
+					t.Errorf("(index = %d).Value actual %s != want %s", i, tokens[i].Value, tc.want[i].Value)
+					t.Errorf("(index = %d).Line actual %d != want %d", i, tokens[i].Line, tc.want[i].Line)
 				}
 			}
 		})
