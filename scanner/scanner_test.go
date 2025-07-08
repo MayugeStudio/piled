@@ -57,7 +57,7 @@ func TestScanProgram(t *testing.T) {
 			}, false,
 		},
 		{
-			"Multiple lines with varius type of tokens", "(I)\n(like)\n(golang)\n",
+			"Multiple lines with various type of tokens", "(I)\n(like)\n(golang)\n",
 			[]*token.Token{
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.IDENTIFIER, Value: "I", Line: 1},
