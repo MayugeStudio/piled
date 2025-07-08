@@ -20,19 +20,59 @@ func ScanProgram(source string) ([]*token.Token, error) {
 	result := make([]*token.Token, 0)
 
 	i := 0
+	line := 1
 
 	for i < len(source) {
 		b := source[i]
 		switch b {
 		case '(':
 			{
-				token := &token.Token{Type: token.LPAREN}
+				token := &token.Token{Type: token.LPAREN, Line: line}
 				result = append(result, token)
 			}
 		case ')':
 			{
-				token := &token.Token{Type: token.RPAREN}
+				token := &token.Token{Type: token.RPAREN, Line: line}
 				result = append(result, token)
+			}
+		case '.':
+			{
+				token := &token.Token{Type: token.DOT, Line: line}
+				result = append(result, token)
+			}
+		case ',':
+			{
+				token := &token.Token{Type: token.COMMA, Line: line}
+				result = append(result, token)
+			}
+		case '=':
+			{
+				token := &token.Token{Type: token.EQUAL, Line: line}
+				result = append(result, token)
+			}
+		case '+':
+			{
+				token := &token.Token{Type: token.PLUS, Line: line}
+				result = append(result, token)
+			}
+		case '-':
+			{
+				token := &token.Token{Type: token.MINUS, Line: line}
+				result = append(result, token)
+			}
+		case '*':
+			{
+				token := &token.Token{Type: token.ASTERISK, Line: line}
+				result = append(result, token)
+			}
+		case '/':
+			{
+				token := &token.Token{Type: token.SLASH, Line: line}
+				result = append(result, token)
+			}
+		case '\n':
+			{
+				line += 1
 			}
 		case ' ':
 			{
@@ -45,7 +85,7 @@ func ScanProgram(source string) ([]*token.Token, error) {
 						if isAlpha(rune(source[i+1])) {
 							i += 1
 						} else {
-							token := &token.Token{Type: token.LITERAL, Value: string(source[start : i+1])}
+							token := &token.Token{Type: token.LITERAL, Value: string(source[start : i+1]), Line: 1}
 							result = append(result, token)
 							break
 						}
