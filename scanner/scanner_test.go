@@ -1,20 +1,20 @@
 package scanner
 
 import (
-	"testing"
 	"reflect"
+	"testing"
 
 	"piled/token"
 )
 
 func TestScanProgram(t *testing.T) {
 	tests := []struct {
-		name    string
-		source  string
-		want    []*token.Token
+		name   string
+		source string
+		want   []*token.Token
 	}{
 		{
-			"Parentheses", "()", 
+			"Parentheses", "()",
 			[]*token.Token{
 				{Type: token.LPAREN},
 				{Type: token.RPAREN},
@@ -46,7 +46,7 @@ func TestScanProgram(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T){
+		t.Run(tc.name, func(t *testing.T) {
 			tokens, err := ScanProgram(tc.source)
 			if err != nil {
 				t.Errorf("ScanProgram.err = %s\n", err)

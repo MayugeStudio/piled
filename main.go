@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"piled/utils"
 	"piled/scanner"
+	"piled/utils"
 )
 
 func main() {
@@ -34,4 +34,3 @@ func main() {
 	}
 	fmt.Println(ops)
 }
-

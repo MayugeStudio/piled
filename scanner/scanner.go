@@ -6,9 +6,9 @@ import (
 )
 
 type ScanContext struct {
-	line int
-	index int
-	source string
+	line    int
+	index   int
+	source  string
 	current rune
 }
 
@@ -24,23 +24,28 @@ func ScanProgram(source string) ([]*token.Token, error) {
 	for i < len(source) {
 		b := source[i]
 		switch b {
-			case '(': {
-				token := &token.Token{ Type: token.LPAREN }
+		case '(':
+			{
+				token := &token.Token{Type: token.LPAREN}
 				result = append(result, token)
 			}
-			case ')': {
-				token := &token.Token{ Type: token.RPAREN }
+		case ')':
+			{
+				token := &token.Token{Type: token.RPAREN}
 				result = append(result, token)
 			}
-			case ' ' : {} // ignore
-			default: {
-				if isAlpha(rune(b)) { 
+		case ' ':
+			{
+			} // ignore
+		default:
+			{
+				if isAlpha(rune(b)) {
 					start := i
-					for i + 1 < len(source) {
+					for i+1 < len(source) {
 						if isAlpha(rune(source[i+1])) {
 							i += 1
 						} else {
-							token := &token.Token{ Type: token.LITERAL, Value: string(source[start:i+1])}
+							token := &token.Token{Type: token.LITERAL, Value: string(source[start : i+1])}
 							result = append(result, token)
 							break
 						}
@@ -55,4 +60,3 @@ func ScanProgram(source string) ([]*token.Token, error) {
 
 	return result, nil
 }
-
