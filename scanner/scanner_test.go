@@ -29,10 +29,10 @@ func TestScanProgram(t *testing.T) {
 			}, false,
 		},
 		{
-			"Parentheses with a literal", "(hello)",
+			"Parentheses with an identifier", "(hello)",
 			[]*token.Token{
 				{Type: token.LPAREN, Line: 1},
-				{Type: token.LITERAL, Value: "hello", Line: 1},
+				{Type: token.IDENTIFIER, Value: "hello", Line: 1},
 				{Type: token.RPAREN, Line: 1},
 			}, false,
 		},
@@ -43,6 +43,33 @@ func TestScanProgram(t *testing.T) {
 				{Type: token.RPAREN, Line: 1},
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.RPAREN, Line: 1},
+			}, false,
+		},
+		{
+			"Multiple lines", "()\n()\n()\n",
+			[]*token.Token{
+				{Type: token.LPAREN, Line: 1},
+				{Type: token.RPAREN, Line: 1},
+				{Type: token.LPAREN, Line: 2},
+				{Type: token.RPAREN, Line: 2},
+				{Type: token.LPAREN, Line: 3},
+				{Type: token.RPAREN, Line: 3},
+			}, false,
+		},
+		{
+			"Multiple lines with varius type of tokens", "(I)\n(like)\n(golang)\n",
+			[]*token.Token{
+				{Type: token.LPAREN, Line: 1},
+				{Type: token.IDENTIFIER, Value: "I", Line: 1},
+				{Type: token.RPAREN, Line: 1},
+
+				{Type: token.LPAREN, Line: 2},
+				{Type: token.IDENTIFIER, Value: "like",Line: 2},
+				{Type: token.RPAREN, Line: 2},
+
+				{Type: token.LPAREN, Line: 3},
+				{Type: token.IDENTIFIER, Value: "golang", Line: 3},
+				{Type: token.RPAREN, Line: 3},
 			}, false,
 		},
 		{
@@ -72,6 +99,18 @@ func TestScanProgram(t *testing.T) {
 		{
 			"SLASH", "/",
 			[]*token.Token{{Type: token.SLASH, Line: 1}}, false,
+		},
+		{
+			"NUMBER", "12345",
+			[]*token.Token{{Type: token.NUMBER, Value: 12345, Line: 1}}, false,
+		},
+		{
+			"NUMBER OUT-OF-RANGE", "10101011010101010101010101010101011001001101010",
+			nil, true,
+		},
+		{
+			"IDENTIFIER", "HELLO",
+			[]*token.Token{{Type: token.IDENTIFIER, Line: 1}}, false,
 		},
 		{
 			"UNEXPECTED-TOKEN", "?",

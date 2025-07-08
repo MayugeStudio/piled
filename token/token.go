@@ -12,11 +12,13 @@ const (
 	MINUS
 	ASTERISK
 	SLASH
-	LITERAL
+	IDENTIFIER
+	NUMBER
+	EOF
 )
 
 type Token struct {
-	Type  TokenType
-	Value string
-	Line  int
+	Type   TokenType
+	Value  any
+	Line   int
 }
