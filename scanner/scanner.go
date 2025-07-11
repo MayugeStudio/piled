@@ -85,11 +85,11 @@ func ScanProgram(source string) ([]*token.Token, error) {
 			{
 				i += 1 // consume a double quote
 				start := i
-				for i+1 < len(source) && isAlpha(rune(source[i+1])) {
+				for rune(source[i+1]) != '"' {
 					i += 1
-				}
-				if source[i+1] != '"' {
-					return nil, fmt.Errorf("unterminated string %d, len(source)=%d", i, len(source))
+					if i >= len(source)-1 {
+						return nil, fmt.Errorf("unterminated string %d, len(source)=%d", i, len(source))
+					}
 				}
 				token := &token.Token{Type: token.STRING, Value: source[start : i+1], Line: line}
 				result = append(result, token)
