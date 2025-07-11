@@ -105,7 +105,7 @@ func TestScanProgram(t *testing.T) {
 			[]*token.Token{{Type: token.NUMBER, Value: 12345, Line: 1}}, false,
 		},
 		{
-			"NUMBER", "69 420",
+			"TWO NUMBERS", "69 420",
 			[]*token.Token{
 				{Type: token.NUMBER, Value: 69, Line: 1},
 				{Type: token.NUMBER, Value: 420, Line: 1},
@@ -127,7 +127,7 @@ func TestScanProgram(t *testing.T) {
 			[]*token.Token{{Type: token.STRING, Value: "MYSTRING", Line: 1}}, false,
 		},
 		{
-			"DOUBLE STRING", "\"MYSTRING\" \"MYSTRING\"",
+			"TWO STRINGS", "\"MYSTRING\" \"MYSTRING\"",
 			[]*token.Token{
 				{Type: token.STRING, Value: "MYSTRING", Line: 1},
 				{Type: token.STRING, Value: "MYSTRING", Line: 1},
