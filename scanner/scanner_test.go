@@ -105,12 +105,64 @@ func TestScanProgram(t *testing.T) {
 			[]*token.Token{{Type: token.NUMBER, Value: 12345, Line: 1}}, false,
 		},
 		{
+			"NUMBER", "69 420",
+			[]*token.Token{
+				{Type: token.NUMBER, Value: 69, Line: 1},
+				{Type: token.NUMBER, Value: 420, Line: 1},
+			}, false,
+		},
+		{
 			"IDENTIFIER", "HELLO",
 			[]*token.Token{{Type: token.IDENTIFIER, Value: "HELLO", Line: 1}}, false,
 		},
 		{
+			"DOUBLE IDENTIFIER", "HELLO HELLO",
+			[]*token.Token{
+				{Type: token.IDENTIFIER, Value: "HELLO", Line: 1},
+				{Type: token.IDENTIFIER, Value: "HELLO", Line: 1},
+			}, false,
+		},
+		{
 			"STRING", "\"MYSTRING\"",
 			[]*token.Token{{Type: token.STRING, Value: "MYSTRING", Line: 1}}, false,
+		},
+		{
+			"DOUBLE STRING", "\"MYSTRING\" \"MYSTRING\"",
+			[]*token.Token{
+				{Type: token.STRING, Value: "MYSTRING", Line: 1},
+				{Type: token.STRING, Value: "MYSTRING", Line: 1},
+			}, false,
+		},
+		{
+			"PRINT STRING", "(\"HELLO WORLD\" print)",
+			[]*token.Token{
+				{Type: token.LPAREN, Line: 1},
+				{Type: token.STRING, Value: "HELLO WORLD", Line: 1},
+				{Type: token.IDENTIFIER, Value: "print", Line: 1},
+				{Type: token.RPAREN, Line: 1},
+			}, false,
+		},
+		{
+			"PRINT NUMBER", "(69 print)",
+			[]*token.Token{
+				{Type: token.LPAREN, Line: 1},
+				{Type: token.NUMBER, Value: 69, Line: 1},
+				{Type: token.IDENTIFIER, Value: "print", Line: 1},
+				{Type: token.RPAREN, Line: 1},
+			}, false,
+		},
+		{
+			"PRINT NESTED", "((3 5 +) print)",
+			[]*token.Token{
+				{Type: token.LPAREN, Line: 1},
+				{Type: token.LPAREN, Line: 1},
+				{Type: token.NUMBER, Value: 3, Line: 1},
+				{Type: token.NUMBER, Value: 5, Line: 1},
+				{Type: token.PLUS, Line: 1},
+				{Type: token.RPAREN, Line: 1},
+				{Type: token.IDENTIFIER, Value: "print", Line: 1},
+				{Type: token.RPAREN, Line: 1},
+			}, false,
 		},
 		{
 			"UNTERMINATED-STRING", "\"A+B-C*D/E=F.G,H",
