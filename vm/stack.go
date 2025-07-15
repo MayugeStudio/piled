@@ -1,9 +1,9 @@
-package stack
+package vm
 
 type Stack []int
 
-func New(cap int) Stack {
-	return make(Stack, 0, 64)
+func NewStack() Stack {
+	return make(Stack, 0, 0)
 }
 
 func (s *Stack) Len() int {

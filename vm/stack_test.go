@@ -1,35 +1,28 @@
-package stack
+package vm
 
 import "testing"
 
-func TestStackNew(t *testing.T) {
-	in := 64
-	want := 64
-	stack := New(in)
-
-	length := len(stack)
-	if length != 0 {
-		t.Errorf("TestNew() wanted 0, but got %d", length)
-		return
+func TestNewStack(t *testing.T) {
+	stack := NewStack()
+	if len(stack) != 0 {
+		t.Errorf("NewStack() len has to be 0, but got %d", len(stack))
 	}
+	if cap(stack) != 0 {
+		t.Errorf("NewStack() cap has to be 0, but got %d", cap(stack))
 
-	capacity := cap(stack)
-	if capacity != want {
-		t.Errorf("TestNew() wanted %d, but got %d", want, capacity)
-		return
 	}
 }
 
 func TestStackLen(t *testing.T) {
 	in := []int{1, 2, 3, 4, 5, 6}
 	want := 6
-	stack := New(32)
+	stack := NewStack()
 	for _, v := range in {
 		stack.Push(v)
 	}
 
 	if stack.Len() != want {
-		t.Errorf("TestNew() wanted %d, but got %d", want, stack.Len())
+		t.Errorf("TestNewStack() wanted %d, but got %d", want, stack.Len())
 		return
 	}
 }
@@ -56,7 +49,7 @@ func TestStackPush(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			stack := New(32)
+			stack := NewStack()
 			for _, v := range tc.in {
 				stack.Push(v)
 			}
@@ -84,7 +77,7 @@ func TestStackPop(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			stack := New(32)
+			stack := NewStack()
 			for _, v := range tc.in {
 				stack.Push(v)
 			}
