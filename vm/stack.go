@@ -19,10 +19,11 @@ func (s *Stack) Pop() (int, bool) {
 		return 0, false
 	}
 
-	index := len(*s) - 1
-	element := (*s)[index] // Get the index of the top element
+ // get a top element
+	l := len(*s)
+	element := (*s)[l-1]
 
-	(*s) = (*s)[:index]
+	(*s) = (*s)[:l-1]
 
 	return element, true
 }

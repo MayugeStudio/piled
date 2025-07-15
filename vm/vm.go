@@ -2,13 +2,21 @@ package vm
 
 import "piled/vm/stack"
 
+type OpType string
+
+const (
+	OpInvalid OpType = "invalid"
+	OpPush    OpType = "push"
+	OpPop     OpType = "pop"
+)
+
 type PiledVM struct {
-	st     stack.Stack
-	logger PiledVMLogger
+	inner     Stack
 }
 
-func New(logger PiledVMLogger) *PiledVM {
+func New() *PiledVM {
 	return &PiledVM{
-		st: stack.New(32),
+		inner: New(),
 	}
 }
+
