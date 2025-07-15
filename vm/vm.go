@@ -1,7 +1,7 @@
 package vm
 
 type PiledVM struct {
-	inner     Stack
+	inner Stack
 }
 
 func NewVM() *PiledVM {
@@ -9,4 +9,3 @@ func NewVM() *PiledVM {
 		inner: NewStack(),
 	}
 }
-
