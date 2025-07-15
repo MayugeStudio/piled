@@ -1,5 +1,6 @@
 package token
 
+// TODO: move token to scanner package
 type TokenType int
 
 const (
