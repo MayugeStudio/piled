@@ -6,13 +6,6 @@ import (
 	"strconv"
 )
 
-type ScanContext struct {
-	line    int
-	index   int
-	source  string
-	current rune
-}
-
 func isAlpha(c rune) bool {
 	return (c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')
 }
