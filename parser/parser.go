@@ -44,19 +44,22 @@ func (p *Parser) peek() {
 }
 
 func (p *Parser) parseList(list *expr.List) error {
-	// (0 1 2 3 4 5)
 	if p.currentToken.Type != token.LPAREN {
 		return fmt.Errorf("Expected '('.")
 	}
-	for p.peek(); p.peekToken.Type != token.RPAREN;{
+	for {
+		p.peek()
+		if p.peekToken.Type == token.RPAREN {
+			break
+		}
 		p.advance()
 		switch p.currentToken.Type {
 		case token.IDENTIFIER, token.NUMBER, token.STRING: {
-			e := &expr.Literal{}
+			e := &expr.Literal{Value: p.currentToken.Value}
 			list.Elements = append(list.Elements, e)
 		}
 		default: {
-			return fmt.Errorf("Unexpected token '%s'", p.currentToken.Value)
+			return fmt.Errorf("Unexpected token '%s:%s'", p.currentToken.String(), p.currentToken.Value)
 		}
 		}
 	}
