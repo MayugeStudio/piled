@@ -1,36 +1,44 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"piled/scanner"
-	"piled/utils"
+	"piled/parser"
 )
 
 func main() {
-	args := os.Args
-	programName := args[0] // TODO: Introduce some sort of arguments operating function
-	if len(args) < 2 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <input-file>\n", programName)
-		fmt.Fprintf(os.Stderr, "ERROR: input file is not provided\n")
-		os.Exit(1)
-	}
+	s := bufio.NewScanner(os.Stdin)
 
-	args = args[1:]
-	inputPath := args[0]
+	cmd:
+	for {
+		fmt.Print("piled> ")
+		if !s.Scan() {
+			break
+		}
+		prompt := s.Text()
+		switch prompt {
+		case "exit": {
+			fmt.Println("bye!")
+			break cmd
+		}
+		default: {
+			tokens, scanErr := scanner.ScanProgram(prompt)
+			if scanErr != nil {
+				fmt.Fprintf(os.Stderr, "Scanning Error: %s", scanErr)
+				os.Exit(1)
+			}
 
-	// Reading input file
-	source, err := utils.ReadFile(inputPath)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "ERROR: could not read source file from `%s`: %s\n", inputPath, err)
-		os.Exit(1)
-	}
+			p := parser.New(tokens)
+			exprs, parseErr := p.Parse()
+			if parseErr != nil {
+				fmt.Fprintf(os.Stderr, "Parsing Error: %s", parseErr)
+				os.Exit(1)
+			}
 
-	// Lexing
-	ops, err := scanner.ScanProgram(source)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
-		os.Exit(1)
+			fmt.Println(exprs)
+		}
+		}
 	}
-	fmt.Println(ops)
 }
