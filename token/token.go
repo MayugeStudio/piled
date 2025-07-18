@@ -4,7 +4,7 @@ package token
 type TokenType int
 
 const (
-	LPAREN = iota
+	LPAREN TokenType = iota
 	RPAREN
 	DOT
 	COMMA
