@@ -6,13 +6,6 @@ import (
 	"strconv"
 )
 
-type ScanContext struct {
-	line    int
-	index   int
-	source  string
-	current rune
-}
-
 func isAlpha(c rune) bool {
 	return (c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')
 }
@@ -122,6 +115,9 @@ func ScanProgram(source string) ([]*token.Token, error) {
 		}
 		i += 1
 	}
+
+	eof := &token.Token{Type: token.EOF, Line: line}
+	result = append(result, eof) 
 
 	return result, nil
 }
