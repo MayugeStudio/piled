@@ -31,7 +31,7 @@ func main() {
 			}
 
 			p := parser.New(tokens)
-			exprs, parseErr := p.Parse()
+			exprs, parseErr := p.ParseExpr()
 			if parseErr != nil {
 				fmt.Fprintf(os.Stderr, "Parsing Error: %s", parseErr)
 				os.Exit(1)
