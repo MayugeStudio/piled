@@ -209,7 +209,7 @@ func TestScanProgram(t *testing.T) {
 					t.Errorf("length of tokens = %d, but want = %d", len(tokens), len(tc.want))
 				}
 				for i := range len(tokens) {
-					t.Errorf("(index = %d).Type actual %d != want %d", i, tokens[i].Type, tc.want[i].Type)
+					t.Errorf("(index = %d).Type actual %s != want %s", i, tokens[i].Type, tc.want[i].Type)
 					t.Errorf("(index = %d).Value actual %s != want %s", i, tokens[i].Value, tc.want[i].Value)
 					t.Errorf("(index = %d).Line actual %d != want %d", i, tokens[i].Line, tc.want[i].Line)
 				}
