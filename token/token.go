@@ -6,13 +6,6 @@ type Type string
 const (
 	LPAREN Type = "("
 	RPAREN           = ")"
-	DOT              = "."
-	COMMA = ","
-	EQUAL = "="
-	PLUS  = "+"
-	MINUS = "-"
-	ASTERISK = "*"
-	SLASH = "/"
 	IDENT = "IDENT"
 	NUMBER = "NUMBER"
 	EOF = "EOF"

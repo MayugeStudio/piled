@@ -108,6 +108,40 @@ func TestParseExpr(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "((1 1 +) (1 1 +) print)",
+			in: []token.Token{
+				tokt(token.LPAREN),
+					tokt(token.LPAREN),
+						tok(token.NUMBER, "1"),
+						tok(token.NUMBER, "1"),
+						tok(token.IDENT, "+"),
+					tokt(token.RPAREN),
+					tokt(token.LPAREN),
+						tok(token.NUMBER, "1"),
+						tok(token.NUMBER, "1"),
+						tok(token.IDENT, "+"),
+					tokt(token.RPAREN),
+					tok(token.IDENT, "print"),
+				tokt(token.RPAREN),
+				tokt(token.EOF),
+			},
+			want: &expr.List{
+				Elements: []expr.Expr{
+					list(
+						lit(1),
+						lit(1),
+						sym("+", expr.SymbolAdd),
+					),
+					list(
+						lit(1),
+						lit(1),
+						sym("+", expr.SymbolAdd),
+					),
+					sym("print", expr.SymbolPrint),
+				},
+			},
+		},
 	}
 
 	for _, tt := range tests {

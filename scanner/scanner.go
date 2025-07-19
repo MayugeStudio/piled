@@ -10,6 +10,10 @@ func isAlpha(c rune) bool {
 	return (c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')
 }
 
+func isValidSymbol(c rune) bool {
+	return c == '+' || c == '-'
+}
+
 func isNumeric(c rune) bool {
 	return (c <= '9' && c >= '0')
 }
@@ -32,41 +36,6 @@ func ScanProgram(source string) ([]token.Token, error) {
 				token := token.Token{Type: token.RPAREN, Line: line}
 				result = append(result, token)
 			}
-		case '.':
-			{
-				token := token.Token{Type: token.DOT, Line: line}
-				result = append(result, token)
-			}
-		case ',':
-			{
-				token := token.Token{Type: token.COMMA, Line: line}
-				result = append(result, token)
-			}
-		case '=':
-			{
-				token := token.Token{Type: token.EQUAL, Line: line}
-				result = append(result, token)
-			}
-		case '+':
-			{
-				token := token.Token{Type: token.PLUS, Line: line}
-				result = append(result, token)
-			}
-		case '-':
-			{
-				token := token.Token{Type: token.MINUS, Line: line}
-				result = append(result, token)
-			}
-		case '*':
-			{
-				token := token.Token{Type: token.ASTERISK, Line: line}
-				result = append(result, token)
-			}
-		case '/':
-			{
-				token := token.Token{Type: token.SLASH, Line: line}
-				result = append(result, token)
-			}
 		case '\n':
 			{
 				line += 1
@@ -82,6 +51,9 @@ func ScanProgram(source string) ([]token.Token, error) {
 						i += 1
 					}
 					token := token.Token{Type: token.IDENT, Literal: source[start : i+1], Line: line}
+					result = append(result, token)
+				} else if isValidSymbol(rune(source[i])) {
+					token := token.Token{Type: token.IDENT, Literal: string(source[i]), Line: line}
 					result = append(result, token)
 				} else if isNumeric(rune(source[i])) {
 					start := i
