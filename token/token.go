@@ -15,7 +15,6 @@ const (
 	SLASH = "/"
 	IDENT = "IDENT"
 	NUMBER = "NUMBER"
-	STRING = "STRING"
 	EOF = "EOF"
 )
 

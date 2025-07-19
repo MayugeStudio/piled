@@ -14,8 +14,8 @@ func isNumeric(c rune) bool {
 	return (c <= '9' && c >= '0')
 }
 
-func ScanProgram(source string) ([]*token.Token, error) {
-	result := make([]*token.Token, 0)
+func ScanProgram(source string) ([]token.Token, error) {
+	result := make([]token.Token, 0)
 
 	i := 0
 	line := 1
@@ -24,47 +24,47 @@ func ScanProgram(source string) ([]*token.Token, error) {
 		switch source[i] {
 		case '(':
 			{
-				token := &token.Token{Type: token.LPAREN, Line: line}
+				token := token.Token{Type: token.LPAREN, Line: line}
 				result = append(result, token)
 			}
 		case ')':
 			{
-				token := &token.Token{Type: token.RPAREN, Line: line}
+				token := token.Token{Type: token.RPAREN, Line: line}
 				result = append(result, token)
 			}
 		case '.':
 			{
-				token := &token.Token{Type: token.DOT, Line: line}
+				token := token.Token{Type: token.DOT, Line: line}
 				result = append(result, token)
 			}
 		case ',':
 			{
-				token := &token.Token{Type: token.COMMA, Line: line}
+				token := token.Token{Type: token.COMMA, Line: line}
 				result = append(result, token)
 			}
 		case '=':
 			{
-				token := &token.Token{Type: token.EQUAL, Line: line}
+				token := token.Token{Type: token.EQUAL, Line: line}
 				result = append(result, token)
 			}
 		case '+':
 			{
-				token := &token.Token{Type: token.PLUS, Line: line}
+				token := token.Token{Type: token.PLUS, Line: line}
 				result = append(result, token)
 			}
 		case '-':
 			{
-				token := &token.Token{Type: token.MINUS, Line: line}
+				token := token.Token{Type: token.MINUS, Line: line}
 				result = append(result, token)
 			}
 		case '*':
 			{
-				token := &token.Token{Type: token.ASTERISK, Line: line}
+				token := token.Token{Type: token.ASTERISK, Line: line}
 				result = append(result, token)
 			}
 		case '/':
 			{
-				token := &token.Token{Type: token.SLASH, Line: line}
+				token := token.Token{Type: token.SLASH, Line: line}
 				result = append(result, token)
 			}
 		case '\n':
@@ -74,20 +74,6 @@ func ScanProgram(source string) ([]*token.Token, error) {
 		case ' ':
 			{
 			} // ignore
-		case '"':
-			{
-				i += 1 // consume a double quote
-				start := i
-				for rune(source[i+1]) != '"' {
-					i += 1
-					if i >= len(source)-1 {
-						return nil, fmt.Errorf("unterminated string %d, len(source)=%d", i, len(source))
-					}
-				}
-				token := &token.Token{Type: token.STRING, Literal: source[start : i+1], Line: line}
-				result = append(result, token)
-				i += 1 // consume a rest of double quote
-			}
 		default:
 			{
 				if isAlpha(rune(source[i])) {
@@ -95,7 +81,7 @@ func ScanProgram(source string) ([]*token.Token, error) {
 					for i+1 < len(source) && isAlpha(rune(source[i+1])) {
 						i += 1
 					}
-					token := &token.Token{Type: token.IDENT, Literal: source[start : i+1], Line: line}
+					token := token.Token{Type: token.IDENT, Literal: source[start : i+1], Line: line}
 					result = append(result, token)
 				} else if isNumeric(rune(source[i])) {
 					start := i
@@ -104,7 +90,7 @@ func ScanProgram(source string) ([]*token.Token, error) {
 					}
 					_, err := strconv.Atoi(source[start : i+1])
 					if err == nil {
-						token := &token.Token{Type: token.NUMBER, Literal: source[start : i + 1], Line: line}
+						token := token.Token{Type: token.NUMBER, Literal: source[start : i + 1], Line: line}
 						result = append(result, token)
 					} else {
 						return nil, fmt.Errorf("got unknown literal: %s", source[start : i+1])
@@ -117,7 +103,7 @@ func ScanProgram(source string) ([]*token.Token, error) {
 		i += 1
 	}
 
-	eof := &token.Token{Type: token.EOF, Line: line}
+	eof := token.Token{Type: token.EOF, Line: line}
 	result = append(result, eof) 
 
 	return result, nil

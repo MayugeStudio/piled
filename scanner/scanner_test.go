@@ -11,12 +11,12 @@ func TestScanProgram(t *testing.T) {
 	tests := []struct {
 		name    string
 		source  string
-		want    []*token.Token
+		want    []token.Token
 		wantErr bool
 	}{
 		{
 			"Parentheses", "()",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.RPAREN, Line: 1},
 				{Type: token.EOF, Line: 1},
@@ -24,7 +24,7 @@ func TestScanProgram(t *testing.T) {
 		},
 		{
 			"Parentheses with a whitespace", "( )",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.RPAREN, Line: 1},
 				{Type: token.EOF, Line: 1},
@@ -32,7 +32,7 @@ func TestScanProgram(t *testing.T) {
 		},
 		{
 			"Parentheses with an identifier", "(hello)",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.IDENT, Literal: "hello", Line: 1},
 				{Type: token.RPAREN, Line: 1},
@@ -41,7 +41,7 @@ func TestScanProgram(t *testing.T) {
 		},
 		{
 			"Two parentheses", "()()",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.RPAREN, Line: 1},
 				{Type: token.LPAREN, Line: 1},
@@ -51,7 +51,7 @@ func TestScanProgram(t *testing.T) {
 		},
 		{
 			"Multiple lines", "()\n()\n()\n",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.RPAREN, Line: 1},
 				{Type: token.LPAREN, Line: 2},
@@ -63,7 +63,7 @@ func TestScanProgram(t *testing.T) {
 		},
 		{
 			"Multiple lines with various type of tokens", "(I)\n(like)\n(golang)\n",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.IDENT, Literal: "I", Line: 1},
 				{Type: token.RPAREN, Line: 1},
@@ -80,40 +80,40 @@ func TestScanProgram(t *testing.T) {
 		},
 		{
 			"DOT", ".",
-			[]*token.Token{{Type: token.DOT, Line: 1}, {Type: token.EOF, Line: 1}}, false,
+			[]token.Token{{Type: token.DOT, Line: 1}, {Type: token.EOF, Line: 1}}, false,
 				
 		},
 		{
 			"COMMA", ",",
-			[]*token.Token{{Type: token.COMMA, Line: 1}, {Type: token.EOF, Line: 1}}, false,
+			[]token.Token{{Type: token.COMMA, Line: 1}, {Type: token.EOF, Line: 1}}, false,
 		},
 		{
 			"EQUAL", "=",
-			[]*token.Token{{Type: token.EQUAL, Line: 1}, {Type: token.EOF, Line: 1}}, false,
+			[]token.Token{{Type: token.EQUAL, Line: 1}, {Type: token.EOF, Line: 1}}, false,
 		},
 		{
 			"PLUS", "+",
-			[]*token.Token{{Type: token.PLUS, Line: 1}, {Type: token.EOF, Line: 1}}, false,
+			[]token.Token{{Type: token.PLUS, Line: 1}, {Type: token.EOF, Line: 1}}, false,
 		},
 		{
 			"MINUS", "-",
-			[]*token.Token{{Type: token.MINUS, Line: 1}, {Type: token.EOF, Line: 1}}, false,
+			[]token.Token{{Type: token.MINUS, Line: 1}, {Type: token.EOF, Line: 1}}, false,
 		},
 		{
 			"ASTERISK", "*",
-			[]*token.Token{{Type: token.ASTERISK, Line: 1}, {Type: token.EOF, Line: 1}}, false,
+			[]token.Token{{Type: token.ASTERISK, Line: 1}, {Type: token.EOF, Line: 1}}, false,
 		},
 		{
 			"SLASH", "/",
-			[]*token.Token{{Type: token.SLASH, Line: 1}, {Type: token.EOF, Line: 1}}, false,
+			[]token.Token{{Type: token.SLASH, Line: 1}, {Type: token.EOF, Line: 1}}, false,
 		},
 		{
 			"NUMBER", "12345",
-			[]*token.Token{{Type: token.NUMBER, Literal: "12345", Line: 1}, {Type: token.EOF, Line: 1}}, false,
+			[]token.Token{{Type: token.NUMBER, Literal: "12345", Line: 1}, {Type: token.EOF, Line: 1}}, false,
 		},
 		{
 			"TWO NUMBERS", "69 420",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.NUMBER, Literal: "69", Line: 1},
 				{Type: token.NUMBER, Literal: "420", Line: 1},
 				{Type: token.EOF, Line: 1},
@@ -121,44 +121,22 @@ func TestScanProgram(t *testing.T) {
 		},
 		{
 			"IDENT", "HELLO",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.IDENT, Literal: "HELLO", Line: 1},
 				{Type: token.EOF, Line: 1},
 			}, false,
 		},
 		{
 			"DOUBLE IDENT", "HELLO HELLO",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.IDENT, Literal: "HELLO", Line: 1},
 				{Type: token.IDENT, Literal: "HELLO", Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
-		},
-		{
-			"STRING", "\"MYSTRING\"",
-			[]*token.Token{{Type: token.STRING, Literal: "MYSTRING", Line: 1}, {Type: token.EOF, Line: 1} }, false,
-		},
-		{
-			"TWO STRINGS", "\"MYSTRING\" \"MYSTRING\"",
-			[]*token.Token{
-				{Type: token.STRING, Literal: "MYSTRING", Line: 1},
-				{Type: token.STRING, Literal: "MYSTRING", Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
-		},
-		{
-			"PRINT STRING", "(\"HELLO WORLD\" print)",
-			[]*token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.STRING, Literal: "HELLO WORLD", Line: 1},
-				{Type: token.IDENT, Literal: "print", Line: 1},
-				{Type: token.RPAREN, Line: 1},
 				{Type: token.EOF, Line: 1},
 			}, false,
 		},
 		{
 			"PRINT NUMBER", "(69 print)",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.NUMBER, Literal: "69", Line: 1},
 				{Type: token.IDENT, Literal: "print", Line: 1},
@@ -168,7 +146,7 @@ func TestScanProgram(t *testing.T) {
 		},
 		{
 			"PRINT NESTED", "((3 5 +) print)",
-			[]*token.Token{
+			[]token.Token{
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.LPAREN, Line: 1},
 				{Type: token.NUMBER, Literal: "3", Line: 1},
@@ -179,10 +157,6 @@ func TestScanProgram(t *testing.T) {
 				{Type: token.RPAREN, Line: 1},
 				{Type: token.EOF, Line: 1},
 			}, false,
-		},
-		{
-			"UNTERMINATED-STRING", "\"A+B-C*D/E=F.G,H",
-			nil, true,
 		},
 		{
 			"UNEXPECTED-TOKEN", "?",
