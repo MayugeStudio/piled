@@ -13,18 +13,18 @@ const (
 	MINUS = "-"
 	ASTERISK = "*"
 	SLASH = "/"
-	IDENTIFIER = "IDENT"
+	IDENT = "IDENT"
 	NUMBER = "NUMBER"
 	STRING = "STRING"
 	EOF = "EOF"
 )
 
 type Token struct {
-	Type  Type
-	Value any
-	Line  int
+	Type    Type
+	Literal string
+	Line    int
 }
 
 func (t Token) String() string {
-	return string(t.Type)
+	return string(t.Type) + " " + t.Literal
 }

@@ -84,7 +84,7 @@ func ScanProgram(source string) ([]*token.Token, error) {
 						return nil, fmt.Errorf("unterminated string %d, len(source)=%d", i, len(source))
 					}
 				}
-				token := &token.Token{Type: token.STRING, Value: source[start : i+1], Line: line}
+				token := &token.Token{Type: token.STRING, Literal: source[start : i+1], Line: line}
 				result = append(result, token)
 				i += 1 // consume a rest of double quote
 			}
@@ -95,19 +95,20 @@ func ScanProgram(source string) ([]*token.Token, error) {
 					for i+1 < len(source) && isAlpha(rune(source[i+1])) {
 						i += 1
 					}
-					token := &token.Token{Type: token.IDENTIFIER, Value: source[start : i+1], Line: line}
+					token := &token.Token{Type: token.IDENT, Literal: source[start : i+1], Line: line}
 					result = append(result, token)
 				} else if isNumeric(rune(source[i])) {
 					start := i
 					for i+1 < len(source) && isNumeric(rune(source[i+1])) {
 						i += 1
 					}
-					value, err := strconv.Atoi(source[start : i+1])
-					if err != nil {
-						return nil, fmt.Errorf("got error while parsing number literal: %s", err)
+					_, err := strconv.Atoi(source[start : i+1])
+					if err == nil {
+						token := &token.Token{Type: token.NUMBER, Literal: source[start : i + 1], Line: line}
+						result = append(result, token)
+					} else {
+						return nil, fmt.Errorf("got unknown literal: %s", source[start : i+1])
 					}
-					token := &token.Token{Type: token.NUMBER, Value: value, Line: line}
-					result = append(result, token)
 				} else {
 					return nil, fmt.Errorf("got unknown literal: %c", rune(source[i]))
 				}
