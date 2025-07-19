@@ -1,82 +1,95 @@
 package parser
 
-import "testing"
-import "reflect"
-import "piled/expr"
-import "piled/token"
+import (
+	"reflect"
+	"testing"
+
+	"piled/expr"
+	"piled/token"
+)
+
+func tok(t token.Type, v any) *token.Token {
+	return &token.Token{Type: t, Value: v}
+}
+func tokt(t token.Type) *token.Token {
+	return &token.Token{Type: t}
+}
+
+func lit(v any) *expr.Literal {
+	return &expr.Literal{Value: v}
+}
 
 func TestParse(t *testing.T) {
-	tests := map[string]struct{
-		in     []*token.Token
-		want   *expr.List
-	} {
-		"nothing": {
+	tests := []struct {
+		name string
+		in   []*token.Token
+		want *expr.List
+	}{
+		{
+			name: "nothing",
 			in: []*token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.EOF, Line: 1},
+				tokt(token.LPAREN),
+				tokt(token.RPAREN),
+				tokt(token.EOF),
 			},
 			want: &expr.List{},
 		},
-		"one value": {
+		{
+			name: "one value",
 			in: []*token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.NUMBER, Value: 69, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.EOF, Line: 1},
+				tokt(token.LPAREN),
+				tok(token.NUMBER, 69),
+				tokt(token.RPAREN),
+				tokt(token.EOF),
 			},
-			want: &expr.List{
-				Elements: []*expr.Literal{{Value: 69}},
-			},
+			want: &expr.List{Elements: []*expr.Literal{lit(69)}},
 		},
-		"serveral values": {
+		{
+			name: "several values",
 			in: []*token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.NUMBER, Value: 100, Line: 1},
-				{Type: token.NUMBER, Value: 200, Line: 1},
-				{Type: token.NUMBER, Value: 300, Line: 1},
-				{Type: token.NUMBER, Value: 400, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.EOF, Line: 1},
+				tokt(token.LPAREN),
+				tok(token.NUMBER, 100),
+				tok(token.NUMBER, 200),
+				tok(token.NUMBER, 300),
+				tok(token.NUMBER, 400),
+				tokt(token.RPAREN),
+				tokt(token.EOF),
 			},
 			want: &expr.List{
 				Elements: []*expr.Literal{
-					{Value: 100},
-					{Value: 200},
-					{Value: 300},
-					{Value: 400},
+					lit(100), lit(200), lit(300), lit(400),
 				},
 			},
 		},
-		// TODO: Parse print as a function name
-		"print 99": {
+		{
+			name: "print 99",
 			in: []*token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.NUMBER, Value: 69, Line: 1},
-				{Type: token.IDENTIFIER, Value: "print", Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.EOF, Line: 1},
+				tokt(token.LPAREN),
+				tok(token.NUMBER, 69),
+				tok(token.IDENTIFIER, "print"),
+				tokt(token.RPAREN),
+				tokt(token.EOF),
 			},
 			want: &expr.List{
 				Elements: []*expr.Literal{
-					{Value: 69},
-					{Value: "print"},
+					lit(69),
+					lit("print"),
 				},
 			},
 		},
 	}
 
-	for title, tt := range tests {
-		t.Run(title, func(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 			p := New(tt.in)
 			got, err := p.Parse()
 			if err != nil {
-				t.Errorf("Parser.Parse() err = %v", err)
+				t.Errorf("Parse() error = %v", err)
 				return
 			}
 			if !reflect.DeepEqual(tt.want, got) {
-				t.Errorf("want = |%v|", tt.want)
-				t.Errorf("got = |%v|", got)
+				t.Errorf("want = %v", tt.want)
+				t.Errorf(" got = %v", got)
 			}
 		})
 	}

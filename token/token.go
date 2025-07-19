@@ -1,10 +1,10 @@
 package token
 
 // TODO: move token to scanner package
-type TokenType string
+type Type string
 
 const (
-	LPAREN TokenType = "("
+	LPAREN Type = "("
 	RPAREN           = ")"
 	DOT              = "."
 	COMMA = ","
@@ -20,7 +20,7 @@ const (
 )
 
 type Token struct {
-	Type  TokenType
+	Type  Type
 	Value any
 	Line  int
 }
