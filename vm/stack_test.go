@@ -14,7 +14,7 @@ func TestNewStack(t *testing.T) {
 }
 
 func TestStackLen(t *testing.T) {
-	in := []int{1, 2, 3, 4, 5, 6}
+	in := []byte{1, 2, 3, 4, 5, 6}
 	want := 6
 	stack := NewStack()
 	for _, v := range in {
@@ -30,20 +30,20 @@ func TestStackLen(t *testing.T) {
 func TestStackPush(t *testing.T) {
 	tests := []struct {
 		name string
-		in   []int
-		want []int
+		in   []byte
+		want []byte
 	}{
 		{
 			"a Single element",
-			[]int{1}, []int{1},
+			[]byte{1}, []byte{1},
 		},
 		{
 			"Two elements",
-			[]int{1, 2}, []int{1, 2},
+			[]byte{1, 2}, []byte{1, 2},
 		},
 		{
 			"Several elements",
-			[]int{1, 2, 3, 4, 5, 6}, []int{1, 2, 3, 4, 5, 6},
+			[]byte{1, 2, 3, 4, 5, 6}, []byte{1, 2, 3, 4, 5, 6},
 		},
 	}
 
@@ -67,12 +67,12 @@ func TestStackPush(t *testing.T) {
 func TestStackPop(t *testing.T) {
 	tests := []struct {
 		name      string
-		in        []int
-		want      []int
+		in        []byte
+		want      []byte
 		wantEmpty bool
 	}{
-		{"123456", []int{1, 2, 3, 4, 5, 6}, []int{6, 5, 4}, false},
-		{"empty", []int{}, []int{1}, true},
+		{"123456", []byte{1, 2, 3, 4, 5, 6}, []byte{6, 5, 4}, false},
+		{"empty", []byte{}, []byte{1}, true},
 	}
 
 	for _, tc := range tests {

@@ -1,20 +1,20 @@
 package vm
 
-type Stack []int
+type Stack []byte
 
 func NewStack() Stack {
 	return make(Stack, 0, 0)
 }
 
-func (s *Stack) Len() int {
+func (s *Stack) Len() byte {
 	return len(*s)
 }
 
-func (s *Stack) Push(v int) {
+func (s *Stack) Push(v byte) {
 	*s = append(*s, v)
 }
 
-func (s *Stack) Pop() (int, bool) {
+func (s *Stack) Pop() (byte, bool) {
 	if len(*s) == 0 {
 		return 0, false
 	}
