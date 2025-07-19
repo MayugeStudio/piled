@@ -28,7 +28,7 @@ func (p *Parser) Parse() (*expr.List, error) {
 	return &root, nil
 }
 
-func (p *Parser) advance() {
+func (p *Parser) next() {
 	if p.currentToken.Type == token.EOF {
 		return
 	}
@@ -52,7 +52,7 @@ func (p *Parser) parseList(list *expr.List) error {
 		if p.peekToken.Type == token.RPAREN {
 			break
 		}
-		p.advance()
+		p.next()
 		switch p.currentToken.Type {
 		case token.IDENTIFIER, token.NUMBER, token.STRING: {
 			e := &expr.Literal{Value: p.currentToken.Value}
@@ -64,11 +64,11 @@ func (p *Parser) parseList(list *expr.List) error {
 		}
 	}
 
-	p.advance()
+	p.next()
 	if p.currentToken.Type != token.RPAREN {
 		return fmt.Errorf("Expected ')'.")
 	}
-	p.advance()
+	p.next()
 	return nil
 }
 
