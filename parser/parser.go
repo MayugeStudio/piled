@@ -3,72 +3,65 @@ package parser
 import "piled/token"
 import "piled/expr"
 import "fmt"
+import "strconv"
 
 type Parser struct {
-	tokens       []*token.Token
-	currentToken *token.Token
-	peekToken    *token.Token
-	index        int
+	tokens       []token.Token
+	pos        int
 }
 
-func New(tokens []*token.Token) *Parser{
-	return &Parser{
-		tokens:       tokens,
-		currentToken: tokens[0],
-		index:        0,
-	}
+func New(tokens []token.Token) *Parser{
+	return &Parser{ tokens: tokens, pos: 0 }
 }
 
-func (p *Parser) Parse() (*expr.List, error) {
-	root := expr.List{}
-	err := p.parseList(&root)
-	if err != nil {
-		return nil, err
+func (p *Parser) peek() token.Token {
+	if p.pos >= len(p.tokens) {
+		return token.Token{}
 	}
-	return &root, nil
+
+	return p.tokens[p.pos]
 }
 
-func (p *Parser) advance() {
-	if p.currentToken.Type == token.EOF {
-		return
-	}
-	p.index += 1
-	p.currentToken = p.tokens[p.index]
+func (p *Parser) next() token.Token {
+	t := p.peek()
+	p.pos++
+	return t
 }
 
-func (p *Parser) peek() {
-	if p.currentToken.Type == token.EOF {
-		p.peekToken = nil
-	}
-	p.peekToken = p.tokens[p.index + 1]
-}
+func (p *Parser) ParseExpr() (expr.Expr, error) {
+	tok := p.next()
 
-func (p *Parser) parseList(list *expr.List) error {
-	if p.currentToken.Type != token.LPAREN {
-		return fmt.Errorf("Expected '('.")
+	switch tok.Type {
+	case token.NUMBER: {
+		val, _ := strconv.Atoi(tok.Literal)
+		return &expr.Literal{Value: int(val)}, nil
 	}
-	for {
-		p.peek()
-		if p.peekToken.Type == token.RPAREN {
-			break
+	case token.IDENT: {
+		return p.parseSymbol(tok), nil
+	}
+	case token.LPAREN: {
+		elems := []expr.Expr{}
+		for p.peek().Type != token.RPAREN && p.peek().Type != token.EOF {
+			expr, err := p.ParseExpr()
+			if err != nil {
+				return nil, err
+			}
+			elems = append(elems, expr)
 		}
-		p.advance()
-		switch p.currentToken.Type {
-		case token.IDENTIFIER, token.NUMBER, token.STRING: {
-			e := &expr.Literal{Value: p.currentToken.Value}
-			list.Elements = append(list.Elements, e)
+		if p.peek().Type != token.RPAREN {
+			return nil, fmt.Errorf("Expected ')', got %v", p.peek().Literal)
 		}
-		default: {
-			return fmt.Errorf("Unexpected token '%s:%s'", p.currentToken.String(), p.currentToken.Value)
-		}
-		}
+		p.next() // consume RPAREN
+		return &expr.List{Elements: elems}, nil
 	}
-
-	p.advance()
-	if p.currentToken.Type != token.RPAREN {
-		return fmt.Errorf("Expected ')'.")
+	default:
+		return nil, fmt.Errorf("unexpected token: %v", p.peek().Literal)
 	}
-	p.advance()
-	return nil
 }
 
+func (p *Parser) parseSymbol(tok token.Token) expr.Expr {
+	if symType, ok := expr.Keywords[tok.Literal]; ok {
+		return &expr.Symbol{Name: tok.Literal, Type: symType}
+	}
+	return &expr.Symbol{Name: tok.Literal, Type: expr.SymbolUnkown}
+}
