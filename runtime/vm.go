@@ -3,6 +3,7 @@ package runtime
 import "fmt"
 import "io"
 import "os"
+import "piled/opcode"
 
 var writer io.Writer
 
@@ -13,13 +14,6 @@ func init() {
 func vmPrint(a ...any) {
 	fmt.Fprintln(writer, a...)
 }
-
-const (
-	OP_PUSH = iota
-	OP_ADD
-	OP_SUB
-	OP_PRINT
-)
 
 type VM struct {
 	code  []int
@@ -37,19 +31,19 @@ func (vm *VM) Run() {
 		vm.ip++
 
 		switch op {
-		case OP_PUSH:
+		case opcode.PUSH:
 			val := vm.code[vm.ip]
 			vm.ip++
 			vm.push(val)
-		case OP_ADD:
+		case opcode.ADD:
 			b := vm.pop()
 			a := vm.pop()
 			vm.push(a + b)
-		case OP_SUB:
+		case opcode.SUB:
 			b := vm.pop()
 			a := vm.pop()
 			vm.push(a - b)
-		case OP_PRINT:
+		case opcode.PRINT:
 			vmPrint(vm.pop())
 		}
 	}
