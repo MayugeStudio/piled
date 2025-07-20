@@ -3,6 +3,7 @@ package runtime
 import (
 	"bytes"
 	"testing"
+	"piled/opcode"
 )
 
 func TestVM_Run(t *testing.T) {
@@ -15,9 +16,9 @@ func TestVM_Run(t *testing.T) {
 		{
 			name: "simple add",
 			code: []int{
-				OP_PUSH, 10,
-				OP_PUSH, 20,
-				OP_ADD,
+				opcode.PUSH, 10,
+				opcode.PUSH, 20,
+				opcode.ADD,
 			},
 			want:   []int{30},
 			output: "",
@@ -25,9 +26,9 @@ func TestVM_Run(t *testing.T) {
 		{
 			name: "simple sub",
 			code: []int{
-				OP_PUSH, 50,
-				OP_PUSH, 20,
-				OP_SUB,
+				opcode.PUSH, 50,
+				opcode.PUSH, 20,
+				opcode.SUB,
 			},
 			want:   []int{30},
 			output: "",
@@ -35,10 +36,10 @@ func TestVM_Run(t *testing.T) {
 		{
 			name: "add and print",
 			code: []int{
-				OP_PUSH, 5,
-				OP_PUSH, 7,
-				OP_ADD,
-				OP_PRINT,
+				opcode.PUSH, 5,
+				opcode.PUSH, 7,
+				opcode.ADD,
+				opcode.PRINT,
 			},
 			want:   []int{},
 			output: "12\n",
@@ -46,9 +47,9 @@ func TestVM_Run(t *testing.T) {
 		{
 			name: "push multiple values",
 			code: []int{
-				OP_PUSH, 1,
-				OP_PUSH, 2,
-				OP_PUSH, 3,
+				opcode.PUSH, 1,
+				opcode.PUSH, 2,
+				opcode.PUSH, 3,
 			},
 			want:   []int{1, 2, 3},
 			output: "",
