@@ -20,7 +20,7 @@ var Keywords = map[string]SymbolType{
 
 type Expr interface {
 	String() string
-	Equal(Expr)  bool
+	Equal(Expr) bool
 }
 
 type Literal struct {
@@ -51,7 +51,7 @@ func (s *Symbol) Equal(other Expr) bool {
 }
 
 type List struct {
-	Elements   []Expr
+	Elements []Expr
 }
 
 func (l *List) String() string {

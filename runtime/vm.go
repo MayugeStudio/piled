@@ -22,8 +22,8 @@ const (
 )
 
 type VM struct {
-	code []int
-	ip   int
+	code  []int
+	ip    int
 	stack []int
 }
 
@@ -37,20 +37,20 @@ func (vm *VM) Run() {
 		vm.ip++
 
 		switch op {
-			case OP_PUSH:
-				val := vm.code[vm.ip]
-				vm.ip++
-				vm.push(val)
-			case OP_ADD:
-				b := vm.pop()
-				a := vm.pop()
-				vm.push(a + b)
-			case OP_SUB:
-				b := vm.pop()
-				a := vm.pop()
-				vm.push(a - b)
-			case OP_PRINT:
-				vmPrint(vm.pop())
+		case OP_PUSH:
+			val := vm.code[vm.ip]
+			vm.ip++
+			vm.push(val)
+		case OP_ADD:
+			b := vm.pop()
+			a := vm.pop()
+			vm.push(a + b)
+		case OP_SUB:
+			b := vm.pop()
+			a := vm.pop()
+			vm.push(a - b)
+		case OP_PRINT:
+			vmPrint(vm.pop())
 		}
 	}
 }
@@ -63,7 +63,7 @@ func (vm *VM) pop() int {
 	if len(vm.stack) == 0 {
 		panic("RUNTIME ERROR")
 	}
-	index := len(vm.stack)-1
+	index := len(vm.stack) - 1
 	val := vm.stack[index]
 	vm.stack = vm.stack[:index]
 	return val

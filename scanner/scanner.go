@@ -62,10 +62,10 @@ func ScanProgram(source string) ([]token.Token, error) {
 					}
 					_, err := strconv.Atoi(source[start : i+1])
 					if err == nil {
-						token := token.Token{Type: token.NUMBER, Literal: source[start : i + 1], Line: line}
+						token := token.Token{Type: token.NUMBER, Literal: source[start : i+1], Line: line}
 						result = append(result, token)
 					} else {
-						return nil, fmt.Errorf("got unknown literal: %s", source[start : i+1])
+						return nil, fmt.Errorf("got unknown literal: %s", source[start:i+1])
 					}
 				} else {
 					return nil, fmt.Errorf("got unknown literal: %c", rune(source[i]))
@@ -76,7 +76,7 @@ func ScanProgram(source string) ([]token.Token, error) {
 	}
 
 	eof := token.Token{Type: token.EOF, Line: line}
-	result = append(result, eof) 
+	result = append(result, eof)
 
 	return result, nil
 }
