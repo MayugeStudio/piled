@@ -6,12 +6,12 @@ import "fmt"
 import "strconv"
 
 type Parser struct {
-	tokens       []token.Token
-	pos        int
+	tokens []token.Token
+	pos    int
 }
 
-func New(tokens []token.Token) *Parser{
-	return &Parser{ tokens: tokens, pos: 0 }
+func New(tokens []token.Token) *Parser {
+	return &Parser{tokens: tokens, pos: 0}
 }
 
 func (p *Parser) peek() token.Token {
@@ -32,28 +32,31 @@ func (p *Parser) ParseExpr() (expr.Expr, error) {
 	tok := p.next()
 
 	switch tok.Type {
-	case token.NUMBER: {
-		val, _ := strconv.Atoi(tok.Literal)
-		return &expr.Literal{Value: int(val)}, nil
-	}
-	case token.IDENT: {
-		return p.parseSymbol(tok), nil
-	}
-	case token.LPAREN: {
-		elems := []expr.Expr{}
-		for p.peek().Type != token.RPAREN && p.peek().Type != token.EOF {
-			expr, err := p.ParseExpr()
-			if err != nil {
-				return nil, err
+	case token.NUMBER:
+		{
+			val, _ := strconv.Atoi(tok.Literal)
+			return &expr.Literal{Value: int(val)}, nil
+		}
+	case token.IDENT:
+		{
+			return p.parseSymbol(tok), nil
+		}
+	case token.LPAREN:
+		{
+			elems := []expr.Expr{}
+			for p.peek().Type != token.RPAREN && p.peek().Type != token.EOF {
+				expr, err := p.ParseExpr()
+				if err != nil {
+					return nil, err
+				}
+				elems = append(elems, expr)
 			}
-			elems = append(elems, expr)
+			if p.peek().Type != token.RPAREN {
+				return nil, fmt.Errorf("Expected ')', got %v", p.peek().Literal)
+			}
+			p.next() // consume RPAREN
+			return &expr.List{Elements: elems}, nil
 		}
-		if p.peek().Type != token.RPAREN {
-			return nil, fmt.Errorf("Expected ')', got %v", p.peek().Literal)
-		}
-		p.next() // consume RPAREN
-		return &expr.List{Elements: elems}, nil
-	}
 	default:
 		return nil, fmt.Errorf("unexpected token: %v", p.peek().Literal)
 	}

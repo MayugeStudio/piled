@@ -5,10 +5,10 @@ type Type string
 
 const (
 	LPAREN Type = "("
-	RPAREN           = ")"
-	IDENT = "IDENT"
-	NUMBER = "NUMBER"
-	EOF = "EOF"
+	RPAREN      = ")"
+	IDENT       = "IDENT"
+	NUMBER      = "NUMBER"
+	EOF         = "EOF"
 )
 
 type Token struct {
