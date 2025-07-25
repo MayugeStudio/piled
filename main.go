@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"piled/compiler"
 	"piled/parser"
+	"piled/runtime"
 	"piled/scanner"
 )
 
@@ -28,18 +30,27 @@ cmd:
 			{
 				tokens, scanErr := scanner.ScanProgram(prompt)
 				if scanErr != nil {
-					fmt.Fprintf(os.Stderr, "Scanning Error: %s", scanErr)
+					fmt.Fprintf(os.Stderr, "Scanning Error: %s\n", scanErr)
 					os.Exit(1)
 				}
 
 				p := parser.New(tokens)
 				exprs, parseErr := p.ParseExpr()
 				if parseErr != nil {
-					fmt.Fprintf(os.Stderr, "Parsing Error: %s", parseErr)
+					fmt.Fprintf(os.Stderr, "Parsing Error: %s\n", parseErr)
 					os.Exit(1)
 				}
 
-				fmt.Println(exprs)
+				c := compiler.New()
+				codes, compileErr := c.Compile(exprs)
+				if compileErr != nil {
+					fmt.Fprintf(os.Stderr, "Compiling Error: %s\n", compileErr)
+					os.Exit(1)
+				}
+
+				vm := runtime.NewVM(codes)
+
+				vm.Run()
 			}
 		}
 	}
