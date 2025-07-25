@@ -7,22 +7,20 @@ import "piled/opcode"
 
 var writer io.Writer
 
-func init() {
-	writer = os.Stdout
-}
-
-func vmPrint(a ...any) {
-	fmt.Fprintln(writer, a...)
-}
-
 type VM struct {
-	code  []int
-	ip    int
-	stack []int
+	code   []int
+	ip     int
+	stack  []int
+	stdout io.Writer
 }
 
 func NewVM(code []int) *VM {
-	return &VM{code: code, ip: 0, stack: make([]int, 0)}
+	return &VM{
+		code:   code,
+		ip:     0,
+		stack:  make([]int, 0),
+		stdout: os.Stdout,
+	}
 }
 
 func (vm *VM) Run() {
@@ -44,9 +42,14 @@ func (vm *VM) Run() {
 			a := vm.pop()
 			vm.push(a - b)
 		case opcode.PRINT:
-			vmPrint(vm.pop())
+			a := vm.pop()
+			vm.Println(a)
 		}
 	}
+}
+
+func (vm *VM) Println(a ...any) {
+	fmt.Fprintln(vm.stdout, a...)
 }
 
 func (vm *VM) push(val int) {
