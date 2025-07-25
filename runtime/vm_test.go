@@ -61,7 +61,7 @@ func TestVM_Run(t *testing.T) {
 			vm := &VM{code: tt.code}
 
 			buf := &bytes.Buffer{}
-			writer = buf
+			vm.stdout = buf;
 			vm.Run()
 
 			if !equalSlices(vm.stack, tt.want) {
