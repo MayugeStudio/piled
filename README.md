@@ -2,6 +2,9 @@
 
 A simple stack based programming language that is implemented in Golang.
 
+> [!WARNING]
+> This is not serious project. Just a recreational one.
+
 ## Example
 
 ```
