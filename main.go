@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"piled/compiler"
 	"piled/parser"
+	"piled/runtime"
 	"piled/scanner"
 )
 
@@ -39,7 +41,16 @@ cmd:
 					os.Exit(1)
 				}
 
-				fmt.Println(exprs)
+				c := compiler.NewCompiler() // TODO: change compiler constructor name to .New.
+				codes, compileErr := c.Compile(exprs)
+				if compileErr != nil {
+					fmt.Fprintf(os.Stderr, "Compiling Error: %s", compileErr)
+					os.Exit(1)
+				}
+
+				vm := runtime.NewVM(codes)
+
+				vm.Run()
 			}
 		}
 	}
