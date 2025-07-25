@@ -41,7 +41,7 @@ cmd:
 					os.Exit(1)
 				}
 
-				c := compiler.NewCompiler() // TODO: change compiler constructor name to .New.
+				c := compiler.New()
 				codes, compileErr := c.Compile(exprs)
 				if compileErr != nil {
 					fmt.Fprintf(os.Stderr, "Compiling Error: %s\n", compileErr)

@@ -8,7 +8,7 @@ type Compiler struct {
 	code []int
 }
 
-func NewCompiler() *Compiler {
+func New() *Compiler {
 	return &Compiler{code: make([]int, 0)}
 }
 func (c *Compiler) Compile(e expr.Expr) ([]int, error) {
