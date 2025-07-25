@@ -24,7 +24,7 @@ cmd:
 			}
 		default:
 			{
-				runningErr := piled.RunSource(prompt);
+				runningErr := piled.RunSource(prompt)
 				if runningErr != nil {
 					fmt.Fprintf(os.Stderr, "Error: %s\n", runningErr)
 				}

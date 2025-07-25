@@ -2,10 +2,10 @@ package piled
 
 import (
 	"os"
-	"piled/scanner"
-	"piled/parser"
 	"piled/compiler"
+	"piled/parser"
 	"piled/runtime"
+	"piled/scanner"
 )
 
 func RunSource(source string) error {
