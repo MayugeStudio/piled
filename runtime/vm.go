@@ -16,9 +16,9 @@ type VM struct {
 
 func NewVM(code []int) *VM {
 	return &VM{
-		code: code,
-		ip: 0,
-		stack: make([]int, 0),
+		code:   code,
+		ip:     0,
+		stack:  make([]int, 0),
 		stdout: os.Stdout,
 	}
 }
@@ -65,4 +65,3 @@ func (vm *VM) pop() int {
 	vm.stack = vm.stack[:index]
 	return val
 }
-

@@ -5,11 +5,11 @@ import "piled/expr"
 import "piled/opcode"
 
 type Compiler struct {
-    code []int
+	code []int
 }
 
 func NewCompiler() *Compiler {
-	return &Compiler{ code: make([]int, 0) }
+	return &Compiler{code: make([]int, 0)}
 }
 func (c *Compiler) Compile(e expr.Expr) ([]int, error) {
 	switch v := e.(type) {

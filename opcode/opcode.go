@@ -1,8 +1,8 @@
 package opcode
 
 const (
-    PUSH = iota
-    ADD
-    SUB
-    PRINT
+	PUSH = iota
+	ADD
+	SUB
+	PRINT
 )

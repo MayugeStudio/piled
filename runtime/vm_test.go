@@ -2,8 +2,8 @@ package runtime
 
 import (
 	"bytes"
-	"testing"
 	"piled/opcode"
+	"testing"
 )
 
 func TestVM_Run(t *testing.T) {
@@ -61,7 +61,7 @@ func TestVM_Run(t *testing.T) {
 			vm := &VM{code: tt.code}
 
 			buf := &bytes.Buffer{}
-			vm.stdout = buf;
+			vm.stdout = buf
 			vm.Run()
 
 			if !equalSlices(vm.stack, tt.want) {
