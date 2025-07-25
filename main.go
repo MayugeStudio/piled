@@ -31,21 +31,21 @@ cmd:
 				tokens, scanErr := scanner.ScanProgram(prompt)
 				if scanErr != nil {
 					fmt.Fprintf(os.Stderr, "Scanning Error: %s\n", scanErr)
-					os.Exit(1)
+					continue
 				}
 
 				p := parser.New(tokens)
 				exprs, parseErr := p.ParseExpr()
 				if parseErr != nil {
 					fmt.Fprintf(os.Stderr, "Parsing Error: %s\n", parseErr)
-					os.Exit(1)
+					continue
 				}
 
 				c := compiler.New()
 				codes, compileErr := c.Compile(exprs)
 				if compileErr != nil {
 					fmt.Fprintf(os.Stderr, "Compiling Error: %s\n", compileErr)
-					os.Exit(1)
+					continue
 				}
 
 				vm := runtime.NewVM(codes)
