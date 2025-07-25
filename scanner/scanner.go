@@ -36,8 +36,17 @@ func ScanProgram(source string) ([]token.Token, error) {
 				token := token.Token{Type: token.RPAREN, Line: line}
 				result = append(result, token)
 			}
-		case '\n':
+		case '\n', '\r':
 			{
+				if source[i] == '\r' {
+					if i+1 >= len(source) {
+						return nil, fmt.Errorf("single \\r is used")
+					}
+					if source[i+1] != '\n' {
+						return nil, fmt.Errorf("single \\r is used")
+					}
+					i += 1
+				}
 				line += 1
 			}
 		case ' ':
@@ -65,7 +74,7 @@ func ScanProgram(source string) ([]token.Token, error) {
 						token := token.Token{Type: token.NUMBER, Literal: source[start : i+1], Line: line}
 						result = append(result, token)
 					} else {
-						return nil, fmt.Errorf("got unknown literal: %s", source[start:i+1])
+						return nil, fmt.Errorf("got unknown literal: %c", source[start:i+1])
 					}
 				} else {
 					return nil, fmt.Errorf("got unknown literal: %c", rune(source[i]))
