@@ -9,13 +9,13 @@ import "piled/opcode"
 var writer io.Writer
 
 type VM struct {
-	code   []int
+	code   []opcode.Code
 	ip     int
 	stack  []int
 	stdout io.Writer
 }
 
-func NewVM(code []int) *VM {
+func NewVM(code []opcode.Code) *VM {
 	return &VM{
 		code:   code,
 		ip:     0,
@@ -31,7 +31,7 @@ func (vm *VM) Run() {
 
 		switch op {
 		case opcode.PUSH:
-			val := vm.code[vm.ip]
+			val := int(vm.code[vm.ip])
 			vm.ip++
 			vm.push(val)
 		case opcode.ADD:

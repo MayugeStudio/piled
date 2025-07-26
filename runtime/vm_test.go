@@ -9,13 +9,13 @@ import (
 func TestVM_Run(t *testing.T) {
 	tests := []struct {
 		name   string
-		code   []int
+		code   []opcode.Code
 		want   []int
 		output string
 	}{
 		{
 			name: "simple add",
-			code: []int{
+			code: []opcode.Code{
 				opcode.PUSH, 10,
 				opcode.PUSH, 20,
 				opcode.ADD,
@@ -25,7 +25,7 @@ func TestVM_Run(t *testing.T) {
 		},
 		{
 			name: "simple sub",
-			code: []int{
+			code: []opcode.Code{
 				opcode.PUSH, 50,
 				opcode.PUSH, 20,
 				opcode.SUB,
@@ -35,7 +35,7 @@ func TestVM_Run(t *testing.T) {
 		},
 		{
 			name: "add and print",
-			code: []int{
+			code: []opcode.Code{
 				opcode.PUSH, 5,
 				opcode.PUSH, 7,
 				opcode.ADD,
@@ -46,7 +46,7 @@ func TestVM_Run(t *testing.T) {
 		},
 		{
 			name: "push multiple values",
-			code: []int{
+			code: []opcode.Code{
 				opcode.PUSH, 1,
 				opcode.PUSH, 2,
 				opcode.PUSH, 3,

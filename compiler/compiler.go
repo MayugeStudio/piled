@@ -1,17 +1,18 @@
 package compiler
 
 import "fmt"
+import "piled/token"
 import "piled/expr"
 import "piled/opcode"
 
 type Compiler struct {
-	code []int
+	code []opcode.Code
 }
 
 func New() *Compiler {
-	return &Compiler{code: make([]int, 0)}
+	return &Compiler{code: make([]opcode.Code, 0)}
 }
-func (c *Compiler) Compile(e expr.Expr) ([]int, error) {
+func (c *Compiler) Compile(e expr.Expr) ([]opcode.Code, error) {
 	switch v := e.(type) {
 	case *expr.Literal:
 		c.compileLiteral(v)
@@ -27,26 +28,26 @@ func (c *Compiler) Compile(e expr.Expr) ([]int, error) {
 	return c.code, nil
 }
 func (c *Compiler) compileLiteral(l *expr.Literal) {
-	c.emit(opcode.PUSH, l.Value)
+	c.emit(opcode.PUSH, opcode.Code(l.Value))
 }
 
 // TODO: Add symbol - opcode relation mapping
 func (c *Compiler) compileSymbol(s *expr.Symbol) error {
-	switch s.Type {
-	case expr.SymbolPrint:
+	switch s.Token.Type {
+	case token.PRINT:
 		c.emit(opcode.PRINT)
-	case expr.SymbolAdd:
+	case token.ADD:
 		c.emit(opcode.ADD)
-	case expr.SymbolSub:
+	case token.SUB:
 		c.emit(opcode.SUB)
-	case expr.SymbolGt:
+	case token.GT:
 		c.emit(opcode.GT)
-	case expr.SymbolLt:
+	case token.LT:
 		c.emit(opcode.LT)
-	case expr.SymbolEq:
+	case token.EQ:
 		c.emit(opcode.EQ)
 	default:
-		return fmt.Errorf("unknown symbol: %s", s.Name)
+		return fmt.Errorf("unknown token has been found at compile time: %s", s.Token.Type)
 	}
 	return nil
 }
@@ -70,7 +71,7 @@ func (c *Compiler) compileList(lst *expr.List) error {
 	}
 	return nil
 }
-func (c *Compiler) emit(op int, args ...int) {
+func (c *Compiler) emit(op opcode.Code, val ...opcode.Code) {
 	c.code = append(c.code, op)
-	c.code = append(c.code, args...)
+	c.code = append(c.code, val...)
 }

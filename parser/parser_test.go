@@ -18,8 +18,8 @@ func lit(v int) *expr.Literal {
 	return &expr.Literal{Value: v}
 }
 
-func sym(v string, t expr.SymbolType) *expr.Symbol {
-	return &expr.Symbol{Name: v, Type: t}
+func sym(t token.Token) *expr.Symbol {
+	return &expr.Symbol{Token: t}
 }
 
 func list(elems ...expr.Expr) *expr.List {
@@ -73,14 +73,14 @@ func TestParseExpr(t *testing.T) {
 			in: []token.Token{
 				tokt(token.LPAREN),
 				tok(token.NUMBER, "69"),
-				tok(token.IDENT, "print"),
+				tokt(token.PRINT),
 				tokt(token.RPAREN),
 				tokt(token.EOF),
 			},
 			want: &expr.List{
 				Elements: []expr.Expr{
 					lit(69),
-					sym("print", expr.SymbolPrint),
+					sym(tokt(token.PRINT)),
 				},
 			},
 		},
@@ -91,9 +91,9 @@ func TestParseExpr(t *testing.T) {
 				tokt(token.LPAREN),
 				tok(token.NUMBER, "1"),
 				tok(token.NUMBER, "1"),
-				tok(token.IDENT, "+"),
+				tokt(token.ADD),
 				tokt(token.RPAREN),
-				tok(token.IDENT, "print"),
+				tokt(token.PRINT),
 				tokt(token.RPAREN),
 				tokt(token.EOF),
 			},
@@ -102,9 +102,9 @@ func TestParseExpr(t *testing.T) {
 					list(
 						lit(1),
 						lit(1),
-						sym("+", expr.SymbolAdd),
+						sym(tokt(token.ADD)),
 					),
-					sym("print", expr.SymbolPrint),
+					sym(tokt(token.PRINT)),
 				},
 			},
 		},
@@ -115,14 +115,14 @@ func TestParseExpr(t *testing.T) {
 				tokt(token.LPAREN),
 				tok(token.NUMBER, "1"),
 				tok(token.NUMBER, "1"),
-				tok(token.IDENT, "+"),
+				tokt(token.ADD),
 				tokt(token.RPAREN),
 				tokt(token.LPAREN),
 				tok(token.NUMBER, "1"),
 				tok(token.NUMBER, "1"),
-				tok(token.IDENT, "+"),
+				tokt(token.ADD),
 				tokt(token.RPAREN),
-				tok(token.IDENT, "print"),
+				tokt(token.PRINT),
 				tokt(token.RPAREN),
 				tokt(token.EOF),
 			},
@@ -131,14 +131,14 @@ func TestParseExpr(t *testing.T) {
 					list(
 						lit(1),
 						lit(1),
-						sym("+", expr.SymbolAdd),
+						sym(tokt(token.ADD)),
 					),
 					list(
 						lit(1),
 						lit(1),
-						sym("+", expr.SymbolAdd),
+						sym(tokt(token.ADD)),
 					),
-					sym("print", expr.SymbolPrint),
+					sym(tokt(token.PRINT)),
 				},
 			},
 		},

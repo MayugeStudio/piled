@@ -3,19 +3,24 @@ package compiler
 import (
 	"piled/expr"
 	"piled/opcode"
+	"piled/token"
 	"testing"
 )
+
+func tok(t token.Type) token.Token {
+	return token.Token{Type: t}
+}
 
 func TestCompiler_Compile(t *testing.T) {
 	tests := []struct {
 		name string
 		in   expr.Expr
-		want []int
+		want []opcode.Code
 	}{
 		{
 			name: "single literal",
 			in:   &expr.Literal{Value: 42},
-			want: []int{opcode.PUSH, 42},
+			want: []opcode.Code{opcode.PUSH, 42},
 		},
 		{
 			name: "simple add",
@@ -23,10 +28,10 @@ func TestCompiler_Compile(t *testing.T) {
 				Elements: []expr.Expr{
 					&expr.Literal{Value: 20},
 					&expr.Literal{Value: 10},
-					&expr.Symbol{Name: "+"},
+					&expr.Symbol{Token: tok(token.ADD)},
 				},
 			},
-			want: []int{
+			want: []opcode.Code{
 				opcode.PUSH, 20,
 				opcode.PUSH, 10,
 				opcode.ADD,
@@ -38,10 +43,10 @@ func TestCompiler_Compile(t *testing.T) {
 				Elements: []expr.Expr{
 					&expr.Literal{Value: 20},
 					&expr.Literal{Value: 10},
-					&expr.Symbol{Name: "-"},
+					&expr.Symbol{Token: tok(token.SUB)},
 				},
 			},
-			want: []int{
+			want: []opcode.Code{
 				opcode.PUSH, 20,
 				opcode.PUSH, 10,
 				opcode.SUB,
@@ -55,13 +60,13 @@ func TestCompiler_Compile(t *testing.T) {
 						Elements: []expr.Expr{
 							&expr.Literal{Value: 10},
 							&expr.Literal{Value: 20},
-							&expr.Symbol{Name: "+"},
+							&expr.Symbol{Token: tok(token.ADD)},
 						},
 					},
-					&expr.Symbol{Name: "print"},
+					&expr.Symbol{Token: tok(token.PRINT)},
 				},
 			},
-			want: []int{
+			want: []opcode.Code{
 				opcode.PUSH, 10,
 				opcode.PUSH, 20,
 				opcode.ADD,
@@ -84,7 +89,7 @@ func TestCompiler_Compile(t *testing.T) {
 	}
 }
 
-func equalSlices(a, b []int) bool {
+func equalSlices(a, b []opcode.Code) bool {
 	if len(a) != len(b) {
 		return false
 	}

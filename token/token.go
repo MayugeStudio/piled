@@ -5,10 +5,16 @@ type Type string
 
 const (
 	LPAREN Type = "("
-	RPAREN      = ")"
-	IDENT       = "IDENT"
-	NUMBER      = "NUMBER"
-	EOF         = "EOF"
+	RPAREN Type     = ")"
+	EQ     Type     = "="
+	PRINT  Type     = "print" // TODO: PRINT should be built-in function
+	ADD    Type     = "+"
+	SUB    Type     = "-"
+	GT     Type     = ">"
+	LT     Type     = "<"
+	IDENT  Type     = "IDENT"
+	NUMBER Type     = "NUMBER"
+	EOF    Type     = "EOF"
 )
 
 type Token struct {

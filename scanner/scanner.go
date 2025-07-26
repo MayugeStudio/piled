@@ -44,6 +44,31 @@ func ScanProgram(source string) ([]token.Token, error) {
 				token := token.Token{Type: token.RPAREN, Line: line}
 				result = append(result, token)
 			}
+		case '+':
+			{
+				token := token.Token{Type: token.ADD, Line: line}
+				result = append(result, token)
+			}
+		case '-':
+			{
+				token := token.Token{Type: token.SUB, Line: line}
+				result = append(result, token)
+			}
+		case '=':
+			{
+				token := token.Token{Type: token.EQ, Line: line}
+				result = append(result, token)
+			}
+		case '>':
+			{
+				token := token.Token{Type: token.GT, Line: line}
+				result = append(result, token)
+			}
+		case '<':
+			{
+				token := token.Token{Type: token.LT, Line: line}
+				result = append(result, token)
+			}
 		case '\n', '\r':
 			{
 				if source[i] == '\r' {
@@ -67,11 +92,14 @@ func ScanProgram(source string) ([]token.Token, error) {
 					for i+1 < len(source) && isAlpha(rune(source[i+1])) {
 						i += 1
 					}
-					token := token.Token{Type: token.IDENT, Literal: source[start : i+1], Line: line}
-					result = append(result, token)
-				} else if isValidSymbol(rune(source[i])) {
-					token := token.Token{Type: token.IDENT, Literal: string(source[i]), Line: line}
-					result = append(result, token)
+					// TODO: PRINT have to be handled other way.
+					if source[start : i+1] == "print" {
+						token := token.Token{Type: token.PRINT, Line: line}
+						result = append(result, token)
+					} else {
+						token := token.Token{Type: token.IDENT, Literal: source[start : i+1], Line: line}
+						result = append(result, token)
+					}
 				} else if isNumeric(rune(source[i])) {
 					start := i
 					for i+1 < len(source) && isNumeric(rune(source[i+1])) {
@@ -82,7 +110,7 @@ func ScanProgram(source string) ([]token.Token, error) {
 						token := token.Token{Type: token.NUMBER, Literal: source[start : i+1], Line: line}
 						result = append(result, token)
 					} else {
-						return nil, fmt.Errorf("got unknown literal: %c", source[start:i+1])
+						return nil, fmt.Errorf("got unknown literal: %s", string(source[start:i+1]))
 					}
 				} else {
 					return nil, fmt.Errorf("got unknown literal: %c", rune(source[i]))
