@@ -4,9 +4,6 @@ import "fmt"
 import "io"
 import "os"
 
-// TODO: Delete it
-var writer io.Writer
-
 type VM struct {
 	code   []OPCode
 	ip     int
