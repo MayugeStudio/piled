@@ -58,7 +58,7 @@ func (vm *VM) push(val int) {
 
 func (vm *VM) pop() int {
 	if len(vm.stack) == 0 {
-		panic("RUNTIME ERROR")
+		panic("RUNTIME ERROR: STACK UNDERFLOW")
 	}
 	index := len(vm.stack) - 1
 	val := vm.stack[index]
