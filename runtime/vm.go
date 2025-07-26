@@ -5,6 +5,7 @@ import "io"
 import "os"
 import "piled/opcode"
 
+// TODO: Delete it
 var writer io.Writer
 
 type VM struct {
