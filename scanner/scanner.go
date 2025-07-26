@@ -10,8 +10,14 @@ func isAlpha(c rune) bool {
 	return (c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')
 }
 
+// TODO: Symbol has to be handled more politely
 func isValidSymbol(c rune) bool {
-	return c == '+' || c == '-'
+	switch c {
+	case '+', '-', '>', '<', '=':
+		return true
+	default:
+		return false
+	}
 }
 
 func isNumeric(c rune) bool {

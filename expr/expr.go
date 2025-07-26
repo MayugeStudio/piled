@@ -10,12 +10,18 @@ const (
 	SymbolPrint
 	SymbolAdd
 	SymbolSub
+	SymbolGt
+	SymbolLt
+	SymbolEq
 )
 
 var Keywords = map[string]SymbolType{
 	"print": SymbolPrint,
 	"+":     SymbolAdd,
 	"-":     SymbolSub,
+	">":     SymbolGt,
+	"<":     SymbolLt,
+	"=":     SymbolEq,
 }
 
 type Expr interface {

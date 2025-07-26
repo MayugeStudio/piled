@@ -32,13 +32,19 @@ func (c *Compiler) compileLiteral(l *expr.Literal) {
 
 // TODO: Add symbol - opcode relation mapping
 func (c *Compiler) compileSymbol(s *expr.Symbol) error {
-	switch s.Name {
-	case "print":
+	switch s.Type {
+	case expr.SymbolPrint:
 		c.emit(opcode.PRINT)
-	case "+":
+	case expr.SymbolAdd:
 		c.emit(opcode.ADD)
-	case "-":
+	case expr.SymbolSub:
 		c.emit(opcode.SUB)
+	case expr.SymbolGt:
+		c.emit(opcode.GT)
+	case expr.SymbolLt:
+		c.emit(opcode.LT)
+	case expr.SymbolEq:
+		c.emit(opcode.EQ)
 	default:
 		return fmt.Errorf("unknown symbol: %s", s.Name)
 	}

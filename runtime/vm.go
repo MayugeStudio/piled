@@ -41,6 +41,36 @@ func (vm *VM) Run() {
 			b := vm.pop()
 			a := vm.pop()
 			vm.push(a - b)
+		case opcode.GT:
+			b := vm.pop()
+			a := vm.pop()
+			var v int;
+			if a > b {
+				v = 1
+			} else {
+				v = 0
+			}
+			vm.push(v)
+		case opcode.LT:
+			b := vm.pop()
+			a := vm.pop()
+			var v int;
+			if a < b {
+				v = 1
+			} else {
+				v = 0
+			}
+			vm.push(v)
+		case opcode.EQ:
+			b := vm.pop()
+			a := vm.pop()
+			var v int;
+			if a == b {
+				v = 1
+			} else {
+				v = 0
+			}
+			vm.push(v)
 		case opcode.PRINT:
 			a := vm.pop()
 			vm.Println(a)
