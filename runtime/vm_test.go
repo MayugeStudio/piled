@@ -2,54 +2,53 @@ package runtime
 
 import (
 	"bytes"
-	"piled/opcode"
 	"testing"
 )
 
 func TestVM_Run(t *testing.T) {
 	tests := []struct {
 		name   string
-		code   []opcode.Code
+		code   []OPCode
 		want   []int
 		output string
 	}{
 		{
 			name: "simple add",
-			code: []opcode.Code{
-				opcode.PUSH, 10,
-				opcode.PUSH, 20,
-				opcode.ADD,
+			code: []OPCode{
+				PUSH, 10,
+				PUSH, 20,
+				ADD,
 			},
 			want:   []int{30},
 			output: "",
 		},
 		{
 			name: "simple sub",
-			code: []opcode.Code{
-				opcode.PUSH, 50,
-				opcode.PUSH, 20,
-				opcode.SUB,
+			code: []OPCode{
+				PUSH, 50,
+				PUSH, 20,
+				SUB,
 			},
 			want:   []int{30},
 			output: "",
 		},
 		{
 			name: "add and print",
-			code: []opcode.Code{
-				opcode.PUSH, 5,
-				opcode.PUSH, 7,
-				opcode.ADD,
-				opcode.PRINT,
+			code: []OPCode{
+				PUSH, 5,
+				PUSH, 7,
+				ADD,
+				PRINT,
 			},
 			want:   []int{},
 			output: "12\n",
 		},
 		{
 			name: "push multiple values",
-			code: []opcode.Code{
-				opcode.PUSH, 1,
-				opcode.PUSH, 2,
-				opcode.PUSH, 3,
+			code: []OPCode{
+				PUSH, 1,
+				PUSH, 2,
+				PUSH, 3,
 			},
 			want:   []int{1, 2, 3},
 			output: "",

@@ -1,15 +1,15 @@
-package piled
+package main
 
 import (
 	"os"
 	"piled/compiler"
+	"piled/lexer"
 	"piled/parser"
 	"piled/runtime"
-	"piled/scanner"
 )
 
 func RunSource(source string) error {
-	tokens, scanErr := scanner.ScanProgram(source)
+	tokens, scanErr := lexer.LexProgram(source)
 	if scanErr != nil {
 		return scanErr
 	}
