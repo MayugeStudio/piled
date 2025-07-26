@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"piled"
 )
 
 func runREPL() {
@@ -24,7 +23,7 @@ cmd:
 			}
 		default:
 			{
-				runningErr := piled.RunSource(prompt)
+				runningErr := RunSource(prompt)
 				if runningErr != nil {
 					fmt.Fprintf(os.Stderr, "Error: %s\n", runningErr)
 				}
@@ -41,12 +40,12 @@ func main() {
 		_ = argv[0]
 		argv = argv[1:]
 		filename := argv[0]
-		source, readErr := piled.ReadSourceFromFile(filename)
+		source, readErr := ReadSourceFromFile(filename)
 		if readErr != nil {
 			fmt.Fprintf(os.Stderr, "Error: %s\n", readErr)
 			os.Exit(1)
 		}
-		runningErr := piled.RunSource(source)
+		runningErr := RunSource(source)
 		if runningErr != nil {
 			fmt.Fprintf(os.Stderr, "Error: %s\n", runningErr)
 			os.Exit(1)

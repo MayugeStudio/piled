@@ -1,4 +1,4 @@
-package piled
+package main
 
 import (
 	"os"
