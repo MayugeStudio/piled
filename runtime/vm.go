@@ -45,7 +45,7 @@ func (vm *VM) Run() {
 		case opcode.GT:
 			b := vm.pop()
 			a := vm.pop()
-			var v int;
+			var v int
 			if a > b {
 				v = 1
 			} else {
@@ -55,7 +55,7 @@ func (vm *VM) Run() {
 		case opcode.LT:
 			b := vm.pop()
 			a := vm.pop()
-			var v int;
+			var v int
 			if a < b {
 				v = 1
 			} else {
@@ -65,7 +65,7 @@ func (vm *VM) Run() {
 		case opcode.EQ:
 			b := vm.pop()
 			a := vm.pop()
-			var v int;
+			var v int
 			if a == b {
 				v = 1
 			} else {

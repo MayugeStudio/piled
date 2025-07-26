@@ -24,7 +24,6 @@ func isNumeric(c rune) bool {
 	return (c <= '9' && c >= '0')
 }
 
-
 // TODO: I probably have to change the strategy of scanning
 func ScanProgram(source string) ([]token.Token, error) {
 	result := make([]token.Token, 0)
@@ -93,7 +92,7 @@ func ScanProgram(source string) ([]token.Token, error) {
 						i += 1
 					}
 					// TODO: PRINT have to be handled other way.
-					if source[start : i+1] == "print" {
+					if source[start:i+1] == "print" {
 						token := token.Token{Type: token.PRINT, Line: line}
 						result = append(result, token)
 					} else {

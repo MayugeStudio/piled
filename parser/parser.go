@@ -39,9 +39,9 @@ func (p *Parser) ParseExpr() (expr.Expr, error) {
 		}
 	// TODO: Too ugly to read
 	case token.IDENT, token.ADD, token.SUB, token.EQ, token.GT, token.LT, token.PRINT:
-	{
+		{
 			return p.parseSymbol(tok), nil
-	}
+		}
 	case token.LPAREN:
 		{
 			elems := []expr.Expr{}
