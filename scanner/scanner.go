@@ -24,6 +24,8 @@ func isNumeric(c rune) bool {
 	return (c <= '9' && c >= '0')
 }
 
+
+// TODO: I probably have to change the strategy of scanning
 func ScanProgram(source string) ([]token.Token, error) {
 	result := make([]token.Token, 0)
 

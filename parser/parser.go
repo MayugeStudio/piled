@@ -39,6 +39,7 @@ func (p *Parser) ParseExpr() (expr.Expr, error) {
 		}
 	case token.IDENT:
 		{
+	// TODO: Too ugly to read
 			return p.parseSymbol(tok), nil
 		}
 	case token.LPAREN:

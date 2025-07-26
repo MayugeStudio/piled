@@ -3,26 +3,7 @@ package expr
 import "strconv"
 import "strings"
 
-type SymbolType int
-
-const (
-	SymbolUnkown SymbolType = iota
-	SymbolPrint
-	SymbolAdd
-	SymbolSub
-	SymbolGt
-	SymbolLt
-	SymbolEq
-)
-
-var Keywords = map[string]SymbolType{
-	"print": SymbolPrint,
-	"+":     SymbolAdd,
-	"-":     SymbolSub,
-	">":     SymbolGt,
-	"<":     SymbolLt,
-	"=":     SymbolEq,
-}
+// TODO: Introduce Binop expr
 
 type Expr interface {
 	String() string
