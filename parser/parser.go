@@ -37,7 +37,8 @@ func (p *Parser) ParseExpr() (expr.Expr, error) {
 			val, _ := strconv.Atoi(tok.Literal)
 			return &expr.Literal{Value: int(val)}, nil
 		}
-	case token.IDENT:
+	// TODO: Too ugly to read
+	case token.IDENT, token.ADD, token.SUB, token.EQ, token.GT, token.LT, token.PRINT:
 		{
 			return p.parseSymbol(tok), nil
 		}
@@ -63,8 +64,5 @@ func (p *Parser) ParseExpr() (expr.Expr, error) {
 }
 
 func (p *Parser) parseSymbol(tok token.Token) expr.Expr {
-	if symType, ok := expr.Keywords[tok.Literal]; ok {
-		return &expr.Symbol{Name: tok.Literal, Type: symType}
-	}
-	return &expr.Symbol{Name: tok.Literal, Type: expr.SymbolUnkown}
+	return &expr.Symbol{Token: tok}
 }

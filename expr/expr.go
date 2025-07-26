@@ -2,21 +2,9 @@ package expr
 
 import "strconv"
 import "strings"
+import "piled/token"
 
-type SymbolType int
-
-const (
-	SymbolUnkown SymbolType = iota
-	SymbolPrint
-	SymbolAdd
-	SymbolSub
-)
-
-var Keywords = map[string]SymbolType{
-	"print": SymbolPrint,
-	"+":     SymbolAdd,
-	"-":     SymbolSub,
-}
+// TODO: Introduce Binop expr
 
 type Expr interface {
 	String() string
@@ -37,17 +25,16 @@ func (l *Literal) Equal(other Expr) bool {
 }
 
 type Symbol struct {
-	Name string
-	Type SymbolType
+	Token token.Token
 }
 
 func (s *Symbol) String() string {
-	return s.Name
+	return string(s.Token.Type)
 }
 
 func (s *Symbol) Equal(other Expr) bool {
 	o, ok := other.(*Symbol)
-	return ok && s.Name == o.Name && s.Type == o.Type
+	return ok && s.Token.Type == o.Token.Type
 }
 
 type List struct {

@@ -1,8 +1,13 @@
 package opcode
 
+type Code int
+
 const (
-	PUSH = iota
+	PUSH Code = iota
 	ADD
 	SUB
+	GT
+	LT
+	EQ
 	PRINT
 )

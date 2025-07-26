@@ -10,14 +10,21 @@ func isAlpha(c rune) bool {
 	return (c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')
 }
 
+// TODO: Symbol has to be handled more politely
 func isValidSymbol(c rune) bool {
-	return c == '+' || c == '-'
+	switch c {
+	case '+', '-', '>', '<', '=':
+		return true
+	default:
+		return false
+	}
 }
 
 func isNumeric(c rune) bool {
 	return (c <= '9' && c >= '0')
 }
 
+// TODO: I probably have to change the strategy of scanning
 func ScanProgram(source string) ([]token.Token, error) {
 	result := make([]token.Token, 0)
 
@@ -34,6 +41,31 @@ func ScanProgram(source string) ([]token.Token, error) {
 		case ')':
 			{
 				token := token.Token{Type: token.RPAREN, Line: line}
+				result = append(result, token)
+			}
+		case '+':
+			{
+				token := token.Token{Type: token.ADD, Line: line}
+				result = append(result, token)
+			}
+		case '-':
+			{
+				token := token.Token{Type: token.SUB, Line: line}
+				result = append(result, token)
+			}
+		case '=':
+			{
+				token := token.Token{Type: token.EQ, Line: line}
+				result = append(result, token)
+			}
+		case '>':
+			{
+				token := token.Token{Type: token.GT, Line: line}
+				result = append(result, token)
+			}
+		case '<':
+			{
+				token := token.Token{Type: token.LT, Line: line}
 				result = append(result, token)
 			}
 		case '\n', '\r':
@@ -59,11 +91,14 @@ func ScanProgram(source string) ([]token.Token, error) {
 					for i+1 < len(source) && isAlpha(rune(source[i+1])) {
 						i += 1
 					}
-					token := token.Token{Type: token.IDENT, Literal: source[start : i+1], Line: line}
-					result = append(result, token)
-				} else if isValidSymbol(rune(source[i])) {
-					token := token.Token{Type: token.IDENT, Literal: string(source[i]), Line: line}
-					result = append(result, token)
+					// TODO: PRINT have to be handled other way.
+					if source[start:i+1] == "print" {
+						token := token.Token{Type: token.PRINT, Line: line}
+						result = append(result, token)
+					} else {
+						token := token.Token{Type: token.IDENT, Literal: source[start : i+1], Line: line}
+						result = append(result, token)
+					}
 				} else if isNumeric(rune(source[i])) {
 					start := i
 					for i+1 < len(source) && isNumeric(rune(source[i+1])) {
@@ -74,7 +109,7 @@ func ScanProgram(source string) ([]token.Token, error) {
 						token := token.Token{Type: token.NUMBER, Literal: source[start : i+1], Line: line}
 						result = append(result, token)
 					} else {
-						return nil, fmt.Errorf("got unknown literal: %c", source[start:i+1])
+						return nil, fmt.Errorf("got unknown literal: %s", string(source[start:i+1]))
 					}
 				} else {
 					return nil, fmt.Errorf("got unknown literal: %c", rune(source[i]))
