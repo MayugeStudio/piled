@@ -30,6 +30,7 @@ func (c *Compiler) compileLiteral(l *expr.Literal) {
 	c.emit(opcode.PUSH, l.Value)
 }
 
+// TODO: Add symbol - opcode relation mapping
 func (c *Compiler) compileSymbol(s *expr.Symbol) error {
 	switch s.Name {
 	case "print":
