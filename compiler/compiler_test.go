@@ -1,7 +1,7 @@
 package compiler
 
 import (
-	"piled/expr"
+	"piled/parser"
 	"piled/opcode"
 	"piled/token"
 	"testing"
@@ -14,21 +14,21 @@ func tok(t token.Type) token.Token {
 func TestCompiler_Compile(t *testing.T) {
 	tests := []struct {
 		name string
-		in   expr.Expr
+		in   parser.Expr
 		want []opcode.Code
 	}{
 		{
 			name: "single literal",
-			in:   &expr.Literal{Value: 42},
+			in:   &parser.Literal{Value: 42},
 			want: []opcode.Code{opcode.PUSH, 42},
 		},
 		{
 			name: "simple add",
-			in: &expr.List{
-				Elements: []expr.Expr{
-					&expr.Literal{Value: 20},
-					&expr.Literal{Value: 10},
-					&expr.Symbol{Token: tok(token.ADD)},
+			in: &parser.List{
+				Elements: []parser.Expr{
+					&parser.Literal{Value: 20},
+					&parser.Literal{Value: 10},
+					&parser.Symbol{Token: tok(token.ADD)},
 				},
 			},
 			want: []opcode.Code{
@@ -39,11 +39,11 @@ func TestCompiler_Compile(t *testing.T) {
 		},
 		{
 			name: "simple sub",
-			in: &expr.List{
-				Elements: []expr.Expr{
-					&expr.Literal{Value: 20},
-					&expr.Literal{Value: 10},
-					&expr.Symbol{Token: tok(token.SUB)},
+			in: &parser.List{
+				Elements: []parser.Expr{
+					&parser.Literal{Value: 20},
+					&parser.Literal{Value: 10},
+					&parser.Symbol{Token: tok(token.SUB)},
 				},
 			},
 			want: []opcode.Code{
@@ -54,16 +54,16 @@ func TestCompiler_Compile(t *testing.T) {
 		},
 		{
 			name: "nested expression with print",
-			in: &expr.List{
-				Elements: []expr.Expr{
-					&expr.List{
-						Elements: []expr.Expr{
-							&expr.Literal{Value: 10},
-							&expr.Literal{Value: 20},
-							&expr.Symbol{Token: tok(token.ADD)},
+			in: &parser.List{
+				Elements: []parser.Expr{
+					&parser.List{
+						Elements: []parser.Expr{
+							&parser.Literal{Value: 10},
+							&parser.Literal{Value: 20},
+							&parser.Symbol{Token: tok(token.ADD)},
 						},
 					},
-					&expr.Symbol{Token: tok(token.PRINT)},
+					&parser.Symbol{Token: tok(token.PRINT)},
 				},
 			},
 			want: []opcode.Code{

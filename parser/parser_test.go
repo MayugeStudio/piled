@@ -3,7 +3,6 @@ package parser
 import (
 	"testing"
 
-	"piled/expr"
 	"piled/token"
 )
 
@@ -14,23 +13,23 @@ func tokt(t token.Type) token.Token {
 	return token.Token{Type: t}
 }
 
-func lit(v int) *expr.Literal {
-	return &expr.Literal{Value: v}
+func lit(v int) *Literal {
+	return &Literal{Value: v}
 }
 
-func sym(t token.Token) *expr.Symbol {
-	return &expr.Symbol{Token: t}
+func sym(t token.Token) *Symbol {
+	return &Symbol{Token: t}
 }
 
-func list(elems ...expr.Expr) *expr.List {
-	return &expr.List{Elements: elems}
+func list(elems ...Expr) *List {
+	return &List{Elements: elems}
 }
 
 func TestParseExpr(t *testing.T) {
 	tests := []struct {
 		name string
 		in   []token.Token
-		want expr.Expr
+		want Expr
 	}{
 		{
 			name: "nothing",
@@ -39,7 +38,7 @@ func TestParseExpr(t *testing.T) {
 				tokt(token.RPAREN),
 				tokt(token.EOF),
 			},
-			want: &expr.List{},
+			want: &List{},
 		},
 		{
 			name: "one value",
@@ -49,7 +48,7 @@ func TestParseExpr(t *testing.T) {
 				tokt(token.RPAREN),
 				tokt(token.EOF),
 			},
-			want: &expr.List{Elements: []expr.Expr{lit(69)}},
+			want: &List{Elements: []Expr{lit(69)}},
 		},
 		{
 			name: "several values",
@@ -62,8 +61,8 @@ func TestParseExpr(t *testing.T) {
 				tokt(token.RPAREN),
 				tokt(token.EOF),
 			},
-			want: &expr.List{
-				Elements: []expr.Expr{
+			want: &List{
+				Elements: []Expr{
 					lit(100), lit(200), lit(300), lit(400),
 				},
 			},
@@ -77,8 +76,8 @@ func TestParseExpr(t *testing.T) {
 				tokt(token.RPAREN),
 				tokt(token.EOF),
 			},
-			want: &expr.List{
-				Elements: []expr.Expr{
+			want: &List{
+				Elements: []Expr{
 					lit(69),
 					sym(tokt(token.PRINT)),
 				},
@@ -97,8 +96,8 @@ func TestParseExpr(t *testing.T) {
 				tokt(token.RPAREN),
 				tokt(token.EOF),
 			},
-			want: &expr.List{
-				Elements: []expr.Expr{
+			want: &List{
+				Elements: []Expr{
 					list(
 						lit(1),
 						lit(1),
@@ -126,8 +125,8 @@ func TestParseExpr(t *testing.T) {
 				tokt(token.RPAREN),
 				tokt(token.EOF),
 			},
-			want: &expr.List{
-				Elements: []expr.Expr{
+			want: &List{
+				Elements: []Expr{
 					list(
 						lit(1),
 						lit(1),
