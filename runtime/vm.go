@@ -3,19 +3,18 @@ package runtime
 import "fmt"
 import "io"
 import "os"
-import "piled/opcode"
 
 // TODO: Delete it
 var writer io.Writer
 
 type VM struct {
-	code   []opcode.Code
+	code   []OPCode
 	ip     int
 	stack  []int
 	stdout io.Writer
 }
 
-func NewVM(code []opcode.Code) *VM {
+func NewVM(code []OPCode) *VM {
 	return &VM{
 		code:   code,
 		ip:     0,
@@ -30,19 +29,19 @@ func (vm *VM) Run() {
 		vm.ip++
 
 		switch op {
-		case opcode.PUSH:
+		case PUSH:
 			val := int(vm.code[vm.ip])
 			vm.ip++
 			vm.push(val)
-		case opcode.ADD:
+		case ADD:
 			b := vm.pop()
 			a := vm.pop()
 			vm.push(a + b)
-		case opcode.SUB:
+		case SUB:
 			b := vm.pop()
 			a := vm.pop()
 			vm.push(a - b)
-		case opcode.GT:
+		case GT:
 			b := vm.pop()
 			a := vm.pop()
 			var v int
@@ -52,7 +51,7 @@ func (vm *VM) Run() {
 				v = 0
 			}
 			vm.push(v)
-		case opcode.LT:
+		case LT:
 			b := vm.pop()
 			a := vm.pop()
 			var v int
@@ -62,7 +61,7 @@ func (vm *VM) Run() {
 				v = 0
 			}
 			vm.push(v)
-		case opcode.EQ:
+		case EQ:
 			b := vm.pop()
 			a := vm.pop()
 			var v int
@@ -72,7 +71,7 @@ func (vm *VM) Run() {
 				v = 0
 			}
 			vm.push(v)
-		case opcode.PRINT:
+		case PRINT:
 			a := vm.pop()
 			vm.Println(a)
 		}

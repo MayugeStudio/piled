@@ -3,16 +3,16 @@ package compiler
 import "fmt"
 import "piled/token"
 import "piled/parser"
-import "piled/opcode"
+import "piled/runtime"
 
 type Compiler struct {
-	code []opcode.Code
+	code []runtime.OPCode
 }
 
 func New() *Compiler {
-	return &Compiler{code: make([]opcode.Code, 0)}
+	return &Compiler{code: make([]runtime.OPCode, 0)}
 }
-func (c *Compiler) Compile(e parser.Expr) ([]opcode.Code, error) {
+func (c *Compiler) Compile(e parser.Expr) ([]runtime.OPCode, error) {
 	switch v := e.(type) {
 	case *parser.Literal:
 		c.compileLiteral(v)
@@ -28,24 +28,24 @@ func (c *Compiler) Compile(e parser.Expr) ([]opcode.Code, error) {
 	return c.code, nil
 }
 func (c *Compiler) compileLiteral(l *parser.Literal) {
-	c.emit(opcode.PUSH, opcode.Code(l.Value))
+	c.emit(runtime.PUSH, runtime.OPCode(l.Value))
 }
 
 // TODO: Add symbol - opcode relation mapping
 func (c *Compiler) compileSymbol(s *parser.Symbol) error {
 	switch s.Token.Type {
 	case token.PRINT:
-		c.emit(opcode.PRINT)
+		c.emit(runtime.PRINT)
 	case token.ADD:
-		c.emit(opcode.ADD)
+		c.emit(runtime.ADD)
 	case token.SUB:
-		c.emit(opcode.SUB)
+		c.emit(runtime.SUB)
 	case token.GT:
-		c.emit(opcode.GT)
+		c.emit(runtime.GT)
 	case token.LT:
-		c.emit(opcode.LT)
+		c.emit(runtime.LT)
 	case token.EQ:
-		c.emit(opcode.EQ)
+		c.emit(runtime.EQ)
 	default:
 		return fmt.Errorf("unknown token has been found at compile time: %s", s.Token.Type)
 	}
@@ -71,7 +71,7 @@ func (c *Compiler) compileList(lst *parser.List) error {
 	}
 	return nil
 }
-func (c *Compiler) emit(op opcode.Code, val ...opcode.Code) {
+func (c *Compiler) emit(op runtime.OPCode, val ...runtime.OPCode) {
 	c.code = append(c.code, op)
 	c.code = append(c.code, val...)
 }
