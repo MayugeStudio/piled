@@ -1,4 +1,4 @@
-package scanner
+package lexer
 
 import (
 	"reflect"
@@ -7,7 +7,7 @@ import (
 	"piled/token"
 )
 
-func TestScanProgram(t *testing.T) {
+func TestLexProgram(t *testing.T) {
 	tests := []struct {
 		name    string
 		source  string
@@ -136,20 +136,20 @@ func TestScanProgram(t *testing.T) {
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			tokens, err := ScanProgram(tc.source)
+			tokens, err := LexProgram(tc.source)
 			if tc.wantErr {
 				if err == nil {
-					t.Errorf("ScanProgram() error = %v, wantErr = %v", err, tc.wantErr)
+					t.Errorf("LexProgram() error = %v, wantErr = %v", err, tc.wantErr)
 					return
 				}
 			} else {
 				if err != nil {
-					t.Errorf("ScanProgram() error = %v, wantErr = %v", err, tc.wantErr)
+					t.Errorf("LexProgram() error = %v, wantErr = %v", err, tc.wantErr)
 					return
 				}
 			}
 			if !reflect.DeepEqual(tokens, tc.want) {
-				t.Errorf("ScanProgram doesn't returned a result which we expect")
+				t.Errorf("LexProgram doesn't returned a result which we expect")
 				if len(tokens) != len(tc.want) {
 					t.Errorf("length of tokens = %d, but want = %d", len(tokens), len(tc.want))
 				}

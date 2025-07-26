@@ -1,4 +1,4 @@
-package scanner
+package lexer
 
 import (
 	"fmt"
@@ -25,7 +25,7 @@ func isNumeric(c rune) bool {
 }
 
 // TODO: I probably have to change the strategy of scanning
-func ScanProgram(source string) ([]token.Token, error) {
+func LexProgram(source string) ([]token.Token, error) {
 	result := make([]token.Token, 0)
 
 	i := 0

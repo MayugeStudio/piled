@@ -5,11 +5,11 @@ import (
 	"piled/compiler"
 	"piled/parser"
 	"piled/runtime"
-	"piled/scanner"
+	"piled/lexer"
 )
 
 func RunSource(source string) error {
-	tokens, scanErr := scanner.ScanProgram(source)
+	tokens, scanErr := lexer.LexProgram(source)
 	if scanErr != nil {
 		return scanErr
 	}
