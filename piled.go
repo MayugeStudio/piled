@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 	"piled/compiler"
+	"piled/lexer"
 	"piled/parser"
 	"piled/runtime"
-	"piled/lexer"
 )
 
 func RunSource(source string) error {
