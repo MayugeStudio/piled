@@ -6,15 +6,18 @@ import "piled/token"
 import "piled/parser"
 import "piled/runtime"
 
+
+// Compiler contains opcodes
 type Compiler struct {
 	code []runtime.OPCode
 }
 
-
+// New is constructor for Compiler
 func New() *Compiler {
 	return &Compiler{code: make([]runtime.OPCode, 0)}
 }
 
+// Write output an array of opcode to specified filepath
 func (c *Compiler) Write(path string) error {
 	out := make([]byte, 0, 1024)
 	for _, c := range c.code {
@@ -23,6 +26,7 @@ func (c *Compiler) Write(path string) error {
 	return os.WriteFile(path, out, 0644)
 }
 
+// Compile generate opcode based parser.Expr
 func (c *Compiler) Compile(e parser.Expr) ([]runtime.OPCode, error) {
 	switch v := e.(type) {
 	case *parser.Literal:
