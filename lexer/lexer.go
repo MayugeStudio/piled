@@ -6,8 +6,10 @@ import (
 	"strconv"
 )
 
-// TODO: I probably have to change the strategy of scanning
+
+// LexProgram is currently an entry point of lexer
 func LexProgram(source string) ([]token.Token, error) {
+	// TODO: I probably have to change the strategy of scanning
 	result := make([]token.Token, 0)
 
 	i := 0
