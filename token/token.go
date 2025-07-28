@@ -1,6 +1,7 @@
 package token
 
 // TODO: move token to scanner package
+// Type used to represent type of token
 type Type string
 
 const (
@@ -17,6 +18,7 @@ const (
 	EOF    Type = "EOF"
 )
 
+// Token represent the lexer token
 type Token struct {
 	Type    Type
 	Literal string
