@@ -1,5 +1,7 @@
 package runtime
 
+// OPCode represent an instruction of piled
+// this is used to emulate programming language
 type OPCode byte
 
 const (
