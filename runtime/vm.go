@@ -4,22 +4,8 @@ import "fmt"
 import "io"
 import "os"
 
-type VM struct {
-	code   []OPCode
-	ip     int
-	stack  []int
-	stdout io.Writer
-}
-
-func NewVM(code []OPCode) *VM {
-	return &VM{
-		code:   code,
-		ip:     0,
-		stack:  make([]int, 0),
-		stdout: os.Stdout,
-	}
-}
-
+// ReadBytecodeFile returns a slice of OPCode and error
+// This function is helper function
 func ReadBytecodeFile(path string) ([]OPCode, error) {
 	raw, err  := os.ReadFile(path)
 	if err != nil {
@@ -34,6 +20,25 @@ func ReadBytecodeFile(path string) ([]OPCode, error) {
 	return c, nil
 }
 
+// VM contains piled Virtual Machine state
+type VM struct {
+	code   []OPCode
+	ip     int
+	stack  []int
+	stdout io.Writer
+}
+
+// NewVM is constructor for piled Virtual Machine
+func NewVM(code []OPCode) *VM {
+	return &VM{
+		code:   code,
+		ip:     0,
+		stack:  make([]int, 0),
+		stdout: os.Stdout,
+	}
+}
+
+// Run start emulating a slice of OPCode on VM
 func (vm *VM) Run() {
 	for vm.ip < len(vm.code) {
 		op := vm.code[vm.ip]

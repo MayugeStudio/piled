@@ -6,16 +6,10 @@ import (
 	"strconv"
 )
 
-func isAlpha(c rune) bool {
-	return (c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')
-}
 
-func isNumeric(c rune) bool {
-	return (c <= '9' && c >= '0')
-}
-
-// TODO: I probably have to change the strategy of scanning
+// LexProgram is currently an entry point of lexer
 func LexProgram(source string) ([]token.Token, error) {
+	// TODO: I probably have to change the strategy of scanning
 	result := make([]token.Token, 0)
 
 	i := 0
@@ -114,3 +108,12 @@ func LexProgram(source string) ([]token.Token, error) {
 
 	return result, nil
 }
+
+func isAlpha(c rune) bool {
+	return (c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')
+}
+
+func isNumeric(c rune) bool {
+	return (c <= '9' && c >= '0')
+}
+

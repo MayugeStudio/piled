@@ -6,11 +6,17 @@ import "piled/token"
 
 // TODO: Introduce Binop expr
 
+// Expr represent an interface of piled Expression
 type Expr interface {
+	// Stringer
 	String() string
+	// Equal is used to test the equality of Expr
 	Equal(Expr) bool
 }
 
+// Literal contains integer Value
+// Currently literal support
+//    - integer
 type Literal struct {
 	Value int
 }
@@ -24,6 +30,7 @@ func (l *Literal) Equal(other Expr) bool {
 	return ok && l.Value == o.Value
 }
 
+// Symbol is used to represent Identifier of piled
 type Symbol struct {
 	Token token.Token
 }
@@ -37,6 +44,7 @@ func (s *Symbol) Equal(other Expr) bool {
 	return ok && s.Token.Type == o.Token.Type
 }
 
+// List is used to group Exprs
 type List struct {
 	Elements []Expr
 }

@@ -4,29 +4,18 @@ import "piled/token"
 import "fmt"
 import "strconv"
 
+// Parser contains tokens and position of a current token
 type Parser struct {
 	tokens []token.Token
 	pos    int
 }
 
+// New is constructor for parser and return a Parser instance from []token.Token
 func New(tokens []token.Token) *Parser {
 	return &Parser{tokens: tokens, pos: 0}
 }
 
-func (p *Parser) peek() token.Token {
-	if p.pos >= len(p.tokens) {
-		return token.Token{}
-	}
-
-	return p.tokens[p.pos]
-}
-
-func (p *Parser) next() token.Token {
-	t := p.peek()
-	p.pos++
-	return t
-}
-
+// ParseExpr generate new Expr from tokens
 func (p *Parser) ParseExpr() (Expr, error) {
 	tok := p.next()
 
@@ -60,6 +49,20 @@ func (p *Parser) ParseExpr() (Expr, error) {
 	default:
 		return nil, fmt.Errorf("unexpected token: %v", p.peek().Literal)
 	}
+}
+
+func (p *Parser) peek() token.Token {
+	if p.pos >= len(p.tokens) {
+		return token.Token{}
+	}
+
+	return p.tokens[p.pos]
+}
+
+func (p *Parser) next() token.Token {
+	t := p.peek()
+	p.pos++
+	return t
 }
 
 func (p *Parser) parseSymbol(tok token.Token) Expr {
