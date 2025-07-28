@@ -1,6 +1,7 @@
 package compiler
 
 import "fmt"
+import "os"
 import "piled/token"
 import "piled/parser"
 import "piled/runtime"
@@ -9,9 +10,19 @@ type Compiler struct {
 	code []runtime.OPCode
 }
 
+
 func New() *Compiler {
 	return &Compiler{code: make([]runtime.OPCode, 0)}
 }
+
+func (c *Compiler) Write(path string) error {
+	out := make([]byte, 0, 1024)
+	for _, c := range c.code {
+		out = append(out, byte(c))
+	}
+	return os.WriteFile(path, out, 0644)
+}
+
 func (c *Compiler) Compile(e parser.Expr) ([]runtime.OPCode, error) {
 	switch v := e.(type) {
 	case *parser.Literal:
@@ -27,6 +38,7 @@ func (c *Compiler) Compile(e parser.Expr) ([]runtime.OPCode, error) {
 	}
 	return c.code, nil
 }
+
 func (c *Compiler) compileLiteral(l *parser.Literal) {
 	c.emit(runtime.PUSH, runtime.OPCode(l.Value))
 }
@@ -71,6 +83,7 @@ func (c *Compiler) compileList(lst *parser.List) error {
 	}
 	return nil
 }
+
 func (c *Compiler) emit(op runtime.OPCode, val ...runtime.OPCode) {
 	c.code = append(c.code, op)
 	c.code = append(c.code, val...)

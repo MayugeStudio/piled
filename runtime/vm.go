@@ -20,6 +20,20 @@ func NewVM(code []OPCode) *VM {
 	}
 }
 
+func ReadBytecodeFile(path string) ([]OPCode, error) {
+	raw, err  := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	c := make([]OPCode, 0, 1024)
+	for _, r := range raw {
+		c = append(c, OPCode(r))
+	}
+
+	return c, nil
+}
+
 func (vm *VM) Run() {
 	for vm.ip < len(vm.code) {
 		op := vm.code[vm.ip]
