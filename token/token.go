@@ -18,6 +18,9 @@ const (
 	EOF    Type = "EOF"
 )
 
+var keywords = map[string]Type{
+}
+
 // Token represent the lexer token
 type Token struct {
 	Type    Type
@@ -25,6 +28,10 @@ type Token struct {
 	Line    int
 }
 
-func (t Token) String() string {
-	return string(t.Type) + " " + t.Literal
+func LookupIdentifier(in string) Type {
+	if t, ok := keywords[in]; ok {
+		return t
+	} else {
+		return IDENT
+	}
 }
