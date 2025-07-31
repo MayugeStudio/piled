@@ -26,7 +26,7 @@ func (c *Compiler) Write(path string) error {
 	return os.WriteFile(path, out, 0644)
 }
 
-// Compile generate opcode based parser.Expr
+// Compile generate opcode based on parser.Expr
 func (c *Compiler) Compile(e parser.Expr) ([]runtime.OPCode, error) {
 	switch v := e.(type) {
 	case *parser.Literal:
