@@ -7,12 +7,12 @@ type Type string
 const (
 	LPAREN Type = "("
 	RPAREN Type = ")"
-	EQ     Type = "="
 	PRINT  Type = "print" // TODO: PRINT should be built-in function
 	ADD    Type = "+"
 	SUB    Type = "-"
 	GT     Type = ">"
 	LT     Type = "<"
+	EQ     Type = "="
 	IDENT  Type = "IDENT"
 	NUMBER Type = "NUMBER"
 	EOF    Type = "EOF"
