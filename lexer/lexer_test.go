@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	//"reflect"
+	"reflect"
 	"testing"
 
 	"piled/token"
@@ -68,10 +68,56 @@ func TestLexerNextToken(t *testing.T) {
 			l := New(tt.in)
 			//tokens := make([]token.Token, 0, 0)
 		    tok := l.NextToken()
-		    if tok != tt.want {
+		    if !reflect.Equal(tok, tt.want) {
 				t.Errorf("got = %v, want = %v\n", tok, tt.want)
 			}
 		})
+	}
 }
+
+func TestLexerNextTokenMultiple(t *testing.T) {
+	tests := []struct {
+		name    string
+		in      string
+		want    []token.Token
+	}{
+		{
+			"two-items + EOF",
+			"1234 print",
+			{
+				tok(token.NUMBER, "1234", 1),
+				tok(token.IDENT, "print", 1),
+				tok(token.EOF, "", 1),
+			},
+		},
+		{
+			"three-items + EOF",
+			"1 1 +",
+			{
+				tok(token.NUMBER, "1", 1),
+				tok(token.NUMBER, "1", 1),
+				tok(token.ADD, "+", 1),
+				tok(token.EOF, "", 1),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			l := New(tt.in)
+			tokens := make([]token.Token, 0, 0)
+		    for  {
+				tok := l.NextToken()
+				tokens = append(tokens, tok)
+				if tok.Type == token.EOF {
+					break
+				}
+			}
+
+		    if !reflect.Equal(tokens, tt.want) {
+				t.Errorf("got = %v, want = %v\n", tokens, tt.want)
+			}
+		})
+	}
 }
 
