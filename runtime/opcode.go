@@ -12,6 +12,8 @@ const (
 	// Arithmetic
 	ADD OPCode = 0x10
 	SUB OPCode = 0x11
+	MUL OPCode = 0x12
+	DIV OPCode = 0x13
 
 	// Comparison
 	GT  OPCode = 0x20
