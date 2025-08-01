@@ -4,30 +4,14 @@ import (
 	"os"
 	"piled/compiler"
 	"piled/lexer"
-	"piled/parser"
 	"piled/runtime"
 )
 
 func RunSource(source string) error {
-	tokens, scanErr := lexer.LexProgram(source)
-	if scanErr != nil {
-		return scanErr
-	}
-
-	p := parser.New(tokens)
-	exprs, parseErr := p.ParseExpr()
-	if parseErr != nil {
-		return parseErr
-	}
-
-	c := compiler.New()
-	codes, compileErr := c.Compile(exprs)
-	if compileErr != nil {
-		return compileErr
-	}
-
-	vm := runtime.NewVM(codes)
-
+	l := lexer.New(source)
+	c := compiler.New(l)
+	code := c.Compile()
+	vm := runtime.NewVM(code)
 	vm.Run()
 	return nil
 }

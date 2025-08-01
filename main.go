@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 
 	"piled/lexer"
-	"piled/parser"
 	"piled/compiler"
 	"piled/runtime"
 )
@@ -53,25 +52,9 @@ func main() {
 			os.Exit(1)
 		}
 
-		tokens, err := lexer.LexProgram(source)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-			os.Exit(1)
-		}
-
-		p := parser.New(tokens)
-		exprs, err := p.ParseExpr()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-			os.Exit(1)
-		}
-
-		c := compiler.New()
-		if _, err := c.Compile(exprs); err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-			os.Exit(1)
-		}
-
+		l := lexer.New(source)
+		c := compiler.New(l)
+		c.Compile()
 		outpath := strings.TrimSuffix(filename, filepath.Ext(filename))
 		
 		if err := c.Write(outpath + ".pdb"); err != nil {
@@ -85,11 +68,5 @@ func main() {
 		}
 		vm := runtime.NewVM(code)
 		vm.Run()
-
-		//runningErr := RunSource(source)
-		//if runningErr != nil {
-		//	fmt.Fprintf(os.Stderr, "Error: %s\n", runningErr)
-		//	os.Exit(1)
-		//}
 	}
 }

@@ -48,7 +48,7 @@ func (c *Compiler) Compile() []runtime.OPCode {
 		case token.EQ:
 			c.code = append(c.code, runtime.EQ)
 		case token.IDENT:
-			fmt.Println("currently not supported")
+			fmt.Printf("currently not supported: %s\n", tok.Literal)
 		case token.NUMBER:
 			{
 				value, _ := strconv.Atoi(tok.Literal)
