@@ -39,7 +39,10 @@ cmd:
 }
 
 func main() {
+	pl := PiledLogger{ w: os.Stdout }
+
 	argv := os.Args
+	
 	if len(argv) == 1 {
 		runREPL()
 	} else {
@@ -58,26 +61,34 @@ func main() {
 			DumpTokens(l)
 		} else {
 			filename := argv[0]
+			outpath := strings.TrimSuffix(filename, filepath.Ext(filename))
+			outfile := outpath + ".pdb"
+			
+			pl.Info("reading %s ...", filename)
 			source, err := ReadSourceFromFile(filename)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 				os.Exit(1)
 			}
+			pl.Info("reading file successfully")
 
+			pl.Info("compiling program ...")
 			l := lexer.New(source)
 			c := compiler.New(l)
 			c.Compile()
-			outpath := strings.TrimSuffix(filename, filepath.Ext(filename))
-			
+
+			pl.Info("generating bytecode to %s...", outfile)
 			if err := c.Write(outpath + ".pdb"); err != nil {
 				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 				os.Exit(1)
 			}
 
-			code, err := runtime.ReadBytecodeFile(outpath + ".pdb")
+			pl.Info("reading bytecode from %s ...", outfile)
+			code, err := runtime.ReadBytecodeFile(outfile)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 			}
+
 			vm := runtime.NewVM(code)
 			vm.Run()
 		}
