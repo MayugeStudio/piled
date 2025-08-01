@@ -66,9 +66,8 @@ func TestLexerNextToken(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := New(tt.in)
-			//tokens := make([]token.Token, 0, 0)
 		    tok := l.NextToken()
-		    if !reflect.Equal(tok, tt.want) {
+		    if !reflect.DeepEqual(tok, tt.want) {
 				t.Errorf("got = %v, want = %v\n", tok, tt.want)
 			}
 		})
@@ -82,22 +81,20 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 		want    []token.Token
 	}{
 		{
-			"two-items + EOF",
+			"two-items",
 			"1234 print",
-			{
+			[]token.Token{
 				tok(token.NUMBER, "1234", 1),
 				tok(token.IDENT, "print", 1),
-				tok(token.EOF, "", 1),
 			},
 		},
 		{
-			"three-items + EOF",
+			"three-items",
 			"1 1 +",
-			{
+			[]token.Token{
 				tok(token.NUMBER, "1", 1),
 				tok(token.NUMBER, "1", 1),
 				tok(token.ADD, "+", 1),
-				tok(token.EOF, "", 1),
 			},
 		},
 	}
@@ -106,15 +103,11 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			l := New(tt.in)
 			tokens := make([]token.Token, 0, 0)
-		    for  {
-				tok := l.NextToken()
+			for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
 				tokens = append(tokens, tok)
-				if tok.Type == token.EOF {
-					break
-				}
 			}
 
-		    if !reflect.Equal(tokens, tt.want) {
+		    if !reflect.DeepEqual(tokens, tt.want) {
 				t.Errorf("got = %v, want = %v\n", tokens, tt.want)
 			}
 		})

@@ -66,6 +66,7 @@ func (l *Lexer) NextToken() token.Token {
 	}
 
 	tok.Line = l.Line
+	l.nextChar()
 
 	return tok
 }
