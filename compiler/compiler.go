@@ -22,16 +22,7 @@ func New(l *lexer.Lexer) *Compiler {
 	}
 }
 
-// Write output an array of opcode to specified filepath
-func (c *Compiler) Write(path string) error {
-	out := make([]byte, 0, 1024)
-	for _, c := range c.code {
-		out = append(out, byte(c))
-	}
-	return os.WriteFile(path, out, 0644)
-}
-
-// Compile generate opcode based on parser.Expr
+// Compile generate opcode from source-code
 func (c *Compiler) Compile() []runtime.OPCode {
 	for tok := c.l.NextToken(); tok.Type != token.EOF; tok = c.l.NextToken() {
 		switch tok.Type {
@@ -64,5 +55,14 @@ func (c *Compiler) Compile() []runtime.OPCode {
 		}
 	}
 	return c.code
+}
+
+// Write output an array of opcode to specified filepath
+func (c *Compiler) Write(path string) error {
+	out := make([]byte, 0, 1024)
+	for _, c := range c.code {
+		out = append(out, byte(c))
+	}
+	return os.WriteFile(path, out, 0644)
 }
 

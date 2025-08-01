@@ -29,6 +29,7 @@ func New(source string) *Lexer {
 	return l
 }
 
+// NextToken provide token by reading source-code character by character
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	l.skipWhitespace()
