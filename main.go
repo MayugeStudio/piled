@@ -52,11 +52,14 @@ func main() {
 			_ = argv[0]
 			argv = argv[1:]
 			filename := argv[0]
+
+			pl.Info("reading %s ...", filename)
 			source, err := ReadSourceFromFile(filename)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "error during reading source file: %s", err)
 				os.Exit(1)
 			}
+
 			l := lexer.New(source)
 			DumpTokens(l)
 		} else {
