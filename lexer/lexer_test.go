@@ -7,158 +7,110 @@ import (
 	"piled/token"
 )
 
-func TestLexProgram(t *testing.T) {
+
+func tok(t token.Type, lit string, l int) token.Token {
+	return token.Token{
+		Type:    t,
+		Literal: lit,
+		Line:    l,
+	}
+}
+
+func TestLexerNextToken(t *testing.T) {
 	tests := []struct {
 		name    string
-		source  string
-		want    []token.Token
-		wantErr bool
+		in      string
+		want    token.Token
 	}{
 		{
-			"Parentheses", "()",
-			[]token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
+			"EOF", "",
+			tok(token.EOF, "", 1),
 		},
 		{
-			"Parentheses with a whitespace", "( )",
-			[]token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
+			"left-parenthesis", "(",
+			tok(token.LPAREN, "(", 1),
 		},
 		{
-			"Parentheses with an identifier", "(hello)",
-			[]token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.IDENT, Literal: "hello", Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
+			"right-parenthesis", ")",
+			tok(token.RPAREN, ")", 1),
 		},
 		{
-			"Two parentheses", "()()",
-			[]token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
+			"binary-operators-add", "+",
+			tok(token.ADD, "+", 1),
 		},
 		{
-			"Multiple lines", "()\n()\n()\n",
-			[]token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.LPAREN, Line: 2},
-				{Type: token.RPAREN, Line: 2},
-				{Type: token.LPAREN, Line: 3},
-				{Type: token.RPAREN, Line: 3},
-				{Type: token.EOF, Line: 4},
-			}, false,
+			"binary-operators-sub", "-",
+			tok(token.SUB, "-", 1),
 		},
 		{
-			"Multiple lines with various type of tokens", "(I)\n(like)\n(golang)\n",
-			[]token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.IDENT, Literal: "I", Line: 1},
-				{Type: token.RPAREN, Line: 1},
-
-				{Type: token.LPAREN, Line: 2},
-				{Type: token.IDENT, Literal: "like", Line: 2},
-				{Type: token.RPAREN, Line: 2},
-
-				{Type: token.LPAREN, Line: 3},
-				{Type: token.IDENT, Literal: "golang", Line: 3},
-				{Type: token.RPAREN, Line: 3},
-				{Type: token.EOF, Line: 4},
-			}, false,
+			"comparison-operators-gt", ">",
+			tok(token.GT, ">", 1),
 		},
 		{
-			"NUMBER", "12345",
-			[]token.Token{{Type: token.NUMBER, Literal: "12345", Line: 1}, {Type: token.EOF, Line: 1}}, false,
+			"comparison-operators-lt", "<",
+			tok(token.LT, "<", 1),
 		},
 		{
-			"TWO NUMBERS", "69 420",
-			[]token.Token{
-				{Type: token.NUMBER, Literal: "69", Line: 1},
-				{Type: token.NUMBER, Literal: "420", Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
+			"comparison-operators-gt", "=",
+			tok(token.EQ, "=", 1),
 		},
 		{
-			"IDENT", "HELLO",
-			[]token.Token{
-				{Type: token.IDENT, Literal: "HELLO", Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
+			"number", "12",
+			tok(token.NUMBER, "12", 1),
 		},
 		{
-			"DOUBLE IDENT", "HELLO HELLO",
-			[]token.Token{
-				{Type: token.IDENT, Literal: "HELLO", Line: 1},
-				{Type: token.IDENT, Literal: "HELLO", Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
-		},
-		{
-			"PRINT NUMBER", "(69 print)",
-			[]token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.NUMBER, Literal: "69", Line: 1},
-				{Type: token.PRINT, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
-		},
-		{
-			"PRINT NESTED", "((3 5 +) print)",
-			[]token.Token{
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.LPAREN, Line: 1},
-				{Type: token.NUMBER, Literal: "3", Line: 1},
-				{Type: token.NUMBER, Literal: "5", Line: 1},
-				{Type: token.ADD, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.PRINT, Line: 1},
-				{Type: token.RPAREN, Line: 1},
-				{Type: token.EOF, Line: 1},
-			}, false,
-		},
-		{
-			"UNEXPECTED-TOKEN", "?",
-			nil, true,
+			"identifier", "print",
+			tok(token.IDENT, "print", 1),
 		},
 	}
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			tokens, err := LexProgram(tc.source)
-			if tc.wantErr {
-				if err == nil {
-					t.Errorf("LexProgram() error = %v, wantErr = %v", err, tc.wantErr)
-					return
-				}
-			} else {
-				if err != nil {
-					t.Errorf("LexProgram() error = %v, wantErr = %v", err, tc.wantErr)
-					return
-				}
-			}
-			if !reflect.DeepEqual(tokens, tc.want) {
-				t.Errorf("LexProgram doesn't returned a result which we expect")
-				if len(tokens) != len(tc.want) {
-					t.Errorf("length of tokens = %d, but want = %d", len(tokens), len(tc.want))
-				}
-				for i := range len(tokens) {
-					t.Errorf("(index = %d).Type actual %s != want %s", i, tokens[i].Type, tc.want[i].Type)
-					t.Errorf("(index = %d).Literal actual %s != want %s", i, tokens[i].Literal, tc.want[i].Literal)
-					t.Errorf("(index = %d).Line actual %d != want %d", i, tokens[i].Line, tc.want[i].Line)
-				}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			l := New(tt.in)
+		    tok := l.NextToken()
+		    if !reflect.DeepEqual(tok, tt.want) {
+				t.Errorf("got = %v, want = %v\n", tok, tt.want)
 			}
 		})
 	}
 }
+
+func TestLexerNextTokenMultiple(t *testing.T) {
+	tests := []struct {
+		name    string
+		in      string
+		want    []token.Token
+	}{
+		{
+			"two-items",
+			"1234 print",
+			[]token.Token{
+				tok(token.NUMBER, "1234", 1),
+				tok(token.IDENT, "print", 1),
+			},
+		},
+		{
+			"three-items",
+			"1 1 +",
+			[]token.Token{
+				tok(token.NUMBER, "1", 1),
+				tok(token.NUMBER, "1", 1),
+				tok(token.ADD, "+", 1),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			l := New(tt.in)
+			tokens := make([]token.Token, 0, 0)
+			for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
+				tokens = append(tokens, tok)
+			}
+
+		    if !reflect.DeepEqual(tokens, tt.want) {
+				t.Errorf("got = %v, want = %v\n", tokens, tt.want)
+			}
+		})
+	}
+}
+

@@ -1,119 +1,135 @@
 package lexer
 
 import (
-	"fmt"
 	"piled/token"
-	"strconv"
 )
 
+// Lexer provide methods to lex source code
+type Lexer struct {
+	ch         rune
+	characters []rune
+	pos        int
+	readPos    int
 
-// LexProgram is currently an entry point of lexer
-func LexProgram(source string) ([]token.Token, error) {
-	// TODO: I probably have to change the strategy of scanning
-	result := make([]token.Token, 0)
+	Line       int
+	Col        int
+}
 
-	i := 0
-	line := 1
+// New is constructor for lexer
+func New(source string) *Lexer {
+	l := &Lexer{
+		characters:  []rune(source),
+		pos:         0,
+		readPos:     0,
+		Line:        1,
+		Col:         0,
+	}
+	// ensure that ch point at a character
+	l.nextChar()
+	return l
+}
 
-	for i < len(source) {
-		switch source[i] {
-		case '(':
-			{
-				token := token.Token{Type: token.LPAREN, Line: line}
-				result = append(result, token)
-			}
-		case ')':
-			{
-				token := token.Token{Type: token.RPAREN, Line: line}
-				result = append(result, token)
-			}
-		case '+':
-			{
-				token := token.Token{Type: token.ADD, Line: line}
-				result = append(result, token)
-			}
-		case '-':
-			{
-				token := token.Token{Type: token.SUB, Line: line}
-				result = append(result, token)
-			}
-		case '=':
-			{
-				token := token.Token{Type: token.EQ, Line: line}
-				result = append(result, token)
-			}
-		case '>':
-			{
-				token := token.Token{Type: token.GT, Line: line}
-				result = append(result, token)
-			}
-		case '<':
-			{
-				token := token.Token{Type: token.LT, Line: line}
-				result = append(result, token)
-			}
-		case '\n', '\r':
-			{
-				if source[i] == '\r' {
-					if i+1 >= len(source) {
-						return nil, fmt.Errorf("single \\r is used")
-					}
-					if source[i+1] != '\n' {
-						return nil, fmt.Errorf("single \\r is used")
-					}
-					i += 1
-				}
-				line += 1
-			}
-		case ' ':
-			{
-			} // ignore
-		default:
-			{
-				if isAlpha(rune(source[i])) {
-					start := i
-					for i+1 < len(source) && isAlpha(rune(source[i+1])) {
-						i += 1
-					}
-					// TODO: PRINT have to be handled other way.
-					if source[start:i+1] == "print" {
-						token := token.Token{Type: token.PRINT, Line: line}
-						result = append(result, token)
-					} else {
-						token := token.Token{Type: token.IDENT, Literal: source[start : i+1], Line: line}
-						result = append(result, token)
-					}
-				} else if isNumeric(rune(source[i])) {
-					start := i
-					for i+1 < len(source) && isNumeric(rune(source[i+1])) {
-						i += 1
-					}
-					_, err := strconv.Atoi(source[start : i+1])
-					if err == nil {
-						token := token.Token{Type: token.NUMBER, Literal: source[start : i+1], Line: line}
-						result = append(result, token)
-					} else {
-						return nil, fmt.Errorf("got unknown literal: %s", string(source[start:i+1]))
-					}
-				} else {
-					return nil, fmt.Errorf("got unknown literal: %c", rune(source[i]))
-				}
-			}
+func (l *Lexer) NextToken() token.Token {
+	var tok token.Token
+	l.skipWhitespace()
+
+	switch l.ch {
+	case '(':
+		tok.Type = token.LPAREN
+		tok.Literal = "("
+	case ')':
+		tok.Type = token.RPAREN
+		tok.Literal = ")"
+	case '+':
+		tok.Type = token.ADD
+		tok.Literal = "+"
+	case '-':
+		tok.Type = token.SUB
+		tok.Literal = "-"
+	case '>':
+		tok.Type = token.GT
+		tok.Literal = ">"
+	case '<':
+		tok.Type = token.LT
+		tok.Literal = "<"
+	case '=':
+		tok.Type = token.EQ
+		tok.Literal = "="
+	case rune(0):
+		tok.Type = token.EOF
+	default:
+		if isDigit(l.ch) {
+			return l.readNumeric()
 		}
-		i += 1
+		tok.Literal = l.readIdentifier()
+		tok.Type = token.LookupIdentifier(tok.Literal)
 	}
 
-	eof := token.Token{Type: token.EOF, Line: line}
-	result = append(result, eof)
+	tok.Line = l.Line
+	l.nextChar()
 
-	return result, nil
+	return tok
+}
+
+func (l *Lexer) nextChar() {
+	if l.readPos >= len(l.characters) {
+		l.ch = rune(0)
+	} else {
+		l.ch = l.characters[l.readPos]
+	}
+
+	if l.ch == ('\n') {
+		l.Line ++
+		l.Col = 0
+	}
+
+	l.pos = l.readPos
+	l.readPos++
+}
+
+func (l *Lexer) peekChar() rune {
+	if l.pos >= len(l.characters) {
+		return rune(0)
+	} else {
+		return l.characters[l.readPos]
+	}
+}
+
+func (l *Lexer) skipWhitespace() {
+	for l.ch == rune(' ') {
+		l.nextChar()
+	}
+}
+
+func (l *Lexer) readNumeric() token.Token {
+	out := ""
+	for isDigit(l.ch) {
+		out += string(l.ch)
+		l.nextChar()
+	}
+
+	return token.Token{
+		Type: token.NUMBER,
+		Literal: out,
+		Line: l.Line,
+	}
+
+}
+func (l *Lexer) readIdentifier() string {
+	out := ""
+
+	for isAlpha(l.ch) {
+		out += string(l.ch)
+		l.nextChar()
+	}
+	return out
 }
 
 func isAlpha(c rune) bool {
 	return (c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')
 }
 
-func isNumeric(c rune) bool {
+func isDigit(c rune) bool {
 	return (c <= '9' && c >= '0')
 }
 

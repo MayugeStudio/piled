@@ -2,19 +2,24 @@ package compiler
 
 import "fmt"
 import "os"
+import "strconv"
 import "piled/token"
-import "piled/parser"
+import "piled/lexer"
 import "piled/runtime"
 
 
 // Compiler contains opcodes
 type Compiler struct {
-	code []runtime.OPCode
+	l        *lexer.Lexer
+	code     []runtime.OPCode
 }
 
 // New is constructor for Compiler
-func New() *Compiler {
-	return &Compiler{code: make([]runtime.OPCode, 0)}
+func New(l *lexer.Lexer) *Compiler {
+	return &Compiler{
+		l: l,
+		code: make([]runtime.OPCode, 0),
+	}
 }
 
 // Write output an array of opcode to specified filepath
@@ -26,69 +31,34 @@ func (c *Compiler) Write(path string) error {
 	return os.WriteFile(path, out, 0644)
 }
 
-// Compile generate opcode based parser.Expr
-func (c *Compiler) Compile(e parser.Expr) ([]runtime.OPCode, error) {
-	switch v := e.(type) {
-	case *parser.Literal:
-		c.compileLiteral(v)
-	case *parser.Symbol:
-		if err := c.compileSymbol(v); err != nil {
-			return nil, err
-		}
-	case *parser.List:
-		if err := c.compileList(v); err != nil {
-			return nil, err
-		}
-	}
-	return c.code, nil
-}
-
-func (c *Compiler) compileLiteral(l *parser.Literal) {
-	c.emit(runtime.PUSH, runtime.OPCode(l.Value))
-}
-
-// TODO: Add symbol - opcode relation mapping
-func (c *Compiler) compileSymbol(s *parser.Symbol) error {
-	switch s.Token.Type {
-	case token.PRINT:
-		c.emit(runtime.PRINT)
-	case token.ADD:
-		c.emit(runtime.ADD)
-	case token.SUB:
-		c.emit(runtime.SUB)
-	case token.GT:
-		c.emit(runtime.GT)
-	case token.LT:
-		c.emit(runtime.LT)
-	case token.EQ:
-		c.emit(runtime.EQ)
-	default:
-		return fmt.Errorf("unknown token has been found at compile time: %s", s.Token.Type)
-	}
-	return nil
-}
-
-func (c *Compiler) compileList(lst *parser.List) error {
-	for _, elem := range lst.Elements {
-		switch e := elem.(type) {
-		case *parser.Literal:
-			c.compileLiteral(e)
-		case *parser.Symbol:
-			if err := c.compileSymbol(e); err != nil {
-				return err
-			}
-		case *parser.List:
-			if err := c.compileList(e); err != nil {
-				return err
+// Compile generate opcode based on parser.Expr
+func (c *Compiler) Compile() []runtime.OPCode {
+	for tok := c.l.NextToken(); tok.Type != token.EOF; tok = c.l.NextToken() {
+		switch tok.Type {
+		case token.LPAREN: // Currently ignored
+		case token.RPAREN: // Currently ignored
+		case token.ADD:
+			c.code = append(c.code, runtime.ADD)
+		case token.SUB:
+			c.code = append(c.code, runtime.SUB)
+		case token.GT:
+			c.code = append(c.code, runtime.GT)
+		case token.LT:
+			c.code = append(c.code, runtime.LT)
+		case token.EQ:
+			c.code = append(c.code, runtime.EQ)
+		case token.IDENT:
+			fmt.Printf("currently not supported: %s\n", tok.Literal)
+		case token.NUMBER:
+			{
+				value, _ := strconv.Atoi(tok.Literal)
+				c.code = append(c.code, runtime.PUSH)
+				c.code = append(c.code, runtime.OPCode(value))
 			}
 		default:
-			return fmt.Errorf("unsupported parser type")
+			fmt.Printf("unhandled token: %v\n", tok)
 		}
 	}
-	return nil
+	return c.code
 }
 
-func (c *Compiler) emit(op runtime.OPCode, val ...runtime.OPCode) {
-	c.code = append(c.code, op)
-	c.code = append(c.code, val...)
-}

@@ -7,16 +7,19 @@ type Type string
 const (
 	LPAREN Type = "("
 	RPAREN Type = ")"
-	EQ     Type = "="
 	PRINT  Type = "print" // TODO: PRINT should be built-in function
 	ADD    Type = "+"
 	SUB    Type = "-"
 	GT     Type = ">"
 	LT     Type = "<"
+	EQ     Type = "="
 	IDENT  Type = "IDENT"
 	NUMBER Type = "NUMBER"
 	EOF    Type = "EOF"
 )
+
+var keywords = map[string]Type{
+}
 
 // Token represent the lexer token
 type Token struct {
@@ -25,6 +28,10 @@ type Token struct {
 	Line    int
 }
 
-func (t Token) String() string {
-	return string(t.Type) + " " + t.Literal
+func LookupIdentifier(in string) Type {
+	if t, ok := keywords[in]; ok {
+		return t
+	} else {
+		return IDENT
+	}
 }
