@@ -35,8 +35,6 @@ func (c *Compiler) Write(path string) error {
 func (c *Compiler) Compile() []runtime.OPCode {
 	for tok := c.l.NextToken(); tok.Type != token.EOF; tok = c.l.NextToken() {
 		switch tok.Type {
-		case token.LPAREN: // Currently ignored
-		case token.RPAREN: // Currently ignored
 		case token.ADD:
 			c.code = append(c.code, runtime.ADD)
 		case token.SUB:
@@ -47,14 +45,20 @@ func (c *Compiler) Compile() []runtime.OPCode {
 			c.code = append(c.code, runtime.LT)
 		case token.EQ:
 			c.code = append(c.code, runtime.EQ)
-		case token.IDENT:
-			fmt.Printf("currently not supported: %s\n", tok.Literal)
+		case token.LPAREN: // Currently ignored
+			fmt.Printf("lparen is currently not supported: %v\n", tok)
+		case token.RPAREN: // Currently ignored
+			fmt.Printf("rparen is currently not supported: %v\n", tok)
+		case token.PRINT:
+			c.code = append(c.code, runtime.PRINT)
 		case token.NUMBER:
 			{
 				value, _ := strconv.Atoi(tok.Literal)
 				c.code = append(c.code, runtime.PUSH)
 				c.code = append(c.code, runtime.OPCode(value))
 			}
+		case token.IDENT:
+			fmt.Printf("ident is currently not supported: %v\n", tok)
 		default:
 			fmt.Printf("unhandled token: %v\n", tok)
 		}

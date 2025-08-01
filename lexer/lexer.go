@@ -85,6 +85,7 @@ func (l *Lexer) nextChar() {
 
 	l.pos = l.readPos
 	l.readPos++
+	l.Col++
 }
 
 func (l *Lexer) peekChar() rune {
@@ -96,7 +97,7 @@ func (l *Lexer) peekChar() rune {
 }
 
 func (l *Lexer) skipWhitespace() {
-	for l.ch == rune(' ') {
+	for l.ch == rune(' ') || l.ch == rune('\n') || l.ch == rune('\r') {
 		l.nextChar()
 	}
 }

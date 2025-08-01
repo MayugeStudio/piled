@@ -19,6 +19,7 @@ const (
 )
 
 var keywords = map[string]Type{
+	"print": PRINT,
 }
 
 // Token represent the lexer token
