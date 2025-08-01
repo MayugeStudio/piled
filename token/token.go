@@ -29,6 +29,8 @@ type Token struct {
 	Line    int
 }
 
+// LookupIdentifier check whether specified keyword name exists or not
+// if it exists simply return its type, otherwise return IDENT
 func LookupIdentifier(in string) Type {
 	if t, ok := keywords[in]; ok {
 		return t
