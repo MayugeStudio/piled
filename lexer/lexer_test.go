@@ -60,7 +60,7 @@ func TestLexerNextToken(t *testing.T) {
 		},
 		{
 			"identifier", "print",
-			tok(token.IDENT, "print", 1),
+			tok(token.PRINT, "print", 1),
 		},
 	}
 	for _, tt := range tests {
@@ -85,7 +85,7 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 			"1234 print",
 			[]token.Token{
 				tok(token.NUMBER, "1234", 1),
-				tok(token.IDENT, "print", 1),
+				tok(token.PRINT, "print", 1),
 			},
 		},
 		{
