@@ -10,6 +10,8 @@ const (
 	PRINT  Type = "print" // TODO: PRINT should be built-in function
 	ADD    Type = "+"
 	SUB    Type = "-"
+	MUL    Type = "*"
+	DIV    Type = "/"
 	GT     Type = ">"
 	LT     Type = "<"
 	EQ     Type = "="

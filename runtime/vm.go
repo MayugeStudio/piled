@@ -57,6 +57,14 @@ func (vm *VM) Run() {
 			b := vm.pop()
 			a := vm.pop()
 			vm.push(a - b)
+		case MUL:
+			b := vm.pop()
+			a := vm.pop()
+			vm.push(a * b)
+		case DIV:
+			b := vm.pop()
+			a := vm.pop()
+			vm.push(a / b)
 		case GT:
 			b := vm.pop()
 			a := vm.pop()

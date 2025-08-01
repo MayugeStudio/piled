@@ -30,6 +30,10 @@ func (c *Compiler) Compile() []runtime.OPCode {
 			c.code = append(c.code, runtime.ADD)
 		case token.SUB:
 			c.code = append(c.code, runtime.SUB)
+		case token.MUL:
+			c.code = append(c.code, runtime.MUL)
+		case token.DIV:
+			c.code = append(c.code, runtime.DIV)
 		case token.GT:
 			c.code = append(c.code, runtime.GT)
 		case token.LT:
