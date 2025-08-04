@@ -4,15 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
-	"path/filepath"
-
-	"piled/lexer"
-	"piled/compiler"
-	"piled/runtime"
 )
 
-func runREPL() {
+func runREPL() int {
 	s := bufio.NewScanner(os.Stdin)
 cmd:
 	for {
@@ -36,64 +30,36 @@ cmd:
 			}
 		}
 	}
+	return 0
 }
+
+var commands []SubCommand
 
 func main() {
 	pl := PiledLogger{ w: os.Stdout }
+	commands = append(commands, &Command_DumpToken{})
+	commands = append(commands, &Command_Run{})
+	commands = append(commands, &Command_Compile{})
 
 	argv := os.Args
-	
-	if len(argv) == 1 {
-		runREPL()
-	} else {
-		_ = argv[0]
-		argv = argv[1:]
-		if argv[0] == "dumptoken" {
-			_ = argv[0]
-			argv = argv[1:]
-			filename := argv[0]
 
-			pl.Info("reading %s ...", filename)
-			source, err := ReadSourceFromFile(filename)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "error during reading source file: %s", err)
-				os.Exit(1)
-			}
+	_ = argv[0] // program_name
+	argv = argv[1:]
 
-			l := lexer.New(source)
-			DumpTokens(l)
-		} else {
-			filename := argv[0]
-			outpath := strings.TrimSuffix(filename, filepath.Ext(filename))
-			outfile := outpath + ".pdb"
-			
-			pl.Info("reading %s ...", filename)
-			source, err := ReadSourceFromFile(filename)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-				os.Exit(1)
-			}
-			pl.Info("reading file successfully")
+	if len(argv) == 0 {
+		os.Exit(runREPL())
+	}
 
-			pl.Info("compiling program ...")
-			l := lexer.New(source)
-			c := compiler.New(l)
-			c.Compile()
+	command_name := argv[0]
+	argv = argv[1:]
 
-			pl.Info("generating bytecode to %s...", outfile)
-			if err := c.Write(outpath + ".pdb"); err != nil {
-				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-				os.Exit(1)
-			}
-
-			pl.Info("reading bytecode from %s ...", outfile)
-			code, err := runtime.ReadBytecodeFile(outfile)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-			}
-
-			vm := runtime.NewVM(code)
-			vm.Run()
+	for _, command  := range commands {
+		if command.Name() == command_name {
+			os.Exit(command.Execute(os.Args, pl))
 		}
 	}
+	
+	fmt.Fprintf(os.Stderr, "Invalid command was provided: %s\n", command_name)
+
+	os.Exit(CommandError)
 }
