@@ -14,6 +14,11 @@ const (
 	SUB OPCode = 0x11
 	MUL OPCode = 0x12
 	DIV OPCode = 0x13
+	MOD OPCode = 0x14
+	AND OPCode = 0x15
+	OR  OPCode = 0x16
+	SHL OPCode = 0x17
+	SHR OPCode = 0x18
 
 	// Comparison
 	GT  OPCode = 0x20

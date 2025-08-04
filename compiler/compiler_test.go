@@ -5,13 +5,8 @@ import (
 	"testing"
 
 	"piled/runtime"
-	"piled/token"
 	"piled/lexer"
 )
-
-func tok(t token.Type) token.Token {
-	return token.Token{Type: t}
-}
 
 func TestCompiler_Compile(t *testing.T) {
 	tests := []struct {
@@ -26,21 +21,63 @@ func TestCompiler_Compile(t *testing.T) {
 		},
 		{
 			name: "simple add",
-			in: "20 10 +",
-			want: []runtime.OPCode{
-				runtime.PUSH, 20,
-				runtime.PUSH, 10,
-				runtime.ADD,
-			},
+			in: "+",
+			want: []runtime.OPCode{runtime.ADD},
 		},
 		{
 			name: "simple sub",
-			in: "20 10 -",
-			want: []runtime.OPCode{
-				runtime.PUSH, 20,
-				runtime.PUSH, 10,
-				runtime.SUB,
-			},
+			in: "-",
+			want: []runtime.OPCode{runtime.SUB},
+		},
+		{
+			name: "simple mul",
+			in: "*",
+			want: []runtime.OPCode{runtime.MUL},
+		},
+		{
+			name: "simple div",
+			in: "/",
+			want: []runtime.OPCode{runtime.DIV},
+		},
+		{
+			name: "simple mod",
+			in: "%",
+			want: []runtime.OPCode{runtime.MOD},
+		},
+		{
+			name: "simple and",
+			in: "&",
+			want: []runtime.OPCode{runtime.AND},
+		},
+		{
+			name: "simple or",
+			in: "|",
+			want: []runtime.OPCode{runtime.OR},
+		},
+		{
+			name: "shift-left",
+			in: "shl",
+			want: []runtime.OPCode{runtime.SHL},
+		},
+		{
+			name: "shift-right",
+			in: "shr",
+			want: []runtime.OPCode{runtime.SHR},
+		},
+		{
+			name: "gt",
+			in: ">",
+			want: []runtime.OPCode{runtime.GT},
+		},
+		{
+			name: "lt",
+			in: "<",
+			want: []runtime.OPCode{runtime.LT},
+		},
+		{
+			name: "eq",
+			in: "=",
+			want: []runtime.OPCode{runtime.EQ},
 		},
 	}
 

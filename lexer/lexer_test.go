@@ -43,6 +43,26 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.SUB, "-", 1),
 		},
 		{
+			"binary-operators-mul", "*",
+			tok(token.MUL, "*", 1),
+		},
+		{
+			"binary-operators-div", "/",
+			tok(token.DIV, "/", 1),
+		},
+		{
+			"binary-operators-modulo", "%",
+			tok(token.MOD, "%", 1),
+		},
+		{
+			"binary-operators-and", "&",
+			tok(token.AND, "&", 1),
+		},
+		{
+			"binary-operators-or", "|",
+			tok(token.OR, "|", 1),
+		},
+		{
 			"comparison-operators-gt", ">",
 			tok(token.GT, ">", 1),
 		},
@@ -59,8 +79,16 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.NUMBER, "12", 1),
 		},
 		{
-			"identifier", "print",
+			"ident-print", "print",
 			tok(token.PRINT, "print", 1),
+		},
+		{
+			"ident-shl", "shl",
+			tok(token.SHL, "shl", 1),
+		},
+		{
+			"ident-shr", "shr",
+			tok(token.SHR, "shr", 1),
 		},
 	}
 	for _, tt := range tests {
@@ -102,7 +130,7 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := New(tt.in)
-			tokens := make([]token.Token, 0, 0)
+			tokens := make([]token.Token, 0)
 			for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
 				tokens = append(tokens, tok)
 			}

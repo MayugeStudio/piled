@@ -34,6 +34,16 @@ func (c *Compiler) Compile() []runtime.OPCode {
 			c.code = append(c.code, runtime.MUL)
 		case token.DIV:
 			c.code = append(c.code, runtime.DIV)
+		case token.MOD:
+			c.code = append(c.code, runtime.MOD)
+		case token.AND:
+			c.code = append(c.code, runtime.AND)
+		case token.OR:
+			c.code = append(c.code, runtime.OR)
+		case token.SHL:
+			c.code = append(c.code, runtime.SHL)
+		case token.SHR:
+			c.code = append(c.code, runtime.SHR)
 		case token.GT:
 			c.code = append(c.code, runtime.GT)
 		case token.LT:

@@ -33,6 +33,79 @@ func TestVM_Run(t *testing.T) {
 			output: "",
 		},
 		{
+			name: "simple mul",
+			code: []OPCode{
+				PUSH, 5,
+				PUSH, 2,
+				MUL,
+			},
+			want:   []int{10},
+			output: "",
+		},
+		{
+			name: "simple DIV",
+			code: []OPCode{
+				PUSH, 10,
+				PUSH, 2,
+				DIV,
+			},
+			want:   []int{5},
+			output: "",
+		},
+		{
+			name: "simple MOD",
+			code: []OPCode{
+				PUSH, 9,
+				PUSH, 2,
+				MOD,
+				PUSH, 10,
+				PUSH, 2,
+				MOD,
+			},
+			want:   []int{1, 0},
+			output: "",
+		},
+		{
+			name: "simple AND",
+			code: []OPCode{
+				PUSH, 5,  // 0101
+				PUSH, 14, // 1110
+				AND,
+			},
+			want:   []int{4},
+			output: "",
+		},
+		{
+			name: "simple OR",
+			code: []OPCode{
+				PUSH, 6,  // 0110
+				PUSH, 10, // 1010
+				OR,
+			},
+			want:   []int{14},
+			output: "",
+		},
+		{
+			name: "simple left-shift operator",
+			code: []OPCode{
+				PUSH, 2,
+				PUSH, 1,
+				SHL,
+			},
+			want:   []int{4},
+			output: "",
+		},
+		{
+			name: "simple right-shift operator",
+			code: []OPCode{
+				PUSH, 4,
+				PUSH, 1,
+				SHR,
+			},
+			want:   []int{2},
+			output: "",
+		},
+		{
 			name: "add and print",
 			code: []OPCode{
 				PUSH, 5,

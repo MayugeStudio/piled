@@ -53,6 +53,15 @@ func (l *Lexer) NextToken() token.Token {
 	case '/':
 		tok.Type = token.DIV
 		tok.Literal = "/"
+	case '%':
+		tok.Type = token.MOD
+		tok.Literal = "%"
+	case '&':
+		tok.Type = token.AND
+		tok.Literal = "&"
+	case '|':
+		tok.Type = token.OR
+		tok.Literal = "|"
 	case '>':
 		tok.Type = token.GT
 		tok.Literal = ">"
