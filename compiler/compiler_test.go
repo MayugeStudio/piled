@@ -87,6 +87,31 @@ func TestCompiler_Compile(t *testing.T) {
 				runtime.SHR,
 			},
 		},
+		{
+			name: "gt",
+			in: "20 10 >",
+			want: []runtime.OPCode{
+				runtime.PUSH, 20,
+				runtime.PUSH, 10,
+				runtime.GT,
+			},
+		},
+		{
+			name: "lt",
+			in: "20 10 <",
+			want: []runtime.OPCode{
+				runtime.PUSH, 20,
+				runtime.PUSH, 10,
+				runtime.LT,
+			},
+		},
+		{
+			name: "eq",
+			in: "=",
+			want: []runtime.OPCode{
+				runtime.EQ,
+			},
+		},
 	}
 
 	for _, tt := range tests {
