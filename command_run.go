@@ -27,7 +27,12 @@ func (*Command_Run) Usage(programName string) []string {
 func (*Command_Run) Execute(argv []string, pl PiledLogger) int {
 	argv = argv[1:] // skip program name
 	argv = argv[1:] // skip command name
+	if len(argv) == 0 {
+		fmt.Fprintf(os.Stderr, "ERROR: filename is not provided\n")
+		return CommandError
+	}
 	filename := argv[0]
+
 	outpath := strings.TrimSuffix(filename, filepath.Ext(filename))
 	outfile := outpath + ".pdb"
 	

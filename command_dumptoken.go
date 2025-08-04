@@ -24,6 +24,10 @@ func (*Command_DumpToken) Usage(programName string) []string {
 func (*Command_DumpToken) Execute(argv []string, pl PiledLogger) int {
 	argv = argv[1:] // skip program name
 	argv = argv[1:] // skip command name
+	if len(argv) == 0 {
+		fmt.Fprintf(os.Stderr, "ERROR: filename is not provided\n")
+		return CommandError
+	}
 	filename := argv[0]
 
 	pl.Info("reading %s ...", filename)
