@@ -26,91 +26,53 @@ func TestCompiler_Compile(t *testing.T) {
 		},
 		{
 			name: "simple add",
-			in: "20 10 +",
-			want: []runtime.OPCode{
-				runtime.PUSH, 20,
-				runtime.PUSH, 10,
-				runtime.ADD,
-			},
+			in: "+",
+			want: []runtime.OPCode{runtime.ADD},
 		},
 		{
 			name: "simple sub",
-			in: "20 10 -",
-			want: []runtime.OPCode{
-				runtime.PUSH, 20,
-				runtime.PUSH, 10,
-				runtime.SUB,
-			},
+			in: "-",
+			want: []runtime.OPCode{runtime.SUB},
 		},
 		{
 			name: "simple mul",
-			in: "20 10 *",
-			want: []runtime.OPCode{
-				runtime.PUSH, 20,
-				runtime.PUSH, 10,
-				runtime.MUL,
-			},
+			in: "*",
+			want: []runtime.OPCode{runtime.MUL},
 		},
 		{
 			name: "simple div",
-			in: "20 10 /",
-			want: []runtime.OPCode{
-				runtime.PUSH, 20,
-				runtime.PUSH, 10,
-				runtime.DIV,
-			},
+			in: "/",
+			want: []runtime.OPCode{runtime.DIV},
 		},
 		{
 			name: "simple mod",
-			in: "20 10 %",
-			want: []runtime.OPCode{
-				runtime.PUSH, 20,
-				runtime.PUSH, 10,
-				runtime.MOD,
-			},
+			in: "%",
+			want: []runtime.OPCode{runtime.MOD},
 		},
 		{
 			name: "shift-left",
-			in: "10 2 shl",
-			want: []runtime.OPCode{
-				runtime.PUSH, 10,
-				runtime.PUSH, 2,
-				runtime.SHL,
-			},
+			in: "shl",
+			want: []runtime.OPCode{runtime.SHL},
 		},
 		{
 			name: "shift-right",
-			in: "10 2 shr",
-			want: []runtime.OPCode{
-				runtime.PUSH, 10,
-				runtime.PUSH, 2,
-				runtime.SHR,
-			},
+			in: "shr",
+			want: []runtime.OPCode{runtime.SHR},
 		},
 		{
 			name: "gt",
-			in: "20 10 >",
-			want: []runtime.OPCode{
-				runtime.PUSH, 20,
-				runtime.PUSH, 10,
-				runtime.GT,
-			},
+			in: ">",
+			want: []runtime.OPCode{runtime.GT},
 		},
 		{
 			name: "lt",
-			in: "20 10 <",
-			want: []runtime.OPCode{
-				runtime.PUSH, 20,
-				runtime.PUSH, 10,
-				runtime.LT,
-			},
+			in: "<",
+			want: []runtime.OPCode{runtime.LT},
 		},
 		{
 			name: "eq",
 			in: "=",
-			want: []runtime.OPCode{
-				runtime.EQ,
-			},
+			want: []runtime.OPCode{runtime.EQ},
 		},
 	}
 
