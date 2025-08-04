@@ -122,7 +122,7 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := New(tt.in)
-			tokens := make([]token.Token, 0, 0)
+			tokens := make([]token.Token, 0)
 			for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
 				tokens = append(tokens, tok)
 			}

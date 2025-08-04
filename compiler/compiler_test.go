@@ -9,10 +9,6 @@ import (
 	"piled/lexer"
 )
 
-func tok(t token.Type) token.Token {
-	return token.Token{Type: t}
-}
-
 func TestCompiler_Compile(t *testing.T) {
 	tests := []struct {
 		name string
