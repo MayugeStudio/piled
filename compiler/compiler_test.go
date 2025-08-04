@@ -69,6 +69,24 @@ func TestCompiler_Compile(t *testing.T) {
 				runtime.MOD,
 			},
 		},
+		{
+			name: "shift-left",
+			in: "10 2 shl",
+			want: []runtime.OPCode{
+				runtime.PUSH, 10,
+				runtime.PUSH, 2,
+				runtime.SHL,
+			},
+		},
+		{
+			name: "shift-right",
+			in: "10 2 shr",
+			want: []runtime.OPCode{
+				runtime.PUSH, 10,
+				runtime.PUSH, 2,
+				runtime.SHR,
+			},
+		},
 	}
 
 	for _, tt := range tests {

@@ -15,6 +15,8 @@ const (
 	MUL OPCode = 0x12
 	DIV OPCode = 0x13
 	MOD OPCode = 0x14
+	SHL OPCode = 0x15
+	SHR OPCode = 0x16
 
 	// Comparison
 	GT  OPCode = 0x20

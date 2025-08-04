@@ -8,6 +8,8 @@ const (
 	LPAREN Type = "("
 	RPAREN Type = ")"
 	PRINT  Type = "print" // TODO: PRINT should be built-in function
+	SHL    Type = "shr"
+	SHR    Type = "shl"
 	ADD    Type = "+"
 	SUB    Type = "-"
 	MUL    Type = "*"
@@ -23,6 +25,8 @@ const (
 
 var keywords = map[string]Type{
 	"print": PRINT,
+	"shl"  : SHL,
+	"shr"  : SHR,
 }
 
 // Token represent the lexer token

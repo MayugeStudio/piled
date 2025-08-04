@@ -71,8 +71,16 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.NUMBER, "12", 1),
 		},
 		{
-			"identifier", "print",
+			"ident-print", "print",
 			tok(token.PRINT, "print", 1),
+		},
+		{
+			"ident-shl", "shl",
+			tok(token.SHL, "shl", 1),
+		},
+		{
+			"ident-shr", "shr",
+			tok(token.SHR, "shr", 1),
 		},
 	}
 	for _, tt := range tests {
