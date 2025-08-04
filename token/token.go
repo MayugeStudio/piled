@@ -15,6 +15,8 @@ const (
 	MUL    Type = "*"
 	DIV    Type = "/"
 	MOD    Type = "%"
+	AND    Type = "&"
+	OR     Type = "|"
 	GT     Type = ">"
 	LT     Type = "<"
 	EQ     Type = "="

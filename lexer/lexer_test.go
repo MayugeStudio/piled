@@ -55,6 +55,14 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.MOD, "%", 1),
 		},
 		{
+			"binary-operators-and", "&",
+			tok(token.AND, "&", 1),
+		},
+		{
+			"binary-operators-or", "|",
+			tok(token.OR, "|", 1),
+		},
+		{
 			"comparison-operators-gt", ">",
 			tok(token.GT, ">", 1),
 		},

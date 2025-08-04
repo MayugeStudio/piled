@@ -66,6 +66,26 @@ func TestVM_Run(t *testing.T) {
 			output: "",
 		},
 		{
+			name: "simple AND",
+			code: []OPCode{
+				PUSH, 5,  // 0101
+				PUSH, 14, // 1110
+				AND,
+			},
+			want:   []int{4},
+			output: "",
+		},
+		{
+			name: "simple OR",
+			code: []OPCode{
+				PUSH, 6,  // 0110
+				PUSH, 10, // 1010
+				OR,
+			},
+			want:   []int{14},
+			output: "",
+		},
+		{
 			name: "simple left-shift operator",
 			code: []OPCode{
 				PUSH, 2,

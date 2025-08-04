@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"piled/runtime"
-	"piled/token"
 	"piled/lexer"
 )
 
@@ -44,6 +43,16 @@ func TestCompiler_Compile(t *testing.T) {
 			name: "simple mod",
 			in: "%",
 			want: []runtime.OPCode{runtime.MOD},
+		},
+		{
+			name: "simple and",
+			in: "&",
+			want: []runtime.OPCode{runtime.AND},
+		},
+		{
+			name: "simple or",
+			in: "|",
+			want: []runtime.OPCode{runtime.OR},
 		},
 		{
 			name: "shift-left",
