@@ -42,6 +42,33 @@ func TestCompiler_Compile(t *testing.T) {
 				runtime.SUB,
 			},
 		},
+		{
+			name: "simple mul",
+			in: "20 10 *",
+			want: []runtime.OPCode{
+				runtime.PUSH, 20,
+				runtime.PUSH, 10,
+				runtime.MUL,
+			},
+		},
+		{
+			name: "simple div",
+			in: "20 10 /",
+			want: []runtime.OPCode{
+				runtime.PUSH, 20,
+				runtime.PUSH, 10,
+				runtime.DIV,
+			},
+		},
+		{
+			name: "simple mod",
+			in: "20 10 %",
+			want: []runtime.OPCode{
+				runtime.PUSH, 20,
+				runtime.PUSH, 10,
+				runtime.MOD,
+			},
+		},
 	}
 
 	for _, tt := range tests {

@@ -12,6 +12,7 @@ const (
 	SUB    Type = "-"
 	MUL    Type = "*"
 	DIV    Type = "/"
+	MOD    Type = "%"
 	GT     Type = ">"
 	LT     Type = "<"
 	EQ     Type = "="

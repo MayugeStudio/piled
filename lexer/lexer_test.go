@@ -43,6 +43,18 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.SUB, "-", 1),
 		},
 		{
+			"binary-operators-mul", "*",
+			tok(token.MUL, "*", 1),
+		},
+		{
+			"binary-operators-div", "/",
+			tok(token.DIV, "/", 1),
+		},
+		{
+			"binary-operators-modulo", "%",
+			tok(token.MOD, "%", 1),
+		},
+		{
 			"comparison-operators-gt", ">",
 			tok(token.GT, ">", 1),
 		},
