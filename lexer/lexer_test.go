@@ -90,6 +90,14 @@ func TestLexerNextToken(t *testing.T) {
 			"ident-shr", "shr",
 			tok(token.SHR, "shr", 1),
 		},
+		{
+			"controlflow-if", "if",
+			tok(token.IF, "if", 1),
+		},
+		{
+			"controlflow-end", "if",
+			tok(token.IF, "if", 1),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

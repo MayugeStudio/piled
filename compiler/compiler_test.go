@@ -79,6 +79,16 @@ func TestCompiler_Compile(t *testing.T) {
 			in: "=",
 			want: []runtime.OPCode{runtime.EQ},
 		},
+		// Control flow
+		{
+			name: "simple if",
+			in: "if 1 end",
+			want: []runtime.OPCode{
+				runtime.JMPIF, runtime.OPCode(4), // IF 
+				runtime.PUSH, runtime.OPCode(1),  // PUSH 1 
+				runtime.NOP,                      // END
+			},
+		},
 	}
 
 	for _, tt := range tests {
