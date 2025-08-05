@@ -95,8 +95,8 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.IF, "if", 1),
 		},
 		{
-			"controlflow-end", "if",
-			tok(token.IF, "if", 1),
+			"controlflow-end", "end",
+			tok(token.END, "end", 1),
 		},
 	}
 	for _, tt := range tests {
