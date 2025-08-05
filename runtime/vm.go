@@ -115,9 +115,21 @@ func (vm *VM) Run() {
 				v = 0
 			}
 			vm.push(v)
+		case JMPIF:
+			// address is at next opcode
+			addr := vm.code[vm.ip]
+			vm.ip++ // vm ip is point at the next opcode. so we dont need to worry about it.
+			cond := vm.pop()
+			if cond == 0 { // false
+				vm.ip = int(addr)
+			} else { // true
+				// fallthrough
+			}
+
 		case PRINT:
 			a := vm.pop()
 			vm.Println(a)
+		case NOP: // do nothing
 		}
 	}
 }

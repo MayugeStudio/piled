@@ -126,6 +126,21 @@ func TestVM_Run(t *testing.T) {
 			want:   []int{1, 2, 3},
 			output: "",
 		},
+		{
+			name: "if-end",
+			code: []OPCode{// stack trace
+				PUSH, 0,   // 0: 0
+				PUSH, 1,   // 1: 0 1
+				LT,        // 2: 1
+				JMPIF,     // 3: 
+				6,         // 4
+				PUSH, 35,  // 5: 35
+				NOP,       // 6:
+				PUSH, 34,  // 7: 35 34
+			},
+			want:   []int{35, 34},
+			output: "",
+		},
 	}
 
 	for _, tt := range tests {

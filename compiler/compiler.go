@@ -24,6 +24,7 @@ func New(l *lexer.Lexer) *Compiler {
 
 // Compile generate opcode from source-code
 func (c *Compiler) Compile() []runtime.OPCode {
+	if_addr := 0
 	for tok := c.l.NextToken(); tok.Type != token.EOF; tok = c.l.NextToken() {
 		switch tok.Type {
 		case token.ADD:
@@ -54,6 +55,15 @@ func (c *Compiler) Compile() []runtime.OPCode {
 			fmt.Printf("lparen is currently not supported: %v\n", tok)
 		case token.RPAREN: // Currently ignored
 			fmt.Printf("rparen is currently not supported: %v\n", tok)
+		case token.IF:
+			c.code = append(c.code, runtime.JMPIF)
+			c.code = append(c.code, runtime.OPCode(0)) // for backpatching
+			if_addr = len(c.code)-1
+		case token.END:
+			// back-patching
+			c.code = append(c.code, runtime.NOP)
+			end_addr := len(c.code)-1
+			c.code[if_addr] = runtime.OPCode(end_addr)
 		case token.PRINT:
 			c.code = append(c.code, runtime.PRINT)
 		case token.NUMBER:

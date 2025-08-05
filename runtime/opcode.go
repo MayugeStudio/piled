@@ -25,6 +25,12 @@ const (
 	LT  OPCode = 0x21
 	EQ  OPCode = 0x22
 
+	// Program Flow
+	JMPIF OPCode = 0x30
+
 	// I/O
 	PRINT OPCode = 0xF0
+
+	// NOP
+	NOP OPCode = 0xFA
 )
