@@ -129,6 +129,7 @@ func (vm *VM) Run() {
 		case PRINT:
 			a := vm.pop()
 			vm.Println(a)
+		case NOP: // do nothing
 		}
 	}
 }
