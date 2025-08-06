@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"piled/runtime"
 	"piled/lexer"
+	"piled/runtime"
 )
 
 func TestCompiler_Compile(t *testing.T) {
@@ -21,72 +21,84 @@ func TestCompiler_Compile(t *testing.T) {
 		},
 		{
 			name: "simple add",
-			in: "+",
+			in:   "+",
 			want: []runtime.OPCode{runtime.ADD},
 		},
 		{
 			name: "simple sub",
-			in: "-",
+			in:   "-",
 			want: []runtime.OPCode{runtime.SUB},
 		},
 		{
 			name: "simple mul",
-			in: "*",
+			in:   "*",
 			want: []runtime.OPCode{runtime.MUL},
 		},
 		{
 			name: "simple div",
-			in: "/",
+			in:   "/",
 			want: []runtime.OPCode{runtime.DIV},
 		},
 		{
 			name: "simple mod",
-			in: "%",
+			in:   "%",
 			want: []runtime.OPCode{runtime.MOD},
 		},
 		{
 			name: "simple and",
-			in: "&",
+			in:   "&",
 			want: []runtime.OPCode{runtime.AND},
 		},
 		{
 			name: "simple or",
-			in: "|",
+			in:   "|",
 			want: []runtime.OPCode{runtime.OR},
 		},
 		{
 			name: "shift-left",
-			in: "shl",
+			in:   "shl",
 			want: []runtime.OPCode{runtime.SHL},
 		},
 		{
 			name: "shift-right",
-			in: "shr",
+			in:   "shr",
 			want: []runtime.OPCode{runtime.SHR},
 		},
 		{
 			name: "gt",
-			in: ">",
+			in:   ">",
 			want: []runtime.OPCode{runtime.GT},
 		},
 		{
 			name: "lt",
-			in: "<",
+			in:   "<",
 			want: []runtime.OPCode{runtime.LT},
 		},
 		{
 			name: "eq",
-			in: "=",
+			in:   "=",
 			want: []runtime.OPCode{runtime.EQ},
 		},
 		// Control flow
 		{
 			name: "simple if",
-			in: "if 1 end",
+			in:   "if 1 end",
 			want: []runtime.OPCode{
-				runtime.JMPIF, runtime.OPCode(4), // IF 
-				runtime.PUSH, runtime.OPCode(1),  // PUSH 1 
-				runtime.NOP,                      // END
+				runtime.JMPIF, runtime.OPCode(4), // IF
+				runtime.PUSH, runtime.OPCode(1), // PUSH 1
+				runtime.NOP, // END
+			},
+		},
+		{
+			name: "simple if-else",
+			in:   "if 1 else 0 end",
+			want: []runtime.OPCode{
+				runtime.JMPIF, runtime.OPCode(6), // IF  ELSE_ADDR <<
+				runtime.PUSH, runtime.OPCode(1), // PUSH 1
+				runtime.JMP, runtime.OPCode(9), // JMP END_ADDR  <<
+				runtime.NOP,                     // ELSE
+				runtime.PUSH, runtime.OPCode(0), // PUSH 0
+				runtime.NOP, // END
 			},
 		},
 	}
@@ -103,4 +115,3 @@ func TestCompiler_Compile(t *testing.T) {
 		})
 	}
 }
-

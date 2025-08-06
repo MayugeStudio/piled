@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
-	"piled/lexer"
 	"piled/compiler"
+	"piled/lexer"
+	"strings"
 )
 
 type Command_Compile struct {
@@ -34,7 +34,7 @@ func (*Command_Compile) Execute(argv []string, pl PiledLogger) int {
 
 	outpath := strings.TrimSuffix(filename, filepath.Ext(filename))
 	outfile := outpath + ".pdb"
-	
+
 	pl.Info("reading %s ...", filename)
 	source, err := ReadSourceFromFile(filename)
 	if err != nil {
@@ -55,4 +55,3 @@ func (*Command_Compile) Execute(argv []string, pl PiledLogger) int {
 	}
 	return CommandSuccess
 }
-

@@ -5,8 +5,8 @@ import (
 	"os"
 	"piled/compiler"
 	"piled/lexer"
-	"piled/token"
 	"piled/runtime"
+	"piled/token"
 )
 
 func DumpTokens(l *lexer.Lexer) {

@@ -7,24 +7,23 @@ import "piled/token"
 import "piled/lexer"
 import "piled/runtime"
 
-
 // Compiler contains opcodes
 type Compiler struct {
-	l        *lexer.Lexer
-	code     []runtime.OPCode
+	l    *lexer.Lexer
+	code []runtime.OPCode
 }
 
 // New is constructor for Compiler
 func New(l *lexer.Lexer) *Compiler {
 	return &Compiler{
-		l: l,
+		l:    l,
 		code: make([]runtime.OPCode, 0),
 	}
 }
 
 // Compile generate opcode from source-code
 func (c *Compiler) Compile() []runtime.OPCode {
-	if_addr := 0
+	backpatch_stack := make([]runtime.OPCode, 0)
 	for tok := c.l.NextToken(); tok.Type != token.EOF; tok = c.l.NextToken() {
 		switch tok.Type {
 		case token.ADD:
@@ -58,12 +57,30 @@ func (c *Compiler) Compile() []runtime.OPCode {
 		case token.IF:
 			c.code = append(c.code, runtime.JMPIF)
 			c.code = append(c.code, runtime.OPCode(0)) // for backpatching
-			if_addr = len(c.code)-1
-		case token.END:
-			// back-patching
+			// save current ip onto the stack to backpatch it
+			backpatch_stack = append(backpatch_stack, runtime.OPCode(len(c.code)-1))
+		case token.ELSE:
+			// append JMP opcode
+			c.code = append(c.code, runtime.JMP)
+			c.code = append(c.code, runtime.OPCode(0)) // for backpatching
+			// save current ip onto the stack to backpatch it
+			backpatch_stack = append(backpatch_stack, runtime.OPCode(len(c.code)-1))
+
+			// jump destination of 'if'
 			c.code = append(c.code, runtime.NOP)
-			end_addr := len(c.code)-1
-			c.code[if_addr] = runtime.OPCode(end_addr)
+			else_addr := len(c.code) - 1
+
+			// backpatching if-block
+			if_addr := backpatch_stack[0]
+			backpatch_stack = backpatch_stack[1:]
+			c.code[if_addr] = runtime.OPCode(else_addr)
+		case token.END:
+			c.code = append(c.code, runtime.NOP)
+			end_addr := len(c.code) - 1
+			// backpatching block
+			block_addr := backpatch_stack[0]
+			backpatch_stack = backpatch_stack[1:]
+			c.code[block_addr] = runtime.OPCode(end_addr)
 		case token.PRINT:
 			c.code = append(c.code, runtime.PRINT)
 		case token.NUMBER:
@@ -89,4 +106,3 @@ func (c *Compiler) Write(path string) error {
 	}
 	return os.WriteFile(path, out, 0644)
 }
-

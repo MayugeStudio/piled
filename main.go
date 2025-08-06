@@ -36,7 +36,7 @@ cmd:
 var commands []SubCommand
 
 func main() {
-	pl := PiledLogger{ w: os.Stdout }
+	pl := PiledLogger{w: os.Stdout}
 	commands = append(commands, &Command_DumpToken{})
 	commands = append(commands, &Command_Run{})
 	commands = append(commands, &Command_Compile{})
@@ -53,12 +53,12 @@ func main() {
 	command_name := argv[0]
 	argv = argv[1:]
 
-	for _, command  := range commands {
+	for _, command := range commands {
 		if command.Name() == command_name {
 			os.Exit(command.Execute(os.Args, pl))
 		}
 	}
-	
+
 	fmt.Fprintf(os.Stderr, "Invalid command was provided: %s\n", command_name)
 
 	os.Exit(CommandError)

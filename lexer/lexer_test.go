@@ -7,7 +7,6 @@ import (
 	"piled/token"
 )
 
-
 func tok(t token.Type, lit string, l int) token.Token {
 	return token.Token{
 		Type:    t,
@@ -18,9 +17,9 @@ func tok(t token.Type, lit string, l int) token.Token {
 
 func TestLexerNextToken(t *testing.T) {
 	tests := []struct {
-		name    string
-		in      string
-		want    token.Token
+		name string
+		in   string
+		want token.Token
 	}{
 		{
 			"EOF", "",
@@ -95,15 +94,19 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.IF, "if", 1),
 		},
 		{
-			"controlflow-end", "if",
-			tok(token.IF, "if", 1),
+			"controlflow-else", "else",
+			tok(token.ELSE, "else", 1),
+		},
+		{
+			"controlflow-end", "end",
+			tok(token.END, "end", 1),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := New(tt.in)
-		    tok := l.NextToken()
-		    if !reflect.DeepEqual(tok, tt.want) {
+			tok := l.NextToken()
+			if !reflect.DeepEqual(tok, tt.want) {
 				t.Errorf("got = %v, want = %v\n", tok, tt.want)
 			}
 		})
@@ -112,9 +115,9 @@ func TestLexerNextToken(t *testing.T) {
 
 func TestLexerNextTokenMultiple(t *testing.T) {
 	tests := []struct {
-		name    string
-		in      string
-		want    []token.Token
+		name string
+		in   string
+		want []token.Token
 	}{
 		{
 			"two-items",
@@ -143,10 +146,9 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 				tokens = append(tokens, tok)
 			}
 
-		    if !reflect.DeepEqual(tokens, tt.want) {
+			if !reflect.DeepEqual(tokens, tt.want) {
 				t.Errorf("got = %v, want = %v\n", tokens, tt.want)
 			}
 		})
 	}
 }
-
