@@ -20,37 +20,37 @@ func TestCompiler_Compile(t *testing.T) {
 			want: []runtime.OPCode{runtime.PUSH, 42},
 		},
 		{
-			name: "simple add",
+			name: "add",
 			in:   "+",
 			want: []runtime.OPCode{runtime.ADD},
 		},
 		{
-			name: "simple sub",
+			name: "sub",
 			in:   "-",
 			want: []runtime.OPCode{runtime.SUB},
 		},
 		{
-			name: "simple mul",
+			name: "mul",
 			in:   "*",
 			want: []runtime.OPCode{runtime.MUL},
 		},
 		{
-			name: "simple div",
+			name: "div",
 			in:   "/",
 			want: []runtime.OPCode{runtime.DIV},
 		},
 		{
-			name: "simple mod",
+			name: "mod",
 			in:   "%",
 			want: []runtime.OPCode{runtime.MOD},
 		},
 		{
-			name: "simple and",
+			name: "and",
 			in:   "&",
 			want: []runtime.OPCode{runtime.AND},
 		},
 		{
-			name: "simple or",
+			name: "or",
 			in:   "|",
 			want: []runtime.OPCode{runtime.OR},
 		},
@@ -81,7 +81,7 @@ func TestCompiler_Compile(t *testing.T) {
 		},
 		// Control flow
 		{
-			name: "simple if",
+			name: "if",
 			in:   "if 1 end",
 			want: []runtime.OPCode{
 				runtime.JMPIF, runtime.OPCode(4), // IF
@@ -90,7 +90,7 @@ func TestCompiler_Compile(t *testing.T) {
 			},
 		},
 		{
-			name: "simple if-else",
+			name: "if-else",
 			in:   "if 1 else 0 end",
 			want: []runtime.OPCode{
 				runtime.JMPIF, runtime.OPCode(6), // IF  ELSE_ADDR <<
