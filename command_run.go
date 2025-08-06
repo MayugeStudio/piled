@@ -3,11 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
-	"piled/compiler"
-	"piled/lexer"
 	"piled/runtime"
-	"strings"
 )
 
 type Command_Run struct {
@@ -33,32 +29,9 @@ func (*Command_Run) Execute(argv []string, pl PiledLogger) int {
 	}
 	filename := argv[0]
 
-	outpath := strings.TrimSuffix(filename, filepath.Ext(filename))
-	outfile := outpath + ".pdb"
-
-	pl.Info("reading %s ...", filename)
-	source, err := ReadSourceFromFile(filename)
+	code, err := runtime.ReadBytecodeFile(filename)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-		return CommandError
-	}
-	pl.Info("reading file successfully")
-
-	pl.Info("compiling program ...")
-	l := lexer.New(source)
-	c := compiler.New(l)
-	c.Compile()
-
-	pl.Info("generating bytecode to %s...", outfile)
-	if err := c.Write(outpath + ".pdb"); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-		return CommandError
-	}
-
-	pl.Info("reading bytecode from %s ...", outfile)
-	code, err := runtime.ReadBytecodeFile(outfile)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
+		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
 		return CommandError
 	}
 
