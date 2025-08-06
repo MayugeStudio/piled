@@ -132,8 +132,7 @@ func TestVM_Run(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// TODO: Introduce vm constructor
-			vm := &VM{code: tt.code}
+			vm := NewVM(tt.code)
 
 			buf := &bytes.Buffer{}
 			vm.stdout = buf
