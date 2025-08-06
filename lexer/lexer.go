@@ -11,18 +11,18 @@ type Lexer struct {
 	pos        int
 	readPos    int
 
-	Line       int
-	Col        int
+	Line int
+	Col  int
 }
 
 // New is constructor for lexer
 func New(source string) *Lexer {
 	l := &Lexer{
-		characters:  []rune(source),
-		pos:         0,
-		readPos:     0,
-		Line:        1,
-		Col:         0,
+		characters: []rune(source),
+		pos:        0,
+		readPos:    0,
+		Line:       1,
+		Col:        0,
 	}
 	// ensure that ch point at a character
 	l.nextChar()
@@ -95,7 +95,7 @@ func (l *Lexer) nextChar() {
 	}
 
 	if l.ch == ('\n') {
-		l.Line ++
+		l.Line++
 		l.Col = 0
 	}
 
@@ -126,9 +126,9 @@ func (l *Lexer) readNumeric() token.Token {
 	}
 
 	return token.Token{
-		Type: token.NUMBER,
+		Type:    token.NUMBER,
 		Literal: out,
-		Line: l.Line,
+		Line:    l.Line,
 	}
 
 }
@@ -149,4 +149,3 @@ func isAlpha(c rune) bool {
 func isDigit(c rune) bool {
 	return (c <= '9' && c >= '0')
 }
-

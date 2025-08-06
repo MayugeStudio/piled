@@ -7,7 +7,7 @@ import "os"
 // ReadBytecodeFile returns a slice of OPCode and error
 // This function is helper function
 func ReadBytecodeFile(path string) ([]OPCode, error) {
-	raw, err  := os.ReadFile(path)
+	raw, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}

@@ -30,11 +30,11 @@ const (
 
 var keywords = map[string]Type{
 	"print": PRINT,
-	"shl"  : SHL,
-	"shr"  : SHR,
-	"if"   : IF,
-	"else" : ELSE,
-	"end"  : END,
+	"shl":   SHL,
+	"shr":   SHR,
+	"if":    IF,
+	"else":  ELSE,
+	"end":   END,
 }
 
 // Token represent the lexer token

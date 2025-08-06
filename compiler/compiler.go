@@ -7,17 +7,16 @@ import "piled/token"
 import "piled/lexer"
 import "piled/runtime"
 
-
 // Compiler contains opcodes
 type Compiler struct {
-	l        *lexer.Lexer
-	code     []runtime.OPCode
+	l    *lexer.Lexer
+	code []runtime.OPCode
 }
 
 // New is constructor for Compiler
 func New(l *lexer.Lexer) *Compiler {
 	return &Compiler{
-		l: l,
+		l:    l,
 		code: make([]runtime.OPCode, 0),
 	}
 }
@@ -69,7 +68,7 @@ func (c *Compiler) Compile() []runtime.OPCode {
 
 			// jump destination of 'if'
 			c.code = append(c.code, runtime.NOP)
-			else_addr := len(c.code)-1
+			else_addr := len(c.code) - 1
 
 			// backpatching if-block
 			if_addr := backpatch_stack[0]
@@ -77,7 +76,7 @@ func (c *Compiler) Compile() []runtime.OPCode {
 			c.code[if_addr] = runtime.OPCode(else_addr)
 		case token.END:
 			c.code = append(c.code, runtime.NOP)
-			end_addr := len(c.code)-1
+			end_addr := len(c.code) - 1
 			// backpatching block
 			block_addr := backpatch_stack[0]
 			backpatch_stack = backpatch_stack[1:]
@@ -107,4 +106,3 @@ func (c *Compiler) Write(path string) error {
 	}
 	return os.WriteFile(path, out, 0644)
 }
-

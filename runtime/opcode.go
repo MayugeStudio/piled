@@ -21,12 +21,12 @@ const (
 	SHR OPCode = 0x18
 
 	// Comparison
-	GT  OPCode = 0x20
-	LT  OPCode = 0x21
-	EQ  OPCode = 0x22
+	GT OPCode = 0x20
+	LT OPCode = 0x21
+	EQ OPCode = 0x22
 
 	// Program Flow
-	JMP OPCode = 0x30
+	JMP   OPCode = 0x30
 	JMPIF OPCode = 0x31
 
 	// I/O

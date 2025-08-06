@@ -40,4 +40,3 @@ func (p *PiledLogger) Log(level LogLevel, msg string, args ...any) {
 func (p *PiledLogger) write(msg string) {
 	p.w.Write([]byte(msg))
 }
-

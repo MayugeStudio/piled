@@ -69,7 +69,7 @@ func TestVM_Run(t *testing.T) {
 		{
 			name: "simple AND",
 			code: []OPCode{
-				PUSH, 5,  // 0101
+				PUSH, 5, // 0101
 				PUSH, 14, // 1110
 				AND,
 			},
@@ -79,7 +79,7 @@ func TestVM_Run(t *testing.T) {
 		{
 			name: "simple OR",
 			code: []OPCode{
-				PUSH, 6,  // 0110
+				PUSH, 6, // 0110
 				PUSH, 10, // 1010
 				OR,
 			},
@@ -129,15 +129,15 @@ func TestVM_Run(t *testing.T) {
 		},
 		{
 			name: "if-end",
-			code: []OPCode{// stack trace
-				PUSH, 0,   // 0: 0
-				PUSH, 1,   // 1: 0 1
-				LT,        // 2: 1
-				JMPIF,     // 3: 
-				6,         // 4
-				PUSH, 35,  // 5: 35
-				NOP,       // 6:
-				PUSH, 34,  // 7: 35 34
+			code: []OPCode{ // stack trace
+				PUSH, 0, // 0: 0
+				PUSH, 1, // 1: 0 1
+				LT,       // 2: 1
+				JMPIF,    // 3:
+				6,        // 4
+				PUSH, 35, // 5: 35
+				NOP,      // 6:
+				PUSH, 34, // 7: 35 34
 			},
 			want:   []int{35, 34},
 			output: "",
@@ -147,7 +147,7 @@ func TestVM_Run(t *testing.T) {
 			code: []OPCode{
 				PUSH, 0,
 				PUSH, 1,
-				JMP,  8,
+				JMP, 8,
 				PUSH, 34,
 				PUSH, 2,
 			},

@@ -18,4 +18,3 @@ type SubCommand interface {
 	// argv startswith program-name
 	Execute(argv []string, pl PiledLogger) int
 }
-
