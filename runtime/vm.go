@@ -115,10 +115,14 @@ func (vm *VM) Run() {
 				v = 0
 			}
 			vm.push(v)
+		case JMP:
+			addr := vm.code[vm.ip]
+			vm.ip = int(addr)
 		case JMPIF:
+			// TODO: JMPIF need to be jump if cond is true but now it jumps if cond is false
 			// address is at next opcode
 			addr := vm.code[vm.ip]
-			vm.ip++ // vm ip is point at the next opcode. so we dont need to worry about it.
+			vm.ip++ // ensure vm ip is point at the next opcode.
 			cond := vm.pop()
 			if cond == 0 { // false
 				vm.ip = int(addr)

@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+// TODO: TestVM_Run should be only care about OPCode but not token such as if or else.
 func TestVM_Run(t *testing.T) {
 	tests := []struct {
 		name   string
@@ -139,6 +140,18 @@ func TestVM_Run(t *testing.T) {
 				PUSH, 34,  // 7: 35 34
 			},
 			want:   []int{35, 34},
+			output: "",
+		},
+		{
+			name: "jmp",
+			code: []OPCode{
+				PUSH, 0,
+				PUSH, 1,
+				JMP,  8,
+				PUSH, 34,
+				PUSH, 2,
+			},
+			want:   []int{0, 1, 2},
 			output: "",
 		},
 	}

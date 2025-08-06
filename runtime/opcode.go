@@ -26,7 +26,8 @@ const (
 	EQ  OPCode = 0x22
 
 	// Program Flow
-	JMPIF OPCode = 0x30
+	JMP OPCode = 0x30
+	JMPIF OPCode = 0x31
 
 	// I/O
 	PRINT OPCode = 0xF0
