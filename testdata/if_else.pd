@@ -1,0 +1,14 @@
+0 1 <
+if
+    69 print
+else
+    0 print
+end
+
+0 1 >
+if
+    0 print
+else
+    69 print
+end
+
