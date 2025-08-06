@@ -8,6 +8,7 @@ const (
 	LPAREN Type = "("
 	RPAREN Type = ")"
 	IF     Type = "if"
+	ELSE   Type = "else"
 	END    Type = "end"
 	PRINT  Type = "print" // TODO: PRINT should be built-in function
 	SHL    Type = "shr"
@@ -32,6 +33,7 @@ var keywords = map[string]Type{
 	"shl"  : SHL,
 	"shr"  : SHR,
 	"if"   : IF,
+	"else" : ELSE,
 	"end"  : END,
 }
 

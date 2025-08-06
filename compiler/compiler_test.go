@@ -89,6 +89,18 @@ func TestCompiler_Compile(t *testing.T) {
 				runtime.NOP,                      // END
 			},
 		},
+		{
+			name: "simple if-else",
+			in: "if 1 else 0 end",
+			want: []runtime.OPCode{
+				runtime.JMPIF, runtime.OPCode(6), // IF  ELSE_ADDR <<
+				runtime.PUSH,  runtime.OPCode(1), // PUSH 1 
+				runtime.JMP,   runtime.OPCode(9), // JMP END_ADDR  <<
+				runtime.NOP,                      // ELSE
+				runtime.PUSH,  runtime.OPCode(0), // PUSH 0
+				runtime.NOP,                      // END
+			},
+		},
 	}
 
 	for _, tt := range tests {
