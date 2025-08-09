@@ -4,17 +4,17 @@ import "fmt"
 import "io"
 import "os"
 
-// ReadBytecodeFile returns a slice of OPCode and error
+// ReadBytecodeFile returns a slice of Instruction and error
 // This function is helper function
-func ReadBytecodeFile(path string) ([]OPCode, error) {
+func ReadBytecodeFile(path string) ([]Instruction, error) {
 	raw, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 
-	c := make([]OPCode, 0, 1024)
+	c := make([]Instruction, 0, 1024)
 	for _, r := range raw {
-		c = append(c, OPCode(r))
+		c = append(c, Instruction{Kind: InstructionKind(r), Args: []int{}}) // TODO:
 	}
 
 	return c, nil
@@ -22,14 +22,14 @@ func ReadBytecodeFile(path string) ([]OPCode, error) {
 
 // VM contains piled Virtual Machine state
 type VM struct {
-	code   []OPCode
+	code   []Instruction
 	ip     int
 	stack  []int
 	stdout io.Writer
 }
 
 // NewVM is constructor for piled Virtual Machine
-func NewVM(code []OPCode) *VM {
+func NewVM(code []Instruction) *VM {
 	return &VM{
 		code:   code,
 		ip:     0,
@@ -38,16 +38,15 @@ func NewVM(code []OPCode) *VM {
 	}
 }
 
-// Run start emulating a slice of OPCode on VM
+// Run start emulating a slice of Instruction on VM
 func (vm *VM) Run() {
 	for vm.ip < len(vm.code) {
-		op := vm.code[vm.ip]
+		inst := vm.code[vm.ip]
 		vm.ip++
 
-		switch op {
+		switch inst.Kind {
 		case PUSH:
-			val := int(vm.code[vm.ip])
-			vm.ip++
+			val := inst.Args[0]
 			vm.push(val)
 		case ADD:
 			b := vm.pop()
@@ -116,16 +115,17 @@ func (vm *VM) Run() {
 			}
 			vm.push(v)
 		case JMP:
-			addr := vm.code[vm.ip]
-			vm.ip = int(addr)
+			addr := inst.Args[0]
+			vm.ip = addr
 		case JMPIF:
 			// TODO: JMPIF need to be jump if cond is true but now it jumps if cond is false
+
 			// address is at next opcode
-			addr := vm.code[vm.ip]
+			addr := inst.Args[0]
 			vm.ip++ // ensure vm ip is point at the next opcode.
 			cond := vm.pop()
 			if cond == 0 { // false
-				vm.ip = int(addr)
+				vm.ip = addr
 			} else { // true
 				// fallthrough
 			}

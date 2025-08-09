@@ -5,126 +5,132 @@ import (
 	"testing"
 )
 
+func inst(k InstructionKind, args ...int) Instruction {
+	if len(args) == 0 {
+		return Instruction{Kind: k, Args: nil}
+	}
+	return Instruction{Kind: k, Args: args}
+}
+
 func TestVM_Run(t *testing.T) {
 	tests := []struct {
 		name   string
-		code   []OPCode
+		code   []Instruction
 		want   []int
 		output string
 	}{
 		{
 			"add",
-			[]OPCode{
-				PUSH, 10,
-				PUSH, 20,
-				ADD,
+			[]Instruction{
+				inst(PUSH, 10),
+				inst(PUSH, 20),
+				inst(ADD),
 			},
 			[]int{30}, "",
 		},
 		{
 			"sub",
-			[]OPCode{
-				PUSH, 50,
-				PUSH, 20,
-				SUB,
+			[]Instruction{
+				inst(PUSH, 50),
+				inst(PUSH, 20),
+				inst(SUB),
 			},
 			[]int{30}, "",
 		},
 		{
 			"mul",
-			[]OPCode{
-				PUSH, 5,
-				PUSH, 2,
-				MUL,
+			[]Instruction{
+				inst(PUSH, 5),
+				inst(PUSH, 2),
+				inst(MUL),
 			},
 			[]int{10}, "",
 		},
 		{
 			"div",
-			[]OPCode{
-				PUSH, 10,
-				PUSH, 2,
-				DIV,
+			[]Instruction{
+				inst(PUSH, 10),
+				inst(PUSH, 2),
+				inst(DIV),
 			},
 			[]int{5}, "",
 		},
 		{
 			"mod",
-			[]OPCode{
-				PUSH, 9,
-				PUSH, 2,
-				MOD,
-				PUSH, 10,
-				PUSH, 2,
-				MOD,
+			[]Instruction{
+				inst(PUSH, 9),
+				inst(PUSH, 2),
+				inst(MOD),
+				inst(PUSH, 10),
+				inst(PUSH, 2),
+				inst(MOD),
 			},
 			[]int{1, 0}, "",
 		},
 		{
 			"and",
-			[]OPCode{
-				PUSH, 5, // 0101
-				PUSH, 14, // 1110
-				AND,
+			[]Instruction{
+				inst(PUSH, 5),
+				inst(PUSH, 14),
+				inst(AND),
 			},
 			[]int{4}, "",
 		},
 		{
 			"or",
-			[]OPCode{
-				PUSH, 6, // 0110
-				PUSH, 10, // 1010
-				OR,
+			[]Instruction{
+				inst(PUSH, 6),
+				inst(PUSH, 10),
+				inst(OR),
 			},
 			[]int{14}, "",
 		},
 		{
 			"left-shift",
-			[]OPCode{
-				PUSH, 2,
-				PUSH, 1,
-				SHL,
+			[]Instruction{
+				inst(PUSH, 2),
+				inst(PUSH, 1),
+				inst(SHL),
 			},
 			[]int{4}, "",
 		},
 		{
 			"right-shift",
-			[]OPCode{
-				PUSH, 4,
-				PUSH, 1,
-				SHR,
+			[]Instruction{
+				inst(PUSH, 4),
+				inst(PUSH, 1),
+				inst(SHR),
 			},
 			[]int{2}, "",
 		},
 		{
 			"add and print",
-			[]OPCode{
-				PUSH, 5,
-				PUSH, 7,
-				ADD,
-				PRINT,
+			[]Instruction{
+				inst(PUSH, 5),
+				inst(PUSH, 7),
+				inst(ADD),
+				inst(PRINT),
 			},
 			[]int{}, "12\n",
 		},
 		{
 			"jmp",
-			[]OPCode{
-				PUSH, 0,
-				PUSH, 1,
-				JMP,  8,
-				PUSH, 34,
-				PUSH, 2,
+			[]Instruction{
+				inst(PUSH, 0),
+				inst(PUSH, 1),
+				inst(JMP,  4),
+				inst(PUSH, 34),
+				inst(PUSH, 2),
 			},
 			[]int{0, 1, 2}, "",
 		},
 		{
 			"jmpif",
-			[]OPCode{
-				PUSH,  0,
-				JMPIF, 5,
-				PUSH,  35,
-				NOP,
-				PUSH,  34,
+			[]Instruction{
+				inst(PUSH,  0),
+				inst(JMPIF, 3),
+				inst(PUSH,  35),
+				inst(PUSH,  34),
 			},
 			[]int{34}, "",
 		},
