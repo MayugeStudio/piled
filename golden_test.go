@@ -30,7 +30,7 @@ func TestGoldenFiles(t *testing.T) {
 
 			err := cmd.Run()
 			if err != nil {
-				t.Fatalf("failed to compile piled executable: %v\n%s", err, out.String())
+				t.Fatalf("failed to compile piled program: %v\n%s", err, out.String())
 			}
 
 			// run .pdb file

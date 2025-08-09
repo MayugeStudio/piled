@@ -8,97 +8,125 @@ import (
 	"piled/runtime"
 )
 
+func inst(k runtime.InstructionKind, args ...int) runtime.Instruction {
+	if len(args) == 0 {
+		return runtime.Instruction{Kind: k, Args: nil}
+	}
+	return runtime.Instruction{Kind: k, Args: args}
+}
+
 func TestCompiler_Compile(t *testing.T) {
 	tests := []struct {
 		name string
 		in   string
-		want []runtime.OPCode
+		want runtime.Instruction
 	}{
 		{
 			name: "single literal",
 			in:   "42",
-			want: []runtime.OPCode{runtime.PUSH, 42},
+			want: inst(runtime.PUSH, 42),
 		},
 		{
 			name: "add",
 			in:   "+",
-			want: []runtime.OPCode{runtime.ADD},
+			want: inst(runtime.ADD),
 		},
 		{
 			name: "sub",
 			in:   "-",
-			want: []runtime.OPCode{runtime.SUB},
+			want: inst(runtime.SUB),
 		},
 		{
 			name: "mul",
 			in:   "*",
-			want: []runtime.OPCode{runtime.MUL},
+			want: inst(runtime.MUL),
 		},
 		{
 			name: "div",
 			in:   "/",
-			want: []runtime.OPCode{runtime.DIV},
+			want: inst(runtime.DIV),
 		},
 		{
 			name: "mod",
 			in:   "%",
-			want: []runtime.OPCode{runtime.MOD},
+			want: inst(runtime.MOD),
 		},
 		{
 			name: "and",
 			in:   "&",
-			want: []runtime.OPCode{runtime.AND},
+			want: inst(runtime.AND),
 		},
 		{
 			name: "or",
 			in:   "|",
-			want: []runtime.OPCode{runtime.OR},
+			want: inst(runtime.OR),
 		},
 		{
 			name: "shift-left",
 			in:   "shl",
-			want: []runtime.OPCode{runtime.SHL},
+			want: inst(runtime.SHL),
 		},
 		{
 			name: "shift-right",
 			in:   "shr",
-			want: []runtime.OPCode{runtime.SHR},
+			want: inst(runtime.SHR),
 		},
 		{
 			name: "gt",
 			in:   ">",
-			want: []runtime.OPCode{runtime.GT},
+			want: inst(runtime.GT),
 		},
 		{
 			name: "lt",
 			in:   "<",
-			want: []runtime.OPCode{runtime.LT},
+			want: inst(runtime.LT),
 		},
 		{
 			name: "eq",
 			in:   "=",
-			want: []runtime.OPCode{runtime.EQ},
+			want: inst(runtime.EQ),
 		},
-		// Control flow
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			l := lexer.New(tt.in)
+			c := New(l)
+			got := c.Compile()[0]
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("got = %v, want = %v", got, tt.want)
+				return
+			}
+		})
+	}
+}
+
+func TestCompiler_Compile_ControlFlow(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		want []runtime.Instruction
+	}{
 		{
 			name: "if",
 			in:   "if 1 end",
-			want: []runtime.OPCode{
-				runtime.JMPIF, runtime.OPCode(4), // IF
-				runtime.PUSH, runtime.OPCode(1), // PUSH 1
-				runtime.NOP, // END
+			want: []runtime.Instruction{
+				inst(runtime.JMPIF, 2),    // IF
+				inst(runtime.PUSH, 1),     // PUSH 1
+				inst(runtime.NOP),         // END
 			},
 		},
 		{
 			name: "if-else",
 			in:   "if 1 else 0 end",
-			want: []runtime.OPCode{
-				runtime.JMPIF, runtime.OPCode(6), // IF  ELSE_ADDR <<
-				runtime.PUSH, runtime.OPCode(1), // PUSH 1
-				runtime.JMP, runtime.OPCode(9), // JMP END_ADDR  <<
-				runtime.NOP,                     // ELSE
-				runtime.PUSH, runtime.OPCode(0), // PUSH 0
-				runtime.NOP, // END
+			want: []runtime.Instruction{
+				inst(runtime.JMPIF, 3),    // IF  ELSE_ADDR <<
+				inst(runtime.PUSH, 1),     // PUSH 1
+				inst(runtime.JMP, 5),      // JMP END_ADDR  <<
+				inst(runtime.NOP),         // ELSE
+				inst(runtime.PUSH, 0),     // PUSH 0
+				inst(runtime.NOP),         // END
 			},
 		},
 	}
@@ -111,6 +139,7 @@ func TestCompiler_Compile(t *testing.T) {
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got = %v, want = %v", got, tt.want)
+				return
 			}
 		})
 	}
