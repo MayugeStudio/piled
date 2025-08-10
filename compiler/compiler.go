@@ -50,10 +50,6 @@ func (c *Compiler) Compile() []runtime.Instruction {
 			c.emit(runtime.Instruction{Kind: runtime.LT, Args: nil})
 		case token.EQ:
 			c.emit(runtime.Instruction{Kind: runtime.EQ, Args: nil})
-		case token.LPAREN: // Currently ignored
-			fmt.Printf("lparen is currently not supported: %v\n", tok)
-		case token.RPAREN: // Currently ignored
-			fmt.Printf("rparen is currently not supported: %v\n", tok)
 		case token.IF:
 			c.emit(runtime.Instruction{Kind: runtime.JMPIF, Args: []int{}})
 			// save current ip onto the stack to backpatch it

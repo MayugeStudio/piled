@@ -5,8 +5,6 @@ package token
 type Type string
 
 const (
-	LPAREN Type = "("
-	RPAREN Type = ")"
 	IF     Type = "if"
 	ELSE   Type = "else"
 	END    Type = "end"

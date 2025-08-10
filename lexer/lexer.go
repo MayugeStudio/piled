@@ -35,12 +35,6 @@ func (l *Lexer) NextToken() token.Token {
 	l.skipWhitespace()
 
 	switch l.ch {
-	case '(':
-		tok.Type = token.LPAREN
-		tok.Literal = "("
-	case ')':
-		tok.Type = token.RPAREN
-		tok.Literal = ")"
 	case '+':
 		tok.Type = token.ADD
 		tok.Literal = "+"

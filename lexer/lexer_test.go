@@ -26,14 +26,6 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.EOF, "", 1),
 		},
 		{
-			"left-parenthesis", "(",
-			tok(token.LPAREN, "(", 1),
-		},
-		{
-			"right-parenthesis", ")",
-			tok(token.RPAREN, ")", 1),
-		},
-		{
 			"binary-operators-add", "+",
 			tok(token.ADD, "+", 1),
 		},
