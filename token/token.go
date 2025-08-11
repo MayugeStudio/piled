@@ -11,6 +11,8 @@ const (
 	PRINT  Type = "print" // TODO: PRINT should be built-in function
 	SHL    Type = "shr"
 	SHR    Type = "shl"
+	// TODO: Token shouldn't represent meaning of token but just represent token.
+	//       For example, ADD has to be PLUS, SUB has to be MINUS, and so on.
 	ADD    Type = "+"
 	SUB    Type = "-"
 	MUL    Type = "*"
