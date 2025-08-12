@@ -65,8 +65,13 @@ func (l *Lexer) NextToken() token.Token {
 	case '=':
 		tok.Type = token.EQ
 		tok.Literal = "="
+	case '{':
+		tok.Type = token.OCurly
+		tok.Literal = "{"
+	case '}':
+		tok.Type = token.CCurly
+		tok.Literal = "}"
 	case rune(0):
-		tok.Type = token.EOF
 	default:
 		if isDigit(l.ch) {
 			return l.readNumeric()

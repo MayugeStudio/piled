@@ -23,6 +23,8 @@ const (
 	GT     Type = ">"
 	LT     Type = "<"
 	EQ     Type = "="
+	OCurly Type = "{"
+	CCurly Type = "}"
 	IDENT  Type = "IDENT"
 	NUMBER Type = "NUMBER"
 	EOF    Type = "EOF"
