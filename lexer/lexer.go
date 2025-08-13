@@ -72,6 +72,7 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Type = token.CCurly
 		tok.Literal = "}"
 	case rune(0):
+		tok.Type = token.EOF
 	default:
 		if isDigit(l.ch) {
 			return l.readNumeric()
