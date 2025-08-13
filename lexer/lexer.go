@@ -9,7 +9,7 @@ type Lexer struct {
 	ch         rune
 	characters []rune
 	pos        int
-	readPos    int
+	ReadPos    int
 
 	Line int
 	Col  int
@@ -20,13 +20,21 @@ func New(source string) *Lexer {
 	l := &Lexer{
 		characters: []rune(source),
 		pos:        0,
-		readPos:    0,
+		ReadPos:    0,
 		Line:       1,
 		Col:        0,
 	}
 	// ensure that ch point at a character
 	l.nextChar()
 	return l
+}
+
+// TODO: Introduce ParsePoint
+func (l *Lexer) RestorePos(pos int) {
+	l.ReadPos = pos
+
+	// Ensure that lexer.ch point at a valid character
+	l.nextChar()
 }
 
 // NextToken provide token by reading source-code character by character
@@ -88,10 +96,10 @@ func (l *Lexer) NextToken() token.Token {
 }
 
 func (l *Lexer) nextChar() {
-	if l.readPos >= len(l.characters) {
+	if l.ReadPos >= len(l.characters) {
 		l.ch = rune(0)
 	} else {
-		l.ch = l.characters[l.readPos]
+		l.ch = l.characters[l.ReadPos]
 	}
 
 	if l.ch == ('\n') {
@@ -99,16 +107,17 @@ func (l *Lexer) nextChar() {
 		l.Col = 0
 	}
 
-	l.pos = l.readPos
-	l.readPos++
+	l.pos = l.ReadPos
+	l.ReadPos++
 	l.Col++
 }
 
+// TODO: Delete peekChar and lexer.pos
 func (l *Lexer) peekChar() rune {
 	if l.pos >= len(l.characters) {
 		return rune(0)
 	} else {
-		return l.characters[l.readPos]
+		return l.characters[l.ReadPos]
 	}
 }
 

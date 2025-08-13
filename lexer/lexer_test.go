@@ -133,14 +133,49 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := New(tt.in)
-			tokens := make([]token.Token, 0)
+			got := make([]token.Token, 0)
 			for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-				tokens = append(tokens, tok)
+				got = append(got, tok)
 			}
 
-			if !reflect.DeepEqual(tokens, tt.want) {
-				t.Errorf("got = %v, want = %v\n", tokens, tt.want)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("want = %v, got = %v", tt.want, got)
 			}
 		})
+	}
+}
+
+func Test_LexerRestorePos(t *testing.T) {
+	in := "1 2 3"
+	l := New(in)
+	savePoint := l.ReadPos-1
+	if savePoint != 0 {
+		t.Fatalf("got = %v, want = %v", savePoint, 0)
+	}
+
+	if tok := l.NextToken(); tok.Literal != "1" {
+		t.Fatalf("got = %v, want = %v", tok.Literal, "1")
+	}
+
+	if tok := l.NextToken(); tok.Literal != "2" {
+		t.Fatalf("got = %v, want = %v", tok.Literal, "2")
+	}
+
+	if tok := l.NextToken(); tok.Literal != "3" {
+		t.Fatalf("got = %v, want = %v", tok.Literal, "3")
+	}
+
+	l.RestorePos(savePoint)
+	
+	if tok := l.NextToken(); tok.Literal != "1" {
+		t.Fatalf("got = %v, want = %v", tok.Literal, "1")
+	}
+
+	if tok := l.NextToken(); tok.Literal != "2" {
+		t.Fatalf("got = %v, want = %v", tok.Literal, "2")
+	}
+
+	if tok := l.NextToken(); tok.Literal != "3" {
+		t.Fatalf("got = %v, want = %v", tok.Literal, "3")
 	}
 }
