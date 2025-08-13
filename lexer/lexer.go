@@ -66,10 +66,10 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Type = token.EQ
 		tok.Literal = "="
 	case '{':
-		tok.Type = token.OCurly
+		tok.Type = token.OCURLY
 		tok.Literal = "{"
 	case '}':
-		tok.Type = token.CCurly
+		tok.Type = token.CCURLY
 		tok.Literal = "}"
 	case rune(0):
 		tok.Type = token.EOF
