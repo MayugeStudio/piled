@@ -166,11 +166,16 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 	return nil
 }
 
-func (p *IrGen) compileIF(l *lexer.Lexer) error {
-	// TODO: Introduce allocate label function
-	else_label := p.labelCount
-	p.emit(&JmpIfNotLabel{ Label: p.labelCount })
+func (p *IrGen) allocateLabel() int {
+	result := p.labelCount
 	p.labelCount += 1
+	return result
+
+}
+
+func (p *IrGen) compileIF(l *lexer.Lexer) error {
+	else_label := p.allocateLabel()
+	p.emit(&JmpIfNotLabel{ Label: else_label })
 	
 	// TODO: Introduce block by using curly braces
 	// Parse if block
@@ -196,8 +201,7 @@ func (p *IrGen) compileIF(l *lexer.Lexer) error {
 	savePoint := l.ReadPos-1
 	tok = l.NextToken() // expect else
 	if tok.Type == token.ELSE {
-		out_label := p.labelCount
-		p.labelCount += 1
+		out_label := p.allocateLabel()
 		p.emit(&JmpLabel{ Label: out_label })
 		p.emit(&Label{ Label: else_label })
 		tok := l.NextToken() // expect OCurly

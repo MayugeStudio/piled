@@ -6,12 +6,12 @@ import (
 	"piled/lexer"
 )
 
-func num(v int) *NumberImpl {
-	return &NumberImpl{ kind: Number, Value: v }
+func num(v int) *Number {
+	return &Number{ Value: v }
 }
 
-func bin(bkind BinKind) *BinopImpl {
-	return &BinopImpl{ kind: Binop, Bkind: bkind }
+func bin(bkind BinKind) *Binop {
+	return &Binop{ Bkind: bkind }
 }
 
 func Test_CompileProgram(t *testing.T) {
@@ -25,7 +25,7 @@ func Test_CompileProgram(t *testing.T) {
 			"1 print",
 			[]Op{
 				num(1),
-				&PrintImpl{ kind: Print },
+				&Print{},
 			},
 		},
 		{
@@ -34,8 +34,8 @@ func Test_CompileProgram(t *testing.T) {
 			[]Op{
 				num(1),
 				num(1),
-				&BinopImpl{ kind: Binop, Bkind: Add },
-				&PrintImpl{ kind: Print },
+				&Binop{ Bkind: Add },
+				&Print{},
 			},
 		},
 		{
@@ -44,8 +44,8 @@ func Test_CompileProgram(t *testing.T) {
 			[]Op{
 				num(1),
 				num(1),
-				&BinopImpl{ kind: Binop, Bkind: Sub },
-				&PrintImpl{ kind: Print },
+				&Binop{ Bkind: Sub },
+				&Print{},
 			},
 		},
 		{
@@ -54,8 +54,8 @@ func Test_CompileProgram(t *testing.T) {
 			[]Op{
 				num(1),
 				num(1),
-				&BinopImpl{ kind: Binop, Bkind: Mul },
-				&PrintImpl{ kind: Print },
+				&Binop{ Bkind: Mul },
+				&Print{},
 			},
 		},
 		{
@@ -64,8 +64,8 @@ func Test_CompileProgram(t *testing.T) {
 			[]Op{
 				num(1),
 				num(1),
-				&BinopImpl{ kind: Binop, Bkind: Div },
-				&PrintImpl{ kind: Print },
+				&Binop{ Bkind: Div },
+				&Print{},
 			},
 		},
 		{
@@ -73,10 +73,10 @@ func Test_CompileProgram(t *testing.T) {
 			"1 if {34} print",
 			[]Op{
 				num(1),
-				&JmpIfNotLabelImpl{ kind: JmpIfNotLabel, label: 0 },
+				&JmpIfNotLabel{ Label: 0 },
 				num(34),
-				&LabelImpl{ kind: Label, label: 0 },
-				&PrintImpl{ kind: Print },
+				&Label{ Label: 0 },
+				&Print{},
 			},
 		},
 		{
@@ -84,13 +84,13 @@ func Test_CompileProgram(t *testing.T) {
 			"1 if {34} else {35} print",
 			[]Op{
 				num(1),
-				&JmpIfNotLabelImpl{ kind: JmpIfNotLabel, label: 0 },
+				&JmpIfNotLabel{ Label: 0 },
 				num(34),
-				&JmpLabelImpl{ kind: JmpLabel, label: 1 },
-				&LabelImpl{ kind: Label, label: 0 },
+				&JmpLabel{ Label: 1 },
+				&Label{ Label: 0 },
 				num(35),
-				&LabelImpl{ kind: Label, label: 1 },
-				&PrintImpl{ kind: Print },
+				&Label{ Label: 1 },
+				&Print{},
 			},
 		},
 	}
@@ -105,7 +105,7 @@ func Test_CompileProgram(t *testing.T) {
 				return
 			}
 
-			got := g.ops
+			got := g.Ops
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("want = %v, got = %v", tt.want, got)
@@ -119,11 +119,11 @@ func Test_compileIF_SingleIF(t *testing.T) {
 	// if is already found by compileProgram
 	in := "{1 1 +}"
 	want := []Op{
-		&JmpIfNotLabelImpl{ kind: JmpIfNotLabel, label: 0 },
+		&JmpIfNotLabel{ Label: 0 },
 		num(1),
 		num(1),
 		bin(Add),
-		&LabelImpl{ kind: Label, label: 0 },
+		&Label{ Label: 0 },
 	}
 	l := lexer.New(in)
 	g := NewIrGen()
@@ -134,7 +134,7 @@ func Test_compileIF_SingleIF(t *testing.T) {
 		return
 	}
 
-	got := g.ops
+	got := g.Ops
 
 	if !reflect.DeepEqual(want, got) {
 		t.Errorf("want = %v, got = %v", want, got)

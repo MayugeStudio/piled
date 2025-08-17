@@ -13,8 +13,19 @@ func ReadBytecodeFile(path string) ([]Instruction, error) {
 	}
 
 	c := make([]Instruction, 0, 1024)
-	for _, r := range raw {
-		c = append(c, Instruction{Kind: InstructionKind(r), Args: []int{}}) // TODO:
+	for ip := 0; ip<len(raw);ip++ {
+		kind := InstructionKind(raw[ip])
+		switch kind {
+		case PUSH, JMP, JMPIF:
+			ip++
+			if ip >= len(raw) {
+				return nil, fmt.Errorf("error - reading bytecode: invalid bytecode was provided")
+			}
+			value := int(raw[ip])
+			c = append(c, Instruction{Kind: kind, Args: []int{value}})
+		default:
+			c = append(c, Instruction{Kind: kind, Args: []int{}})
+		} 
 	}
 
 	return c, nil
@@ -122,7 +133,6 @@ func (vm *VM) Run() {
 
 			// address is at next opcode
 			addr := inst.Args[0]
-			vm.ip++ // ensure vm ip is point at the next opcode.
 			cond := vm.pop()
 			if cond == 0 { // false
 				vm.ip = addr
