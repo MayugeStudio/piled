@@ -1,10 +1,10 @@
-package compiler
+package codegen
 
 import (
 	"reflect"
 	"testing"
 
-	"piled/lexer"
+	"piled/ir"
 	"piled/runtime"
 )
 
@@ -15,84 +15,83 @@ func inst(k runtime.InstructionKind, args ...int) runtime.Instruction {
 	return runtime.Instruction{Kind: k, Args: args}
 }
 
+// TODO: Separate TestCompiler_Compile from Binop tests
 func TestCompiler_Compile(t *testing.T) {
 	tests := []struct {
 		name string
-		in   string
+		in   ir.Op
 		want runtime.Instruction
 	}{
 		{
 			name: "single literal",
-			in:   "42",
+			in:   &ir.Number{ Value: 42 },
 			want: inst(runtime.PUSH, 42),
 		},
 		{
 			name: "add",
-			in:   "+",
+			in:   &ir.Binop{ Bkind: ir.Add },
 			want: inst(runtime.ADD),
 		},
 		{
 			name: "sub",
-			in:   "-",
+			in:   &ir.Binop{ Bkind: ir.Sub },
 			want: inst(runtime.SUB),
 		},
 		{
 			name: "mul",
-			in:   "*",
+			in:   &ir.Binop{ Bkind: ir.Mul },
 			want: inst(runtime.MUL),
 		},
 		{
 			name: "div",
-			in:   "/",
+			in:   &ir.Binop{ Bkind: ir.Div },
 			want: inst(runtime.DIV),
 		},
 		{
 			name: "mod",
-			in:   "%",
+			in:   &ir.Binop{ Bkind: ir.Mod },
 			want: inst(runtime.MOD),
 		},
 		{
 			name: "and",
-			in:   "&",
+			in:   &ir.Binop{ Bkind: ir.And },
 			want: inst(runtime.AND),
 		},
 		{
 			name: "or",
-			in:   "|",
+			in:   &ir.Binop{ Bkind: ir.Or },
 			want: inst(runtime.OR),
 		},
 		{
 			name: "shift-left",
-			in:   "shl",
+			in:   &ir.Binop{ Bkind: ir.Shl },
 			want: inst(runtime.SHL),
 		},
 		{
 			name: "shift-right",
-			in:   "shr",
+			in:   &ir.Binop{ Bkind: ir.Shr },
 			want: inst(runtime.SHR),
 		},
 		{
 			name: "gt",
-			in:   ">",
+			in:   &ir.Binop{ Bkind: ir.Gt },
 			want: inst(runtime.GT),
 		},
 		{
 			name: "lt",
-			in:   "<",
+			in:   &ir.Binop{ Bkind: ir.Lt },
 			want: inst(runtime.LT),
 		},
 		{
 			name: "eq",
-			in:   "=",
+			in:   &ir.Binop{ Bkind: ir.Eq },
 			want: inst(runtime.EQ),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := lexer.New(tt.in)
-			c := New(l)
-			got := c.Compile()[0]
+			got := GenerateProgram([]ir.Op{tt.in})[0]
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got = %v, want = %v", got, tt.want)
@@ -105,37 +104,46 @@ func TestCompiler_Compile(t *testing.T) {
 func TestCompiler_Compile_ControlFlow(t *testing.T) {
 	tests := []struct {
 		name string
-		in   string
+		in   []ir.Op
 		want []runtime.Instruction
 	}{
 		{
 			name: "if",
-			in:   "if 1 end",
+			in:   []ir.Op{
+				&ir.JmpIfNotLabel{Label: 0},
+				&ir.Number{Value: 1},
+				&ir.Label{Label: 0},
+			},
 			want: []runtime.Instruction{
-				inst(runtime.JMPIF, 2),    // IF
-				inst(runtime.PUSH, 1),     // PUSH 1
-				inst(runtime.NOP),         // END
+				inst(runtime.JMPIF, 2),
+				inst(runtime.PUSH, 1),
+				inst(runtime.NOP),
 			},
 		},
 		{
 			name: "if-else",
-			in:   "if 1 else 0 end",
+			in:   []ir.Op{
+				&ir.JmpIfNotLabel{Label: 0},
+				&ir.Number{Value: 1},
+				&ir.JmpLabel{Label: 1},
+				&ir.Label{Label: 0},
+				&ir.Number{Value: 0},
+				&ir.Label{Label: 1},
+			},
 			want: []runtime.Instruction{
-				inst(runtime.JMPIF, 3),    // IF  ELSE_ADDR <<
-				inst(runtime.PUSH, 1),     // PUSH 1
-				inst(runtime.JMP, 5),      // JMP END_ADDR  <<
-				inst(runtime.NOP),         // ELSE
-				inst(runtime.PUSH, 0),     // PUSH 0
-				inst(runtime.NOP),         // END
+				inst(runtime.JMPIF, 3),
+				inst(runtime.PUSH, 1),
+				inst(runtime.JMP, 5),
+				inst(runtime.NOP),
+				inst(runtime.PUSH, 0),
+				inst(runtime.NOP),
 			},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := lexer.New(tt.in)
-			c := New(l)
-			got := c.Compile()
+			got := GenerateProgram(tt.in)
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got = %v, want = %v", got, tt.want)

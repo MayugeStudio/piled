@@ -5,14 +5,14 @@ package token
 type Type string
 
 const (
-	LPAREN Type = "("
-	RPAREN Type = ")"
 	IF     Type = "if"
 	ELSE   Type = "else"
 	END    Type = "end"
 	PRINT  Type = "print" // TODO: PRINT should be built-in function
 	SHL    Type = "shr"
 	SHR    Type = "shl"
+	// TODO: Token shouldn't represent meaning of token but just represent token.
+	//       For example, ADD has to be PLUS, SUB has to be MINUS, and so on.
 	ADD    Type = "+"
 	SUB    Type = "-"
 	MUL    Type = "*"
@@ -23,6 +23,8 @@ const (
 	GT     Type = ">"
 	LT     Type = "<"
 	EQ     Type = "="
+	OCURLY Type = "{"
+	CCURLY Type = "}"
 	IDENT  Type = "IDENT"
 	NUMBER Type = "NUMBER"
 	EOF    Type = "EOF"

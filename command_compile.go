@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"piled/compiler"
+	"piled/ir"
+	"piled/codegen"
 	"piled/lexer"
 	"strings"
 )
@@ -45,11 +46,17 @@ func (*Command_Compile) Execute(argv []string, pl PiledLogger) int {
 
 	pl.Info("compiling program ...")
 	l := lexer.New(source)
-	c := compiler.New(l)
-	c.Compile()
+	g := ir.NewIrGen()
+	if err := g.CompileProgram(l); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
+		return CommandError
+	}
+	
+	program := codegen.GenerateProgram(g.Ops)
+
 
 	pl.Info("generating bytecode to %s...", outfile)
-	if err := c.Write(outpath + ".pdb"); err != nil {
+	if err := codegen.Write(outpath + ".pdb", program); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 		return CommandError
 	}
