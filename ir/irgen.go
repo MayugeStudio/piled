@@ -7,18 +7,7 @@ import (
 	"piled/token"
 )
 
-type OpKind string
 type BinKind string
-
-const (
-	Number OpKind   = "Number"
-	Bind            = "Bind"
-	Binop           = "Binop"
-	Label           = "Label"
-	JmpLabel        = "JmpLabel"
-	JmpIfNotLabel   = "JmpIfNotLabel"
-	Print           = "Print"
-)
 
 const (
 	// Bin op
@@ -31,103 +20,83 @@ const (
 	Lt              = "Lt"
 	Eq              = "Eq"
 	// TODO: Rename And to BitAnd
-	And             = "And"
 	// TODO: Rename Or to BitOr
+	And             = "And"
 	Or              = "Or"
+	Shl             = "BitShl"
+	Shr             = "BitShr"
 )
 
 type Op interface {
-	Kind() OpKind
 	String() string
 }
 
-// -------------------- NumberImpl -------------------- 
+// -------------------- Number -------------------- 
 
-type NumberImpl struct {
-	kind OpKind
+type Number struct {
 	Value int
 }
 
-func (p *NumberImpl) Kind() OpKind {
-	return p.kind
+func (p *Number) String() string {
+	return "Number(" + strconv.Itoa(p.Value) + ")"
 }
 
-func (p *NumberImpl) String() string {
-	return string(p.kind) + "(" + strconv.Itoa(p.Value) + ")"
-}
+// -------------------- Binop -------------------- 
 
-// -------------------- BinopImpl -------------------- 
-
-type BinopImpl struct {
-	kind OpKind
+type Binop struct {
 	Bkind BinKind
 }
 
-func (p *BinopImpl) Kind() OpKind {
-	return p.kind
+func (p *Binop) String() string {
+	return "Binop(" + string(p.Bkind) + ")"
 }
 
-func (p *BinopImpl) String() string {
-	return string(p.kind) + "(" + string(p.Bkind) + ")"
+// -------------------- Bind --------------------
+
+type Bind struct {
 }
 
-// -------------------- LabelImpl -------------------- 
-
-type LabelImpl struct {
-	kind  OpKind
-	label int
+func (p *Bind) String() string {
+	return "Bind()"
 }
 
-func (p *LabelImpl) Kind() OpKind {
-	return p.kind
+// -------------------- Label -------------------- 
+
+type Label struct {
+	Label int
 }
 
-func (p *LabelImpl) String() string {
-	return string(p.kind) + "(" + strconv.Itoa(p.label) + ")"
+func (p *Label) String() string {
+	return "Label(" + strconv.Itoa(p.Label) + ")"
 }
 
-// -------------------- JmpLabelImpl -------------------- 
+// -------------------- JmpLabel -------------------- 
 
-type JmpLabelImpl struct {
-	kind OpKind
-	label int
+type JmpLabel struct {
+	Label int
 }
 
-func (p *JmpLabelImpl) Kind() OpKind {
-	return p.kind
+func (p *JmpLabel) String() string {
+	return "JmpLabel(" + strconv.Itoa(p.Label) + ")"
 }
 
-func (p *JmpLabelImpl) String() string {
-	return string(p.kind) + "(" + strconv.Itoa(p.label) + ")"
+// -------------------- JmpIfNotLabel -------------------- 
+
+type JmpIfNotLabel struct {
+	Label int
 }
 
-// -------------------- JmpIfNotLabelImpl -------------------- 
-
-type JmpIfNotLabelImpl struct {
-	kind  OpKind
-	label int
-}
-
-func (p *JmpIfNotLabelImpl) Kind() OpKind {
-	return p.kind
-}
-
-func (p *JmpIfNotLabelImpl) String() string {
-	return string(p.kind) + "(" + strconv.Itoa(p.label) + ")"
+func (p *JmpIfNotLabel) String() string {
+	return "JmpIfNotLabel(" + strconv.Itoa(p.Label) + ")"
 }
 
 // -------------------- Print -------------------- 
 
-type PrintImpl struct {
-	kind OpKind
+type Print struct {
 }
 
-func (p *PrintImpl) Kind() OpKind {
-	return p.kind
-}
-
-func (p *PrintImpl) String() string {
-	return string(p.kind) + "()"
+func (p *Print) String() string {
+	return "Print()"
 }
 
 // -------------------- IrGen -------------------- 
@@ -163,7 +132,7 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 		// Literals
 		case token.NUMBER:
 			value, _ := strconv.Atoi(tok.Literal)
-			p.emit(&NumberImpl{ kind: Number, Value: value })
+			p.emit(&Number{ Value: value })
 		case token.IDENT:
 			// TODO: Report invalid Ident through diagnostics
 		// Binops
@@ -184,7 +153,7 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 		//case token.LET:
 		//	p.compileBINDING(l)
 		case token.PRINT:
-			p.emit(&PrintImpl{kind: Print})
+			p.emit(&Print{})
 		//case token.SHL:
 		//case token.SHR:
 		case token.OCURLY:
@@ -200,7 +169,7 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 func (p *IrGen) compileIF(l *lexer.Lexer) error {
 	// TODO: Introduce allocate label function
 	else_label := p.labelCount
-	p.emit(&JmpIfNotLabelImpl{ kind: JmpIfNotLabel, label: p.labelCount })
+	p.emit(&JmpIfNotLabel{ Label: p.labelCount })
 	p.labelCount += 1
 	
 	// TODO: Introduce block by using curly braces
@@ -229,8 +198,8 @@ func (p *IrGen) compileIF(l *lexer.Lexer) error {
 	if tok.Type == token.ELSE {
 		out_label := p.labelCount
 		p.labelCount += 1
-		p.emit(&JmpLabelImpl{ kind: JmpLabel, label: out_label })
-		p.emit(&LabelImpl{ kind: Label, label: else_label })
+		p.emit(&JmpLabel{ Label: out_label })
+		p.emit(&Label{ Label: else_label })
 		tok := l.NextToken() // expect OCurly
 		if tok.Type == token.OCURLY {
 			for {
@@ -246,10 +215,10 @@ func (p *IrGen) compileIF(l *lexer.Lexer) error {
 		} else {
 			return fmt.Errorf("expected } but got %s", tok.Type)
 		}
-		p.emit(&LabelImpl{ kind: Label, label: out_label })
+		p.emit(&Label{ Label: out_label })
 	} else {
 		l.RestorePos(savePoint)
-		p.emit(&LabelImpl{ kind: Label, label: else_label })
+		p.emit(&Label{ Label: else_label })
 	}
 
 	return nil
@@ -263,6 +232,6 @@ func (p *IrGen) emit(ir Op) {
 }
 
 func (p *IrGen) emitBin(b BinKind) {
-	p.emit(&BinopImpl{kind: Binop, Bkind: b})
+	p.emit(&Binop{ Bkind: b })
 }
 
