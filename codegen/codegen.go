@@ -81,6 +81,11 @@ func Write(path string, insts []runtime.Instruction) error {
 	out := make([]byte, 0, 1024)
 	for _, inst := range insts {
 		out = append(out, byte(inst.Kind))
+		if len(inst.Args) > 0 {
+			for _, arg := range inst.Args {
+				out = append(out, byte(arg))
+			}
+		}
 	}
 	return os.WriteFile(path, out, 0644)
 }

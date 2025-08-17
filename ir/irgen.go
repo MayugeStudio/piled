@@ -174,7 +174,6 @@ func (p *IrGen) allocateLabel() int {
 }
 
 func (p *IrGen) compileIF(l *lexer.Lexer) error {
-	// TODO: Introduce allocate label function
 	else_label := p.allocateLabel()
 	p.emit(&JmpIfNotLabel{ Label: else_label })
 	
