@@ -102,12 +102,12 @@ func (p *Print) String() string {
 // -------------------- IrGen -------------------- 
 
 type IrGen struct {
-	ops []Op
+	Ops []Op
 	labelCount int
 }
 
 func NewIrGen() *IrGen {
-	return &IrGen { ops: make([]Op, 0) }
+	return &IrGen { Ops: make([]Op, 0) }
 }
 
 func (p *IrGen) CompileProgram(l *lexer.Lexer) error {
@@ -160,7 +160,7 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 		case token.CCURLY:
 		case token.EOF:
 		default:
-			return fmt.Errorf("unhandled token: %v %v", tok, p.ops)
+			return fmt.Errorf("unhandled token: %v %v", tok, p.Ops)
 	}
 
 	return nil
@@ -228,7 +228,7 @@ func (p *IrGen) compileBINDING(l *lexer.Lexer) {
 }
 
 func (p *IrGen) emit(ir Op) {
-	p.ops = append(p.ops, ir)
+	p.Ops = append(p.Ops, ir)
 }
 
 func (p *IrGen) emitBin(b BinKind) {

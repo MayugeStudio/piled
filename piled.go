@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"piled/compiler"
+	"piled/codegen"
+	"piled/ir"
 	"piled/lexer"
 	"piled/runtime"
 	"piled/token"
@@ -19,9 +20,13 @@ func DumpTokens(l *lexer.Lexer) {
 
 func RunSource(source string) error {
 	l := lexer.New(source)
-	c := compiler.New(l)
-	code := c.Compile()
-	vm := runtime.NewVM(code)
+	g := ir.NewIrGen()
+	if err := g.CompileProgram(l); err != nil {
+		return err
+	}
+
+	program := codegen.GenerateProgram(g.Ops)
+	vm := runtime.NewVM(program)
 	vm.Run()
 	return nil
 }
