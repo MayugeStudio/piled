@@ -1,0 +1,3 @@
+10
+while dup 0 >
+{ dup print 1 - }
