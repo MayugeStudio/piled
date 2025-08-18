@@ -55,3 +55,6 @@ func LookupIdentifier(in string) Type {
 		return IDENT
 	}
 }
+
+// TODO: Introduce Punctuations
+

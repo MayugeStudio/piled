@@ -169,7 +169,7 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 		case token.CCURLY:
 		case token.EOF:
 		default:
-			return fmt.Errorf("unhandled token: %v %v", tok, p.Ops)
+			return fmt.Errorf("IR-GEN: unhandled token: %v %v", tok, p.Ops)
 	}
 
 	return nil
