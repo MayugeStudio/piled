@@ -144,3 +144,28 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 	}
 }
 
+func TestParsePoint(t *testing.T) {
+	l := New("1 2")
+	var tok token.Token
+
+	savedPoint := l.CurrentPoint
+
+	tok = l.NextToken()
+	if tok.Literal !=  "1" {
+		t.Fatalf("got = %q, want = %q", tok.Literal, "1")
+	}
+
+	tok = l.NextToken()
+	if tok.Literal !=  "2" {
+		t.Fatalf("got = %q, want = %q", tok.Literal, "2")
+	}
+
+	// Restore savedPoint
+	l.CurrentPoint = savedPoint
+
+	tok = l.NextToken()
+	if tok.Literal !=  "1" {
+		t.Fatalf("got = %q, want = %q", tok.Literal, "1")
+	}
+}
+

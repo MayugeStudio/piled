@@ -118,16 +118,22 @@ func (l *Lexer) NextToken() token.Token {
 func (l *Lexer) nextChar() {
 	if l.CurrentPoint.current >= len(l.Source) {
 		l.CurrentPoint.ch = rune(0)
-	} else {
-		l.CurrentPoint.ch = l.Source[l.CurrentPoint.current]
+		return
 	}
+	l.CurrentPoint.ch = l.Source[l.CurrentPoint.current]
 
-	if l.CurrentPoint.ch == ('\n') {
-		l.CurrentPoint.current++
+	if l.CurrentPoint.ch == '\n' {
+		l.CurrentPoint.current += 1
+		if l.CurrentPoint.current >= len(l.Source) {
+			l.CurrentPoint.ch = rune(0)
+			return
+		}
 		l.CurrentPoint.lineStart = l.CurrentPoint.current
+		l.CurrentPoint.lineNumber += 1
+	} else {
+		l.CurrentPoint.current += 1
 	}
 
-	l.CurrentPoint.current++
 }
 
 func (l *Lexer) skipWhitespace() {
