@@ -93,6 +93,16 @@ func Test_CompileProgram(t *testing.T) {
 				&Print{},
 			},
 		},
+		{
+			"dup",
+			"69 dup print print",
+			[]Op{
+				num(69),
+				&Dup{},
+				&Print{},
+				&Print{},
+			},
+		},
 	}
 
 	for _, tt := range tests {

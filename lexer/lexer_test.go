@@ -81,6 +81,10 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.SHR, "shr"),
 		},
 		{
+			"ident-dup", "dup",
+			tok(token.DUP, "dup"),
+		},
+		{
 			"controlflow-if", "if",
 			tok(token.IF, "if"),
 		},

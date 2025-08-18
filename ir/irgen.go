@@ -99,6 +99,15 @@ func (p *Print) String() string {
 	return "Print()"
 }
 
+// -------------------- Dup -------------------- 
+
+type Dup struct {
+}
+
+func (p *Dup) String() string {
+	return "Dup()"
+}
+
 // -------------------- IrGen -------------------- 
 
 type IrGen struct {
@@ -152,8 +161,8 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 			}
 		//case token.LET:
 		//	p.compileBINDING(l)
-		case token.PRINT:
-			p.emit(&Print{})
+		case token.PRINT: p.emit(&Print{})
+		case token.DUP: p.emit(&Dup{})
 		//case token.SHL:
 		//case token.SHR:
 		case token.OCURLY:

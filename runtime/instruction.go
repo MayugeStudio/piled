@@ -8,6 +8,7 @@ const (
 	// Stack
 	PUSH InstructionKind = 0x00
 	POP  InstructionKind = 0x01
+	DUP  InstructionKind = 0x02
 
 	// Arithmetic
 	ADD InstructionKind = 0x10

@@ -10,6 +10,7 @@ const (
 	PRINT  Type = "print"
 	SHL    Type = "shr"
 	SHR    Type = "shl"
+	DUP    Type = "dup"
 	// TODO: Token should represent meaning of token.
 	//       For example, ADD has to be PLUS, SUB has to be MINUS, and so on.
 	ADD    Type = "+"
@@ -31,6 +32,7 @@ const (
 
 var keywords = map[string]Type{
 	"print": PRINT,
+	"dup":   DUP,
 	"shl":   SHL,
 	"shr":   SHR,
 	"if":    IF,

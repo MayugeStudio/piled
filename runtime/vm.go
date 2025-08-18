@@ -139,10 +139,13 @@ func (vm *VM) Run() {
 			} else { // true
 				// fallthrough
 			}
-
 		case PRINT:
 			a := vm.pop()
 			vm.Println(a)
+		case DUP:
+			a := vm.pop()
+			vm.push(a)
+			vm.push(a)
 		case NOP: // do nothing
 		}
 	}
