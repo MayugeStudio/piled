@@ -45,7 +45,8 @@ func (*Command_Compile) Execute(argv []string, pl PiledLogger) int {
 	pl.Info("reading file successfully")
 
 	pl.Info("compiling program ...")
-	l := lexer.New(source)
+	// TODO: Rename filename to inputPath
+	l := lexer.New(filename, source)
 	g := ir.NewIrGen()
 	if err := g.CompileProgram(l); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err)

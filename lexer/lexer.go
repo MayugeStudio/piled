@@ -29,14 +29,17 @@ type ParsePoint struct {
 }
 
 
-// Lexer provide methods to lex source code
+// Lexer is the struct that has fields to lex program.
 type Lexer struct {
+	InputPath    string
+	// CurrentPoint holds current parsing position.
 	CurrentPoint ParsePoint
+	// Source is source program.
 	Source       []rune
 }
 
 // New is constructor for lexer
-func New(source string) *Lexer {
+func New(inputPath string, source string) *Lexer {
 	point := ParsePoint{
 		ch:         rune(0),
 		current:    0,
@@ -49,6 +52,7 @@ func New(source string) *Lexer {
 	}
 
 	l := &Lexer{
+		InputPath:    inputPath,
 		CurrentPoint: point,
 		Source:       []rune(source),
 	}

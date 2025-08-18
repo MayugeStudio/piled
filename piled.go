@@ -18,8 +18,8 @@ func DumpTokens(l *lexer.Lexer) {
 	}
 }
 
-func RunSource(source string) error {
-	l := lexer.New(source)
+func RunSource(inputPath string, source string) error {
+	l := lexer.New(inputPath, source)
 	g := ir.NewIrGen()
 	if err := g.CompileProgram(l); err != nil {
 		return err

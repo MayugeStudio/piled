@@ -95,7 +95,7 @@ func TestLexerNextToken(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := New(tt.in)
+			l := New("test.piled", tt.in)
 			tok := l.NextToken()
 			if !reflect.DeepEqual(tok, tt.want) {
 				t.Errorf("got = %v, want = %v\n", tok, tt.want)
@@ -131,7 +131,7 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := New(tt.in)
+			l := New("test.piled", tt.in)
 			got := make([]token.Token, 0)
 			for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
 				got = append(got, tok)
@@ -145,7 +145,7 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 }
 
 func TestParsePoint(t *testing.T) {
-	l := New("1 2")
+	l := New("test.piled", "1 2")
 	var tok token.Token
 
 	savedPoint := l.CurrentPoint
