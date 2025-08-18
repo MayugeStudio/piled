@@ -7,11 +7,10 @@ import (
 	"piled/token"
 )
 
-func tok(t token.Type, lit string, l int) token.Token {
+func tok(t token.Type, lit string) token.Token {
 	return token.Token{
 		Type:    t,
 		Literal: lit,
-		Line:    l,
 	}
 }
 
@@ -23,75 +22,75 @@ func TestLexerNextToken(t *testing.T) {
 	}{
 		{
 			"EOF", "",
-			tok(token.EOF, "", 1),
+			tok(token.EOF, ""),
 		},
 		{
 			"binary-operators-add", "+",
-			tok(token.ADD, "+", 1),
+			tok(token.ADD, "+"),
 		},
 		{
 			"binary-operators-sub", "-",
-			tok(token.SUB, "-", 1),
+			tok(token.SUB, "-"),
 		},
 		{
 			"binary-operators-mul", "*",
-			tok(token.MUL, "*", 1),
+			tok(token.MUL, "*"),
 		},
 		{
 			"binary-operators-div", "/",
-			tok(token.DIV, "/", 1),
+			tok(token.DIV, "/"),
 		},
 		{
 			"binary-operators-modulo", "%",
-			tok(token.MOD, "%", 1),
+			tok(token.MOD, "%"),
 		},
 		{
 			"binary-operators-and", "&",
-			tok(token.AND, "&", 1),
+			tok(token.AND, "&"),
 		},
 		{
 			"binary-operators-or", "|",
-			tok(token.OR, "|", 1),
+			tok(token.OR, "|"),
 		},
 		{
 			"comparison-operators-gt", ">",
-			tok(token.GT, ">", 1),
+			tok(token.GT, ">"),
 		},
 		{
 			"comparison-operators-lt", "<",
-			tok(token.LT, "<", 1),
+			tok(token.LT, "<"),
 		},
 		{
 			"comparison-operators-gt", "=",
-			tok(token.EQ, "=", 1),
+			tok(token.EQ, "="),
 		},
 		{
 			"number", "12",
-			tok(token.NUMBER, "12", 1),
+			tok(token.NUMBER, "12"),
 		},
 		{
 			"ident-print", "print",
-			tok(token.PRINT, "print", 1),
+			tok(token.PRINT, "print"),
 		},
 		{
 			"ident-shl", "shl",
-			tok(token.SHL, "shl", 1),
+			tok(token.SHL, "shl"),
 		},
 		{
 			"ident-shr", "shr",
-			tok(token.SHR, "shr", 1),
+			tok(token.SHR, "shr"),
 		},
 		{
 			"controlflow-if", "if",
-			tok(token.IF, "if", 1),
+			tok(token.IF, "if"),
 		},
 		{
 			"controlflow-else", "else",
-			tok(token.ELSE, "else", 1),
+			tok(token.ELSE, "else"),
 		},
 		{
 			"controlflow-end", "end",
-			tok(token.END, "end", 1),
+			tok(token.END, "end"),
 		},
 	}
 	for _, tt := range tests {
@@ -115,17 +114,17 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 			"two-items",
 			"1234 print",
 			[]token.Token{
-				tok(token.NUMBER, "1234", 1),
-				tok(token.PRINT, "print", 1),
+				tok(token.NUMBER, "1234"),
+				tok(token.PRINT, "print"),
 			},
 		},
 		{
 			"three-items",
 			"1 1 +",
 			[]token.Token{
-				tok(token.NUMBER, "1", 1),
-				tok(token.NUMBER, "1", 1),
-				tok(token.ADD, "+", 1),
+				tok(token.NUMBER, "1"),
+				tok(token.NUMBER, "1"),
+				tok(token.ADD, "+"),
 			},
 		},
 	}

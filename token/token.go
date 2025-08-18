@@ -43,7 +43,6 @@ var keywords = map[string]Type{
 type Token struct {
 	Type    Type
 	Literal string
-	Line    int
 }
 
 // LookupIdentifier check whether specified keyword name exists or not
