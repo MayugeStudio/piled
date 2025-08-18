@@ -97,7 +97,7 @@ func Test_CompileProgram(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := lexer.New(tt.in)
+			l := lexer.New("test.piled", tt.in)
 			g := NewIrGen()
 			err := g.CompileProgram(l)
 			if err != nil {
@@ -125,7 +125,7 @@ func Test_compileIF_SingleIF(t *testing.T) {
 		bin(Add),
 		&Label{ Label: 0 },
 	}
-	l := lexer.New(in)
+	l := lexer.New("test.piled", in)
 	g := NewIrGen()
 
 	err := g.compileIF(l)

@@ -4,45 +4,70 @@ import (
 	"piled/token"
 )
 
-// Lexer provide methods to lex source code
-type Lexer struct {
-	ch         rune
-	characters []rune
-	pos        int
-	ReadPos    int
+// Loc represents a location in the source code.
+// It only contains offsets, and should therefore be used together with Lexer.
+type Loc struct {
+	// InputPath holds the source file path.
+	InputPath  string
+	// LineNumber holds current line number.
+	LineNumber int
+	// LineOffset holds the offset from the beginning of the line.
+	LineOffset int
+}
 
-	Line int
-	Col  int
+// ParsePoint represents the current reading position while parsing.
+// It differs from Loc, which simply stores a position without current parsing context.
+type ParsePoint struct {
+	// ch is pointed at a character being parsed.
+	ch          rune
+	// current holds current parsing offset.
+	current     int
+	// lineStart holds the offset of the beginning of current line being parsed.
+	lineStart   int
+	// lineNumber holds the number of the current line (used for error reporting).
+	lineNumber  int
+}
+
+
+// Lexer is the struct that has fields to lex program.
+type Lexer struct {
+	InputPath    string
+	// CurrentPoint holds current parsing position.
+	CurrentPoint ParsePoint
+	// Source is source program.
+	Source       []rune
 }
 
 // New is constructor for lexer
-func New(source string) *Lexer {
-	l := &Lexer{
-		characters: []rune(source),
-		pos:        0,
-		ReadPos:    0,
-		Line:       1,
-		Col:        0,
+func New(inputPath string, source string) *Lexer {
+	point := ParsePoint{
+		ch:         rune(0),
+		current:    0,
+		lineStart:  0,
+		lineNumber: 1,
 	}
+
+	if len(source) != 0 {
+		point.ch = rune(source[0])
+	}
+
+	l := &Lexer{
+		InputPath:    inputPath,
+		CurrentPoint: point,
+		Source:       []rune(source),
+	}
+
 	// ensure that ch point at a character
 	l.nextChar()
 	return l
 }
 
-// TODO: Introduce ParsePoint
-func (l *Lexer) RestorePos(pos int) {
-	l.ReadPos = pos
-
-	// Ensure that lexer.ch point at a valid character
-	l.nextChar()
-}
-
-// NextToken provide token by reading source-code character by character
+// NextToken provide token by reading source code character by character
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	l.skipWhitespace()
 
-	switch l.ch {
+	switch l.CurrentPoint.ch {
 	case '+':
 		tok.Type = token.ADD
 		tok.Literal = "+"
@@ -82,70 +107,63 @@ func (l *Lexer) NextToken() token.Token {
 	case rune(0):
 		tok.Type = token.EOF
 	default:
-		if isDigit(l.ch) {
+		if isDigit(l.CurrentPoint.ch) {
 			return l.readNumeric()
 		}
 		tok.Literal = l.readIdentifier()
 		tok.Type = token.LookupIdentifier(tok.Literal)
 	}
 
-	tok.Line = l.Line
 	l.nextChar()
 
 	return tok
 }
 
 func (l *Lexer) nextChar() {
-	if l.ReadPos >= len(l.characters) {
-		l.ch = rune(0)
+	if l.CurrentPoint.current >= len(l.Source) {
+		l.CurrentPoint.ch = rune(0)
+		return
+	}
+	l.CurrentPoint.ch = l.Source[l.CurrentPoint.current]
+
+	if l.CurrentPoint.ch == '\n' {
+		l.CurrentPoint.current += 1
+		if l.CurrentPoint.current >= len(l.Source) {
+			l.CurrentPoint.ch = rune(0)
+			return
+		}
+		l.CurrentPoint.lineStart = l.CurrentPoint.current
+		l.CurrentPoint.lineNumber += 1
 	} else {
-		l.ch = l.characters[l.ReadPos]
+		l.CurrentPoint.current += 1
 	}
 
-	if l.ch == ('\n') {
-		l.Line++
-		l.Col = 0
-	}
-
-	l.pos = l.ReadPos
-	l.ReadPos++
-	l.Col++
-}
-
-// TODO: Delete peekChar and lexer.pos
-func (l *Lexer) peekChar() rune {
-	if l.pos >= len(l.characters) {
-		return rune(0)
-	} else {
-		return l.characters[l.ReadPos]
-	}
 }
 
 func (l *Lexer) skipWhitespace() {
-	for l.ch == rune(' ') || l.ch == rune('\n') || l.ch == rune('\r') {
+	for l.CurrentPoint.ch == rune(' ') || l.CurrentPoint.ch == rune('\n') || l.CurrentPoint.ch == rune('\r') {
 		l.nextChar()
 	}
 }
 
 func (l *Lexer) readNumeric() token.Token {
 	out := ""
-	for isDigit(l.ch) {
-		out += string(l.ch)
+	for isDigit(l.CurrentPoint.ch) {
+		out += string(l.CurrentPoint.ch)
 		l.nextChar()
 	}
 
 	return token.Token{
 		Type:    token.NUMBER,
 		Literal: out,
-		Line:    l.Line,
 	}
 
 }
 func (l *Lexer) readIdentifier() string {
 	out := ""
 
-	for isAlpha(l.ch) {
-		out += string(l.ch)
+	for isAlpha(l.CurrentPoint.ch) {
+		out += string(l.CurrentPoint.ch)
 		l.nextChar()
 	}
 	return out

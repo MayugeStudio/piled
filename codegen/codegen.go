@@ -5,10 +5,10 @@ import "os"
 import "piled/ir"
 import "piled/runtime"
 
+
+// GenerateProgram generate instruction from source code.
 // TODO: Make GenerateProgram output program into file directly
 //       ex. func GenerateProgram(output strings.Builder, [])
-
-// Compile generate instruction from source-code
 func GenerateProgram(body []ir.Op) []runtime.Instruction {
 	output := make([]runtime.Instruction, 0)
 	labelMap := make(map[int]int)

@@ -37,7 +37,8 @@ func (*Command_DumpToken) Execute(argv []string, pl PiledLogger) int {
 		return CommandError
 	}
 
-	l := lexer.New(source)
+	// TODO: Rename filename to inputPath
+	l := lexer.New(filename, source)
 	DumpTokens(l)
 
 	return CommandSuccess

@@ -15,8 +15,8 @@ func inst(k runtime.InstructionKind, args ...int) runtime.Instruction {
 	return runtime.Instruction{Kind: k, Args: args}
 }
 
-// TODO: Separate TestCompiler_Compile from Binop tests
 func TestCompiler_Compile(t *testing.T) {
+	// TODO: Separate TestCompiler_Compile from Binop tests
 	tests := []struct {
 		name string
 		in   ir.Op

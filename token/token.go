@@ -1,6 +1,5 @@
 package token
 
-// TODO: move token to scanner package
 // Type used to represent type of token
 type Type string
 
@@ -8,10 +7,10 @@ const (
 	IF     Type = "if"
 	ELSE   Type = "else"
 	END    Type = "end"
-	PRINT  Type = "print" // TODO: PRINT should be built-in function
+	PRINT  Type = "print"
 	SHL    Type = "shr"
 	SHR    Type = "shl"
-	// TODO: Token shouldn't represent meaning of token but just represent token.
+	// TODO: Token should represent meaning of token.
 	//       For example, ADD has to be PLUS, SUB has to be MINUS, and so on.
 	ADD    Type = "+"
 	SUB    Type = "-"
@@ -43,11 +42,10 @@ var keywords = map[string]Type{
 type Token struct {
 	Type    Type
 	Literal string
-	Line    int
 }
 
-// LookupIdentifier check whether specified keyword name exists or not
-// if it exists simply return its type, otherwise return IDENT
+// LookupIdentifier check whether specified keyword name exists or not.
+// If it exists simply return its type, otherwise return IDENT
 func LookupIdentifier(in string) Type {
 	if t, ok := keywords[in]; ok {
 		return t

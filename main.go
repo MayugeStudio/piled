@@ -23,7 +23,7 @@ cmd:
 			}
 		default:
 			{
-				runningErr := RunSource(prompt)
+				runningErr := RunSource("REPR", prompt)
 				if runningErr != nil {
 					fmt.Fprintf(os.Stderr, "Error: %s\n", runningErr)
 				}
