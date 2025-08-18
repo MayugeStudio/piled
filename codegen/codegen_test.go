@@ -101,7 +101,38 @@ func TestCodegen_Compile(t *testing.T) {
 	}
 }
 
-func TestCompiler_Compile_ControlFlow(t *testing.T) {
+func TestCodegen_Compile_Stack(t *testing.T) {
+	tests := []struct {
+		name string
+		in   ir.Op
+		want runtime.Instruction
+	}{
+		{
+			name: "dup",
+			in:   &ir.Dup{},
+			want: inst(runtime.DUP),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			program := GenerateProgram([]ir.Op{tt.in})
+
+			if len(program) == 0 {
+				t.Errorf("got = %v, want = %v", program, tt.want)
+			}
+
+			got := program[0]
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("got = %v, want = %v", got, tt.want)
+				return
+			}
+		})
+	}
+}
+
+func TestCodegen_Compile_ControlFlow(t *testing.T) {
 	tests := []struct {
 		name string
 		in   []ir.Op
