@@ -144,37 +144,3 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 	}
 }
 
-func Test_LexerRestorePos(t *testing.T) {
-	in := "1 2 3"
-	l := New(in)
-	savePoint := l.ReadPos-1
-	if savePoint != 0 {
-		t.Fatalf("got = %v, want = %v", savePoint, 0)
-	}
-
-	if tok := l.NextToken(); tok.Literal != "1" {
-		t.Fatalf("got = %v, want = %v", tok.Literal, "1")
-	}
-
-	if tok := l.NextToken(); tok.Literal != "2" {
-		t.Fatalf("got = %v, want = %v", tok.Literal, "2")
-	}
-
-	if tok := l.NextToken(); tok.Literal != "3" {
-		t.Fatalf("got = %v, want = %v", tok.Literal, "3")
-	}
-
-	l.RestorePos(savePoint)
-	
-	if tok := l.NextToken(); tok.Literal != "1" {
-		t.Fatalf("got = %v, want = %v", tok.Literal, "1")
-	}
-
-	if tok := l.NextToken(); tok.Literal != "2" {
-		t.Fatalf("got = %v, want = %v", tok.Literal, "2")
-	}
-
-	if tok := l.NextToken(); tok.Literal != "3" {
-		t.Fatalf("got = %v, want = %v", tok.Literal, "3")
-	}
-}

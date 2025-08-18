@@ -198,7 +198,7 @@ func (p *IrGen) compileIF(l *lexer.Lexer) error {
 	}
 
 	// Parse else block (if it exists)
-	savePoint := l.ReadPos-1
+	savePoint := l.CurrentPoint
 	tok = l.NextToken() // expect else
 	if tok.Type == token.ELSE {
 		out_label := p.allocateLabel()
@@ -221,7 +221,7 @@ func (p *IrGen) compileIF(l *lexer.Lexer) error {
 		}
 		p.emit(&Label{ Label: out_label })
 	} else {
-		l.RestorePos(savePoint)
+		l.CurrentPoint = savePoint
 		p.emit(&Label{ Label: else_label })
 	}
 
