@@ -127,6 +127,7 @@ func (p *IrGen) CompileProgram(l *lexer.Lexer) error {
 	return nil
 }
 
+// TODO: Report invalid Ident through diagnostics
 func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 	switch tok.Type {
 		// Literals
@@ -134,7 +135,6 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 			value, _ := strconv.Atoi(tok.Literal)
 			p.emit(&Number{ Value: value })
 		case token.IDENT:
-			// TODO: Report invalid Ident through diagnostics
 		// Binops
 		case token.ADD: p.emitBin(Add)
 		case token.SUB: p.emitBin(Sub)
@@ -177,7 +177,6 @@ func (p *IrGen) compileIF(l *lexer.Lexer) error {
 	else_label := p.allocateLabel()
 	p.emit(&JmpIfNotLabel{ Label: else_label })
 	
-	// TODO: Introduce block by using curly braces
 	// Parse if block
 	var err error
 	tok := l.NextToken() // expect OCurly
