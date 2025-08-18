@@ -38,6 +38,7 @@ var commands []SubCommand
 func main() {
 	pl := PiledLogger{w: os.Stdout}
 	commands = append(commands, &Command_DumpToken{})
+	commands = append(commands, &Command_DumpIr{})
 	commands = append(commands, &Command_Run{})
 	commands = append(commands, &Command_Compile{})
 
