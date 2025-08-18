@@ -81,6 +81,10 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.SHR, "shr"),
 		},
 		{
+			"ident-dup", "dup",
+			tok(token.DUP, "dup"),
+		},
+		{
 			"controlflow-if", "if",
 			tok(token.IF, "if"),
 		},
@@ -89,8 +93,8 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.ELSE, "else"),
 		},
 		{
-			"controlflow-end", "end",
-			tok(token.END, "end"),
+			"controlflow-while", "while",
+			tok(token.WHILE, "while"),
 		},
 	}
 	for _, tt := range tests {

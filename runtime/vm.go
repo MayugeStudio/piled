@@ -54,7 +54,6 @@ func (vm *VM) Run() {
 	for vm.ip < len(vm.code) {
 		inst := vm.code[vm.ip]
 		vm.ip++
-
 		switch inst.Kind {
 		case PUSH:
 			val := inst.Args[0]
@@ -139,10 +138,13 @@ func (vm *VM) Run() {
 			} else { // true
 				// fallthrough
 			}
-
 		case PRINT:
 			a := vm.pop()
 			vm.Println(a)
+		case DUP:
+			a := vm.pop()
+			vm.push(a)
+			vm.push(a)
 		case NOP: // do nothing
 		}
 	}

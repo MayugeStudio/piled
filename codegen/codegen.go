@@ -65,8 +65,10 @@ func GenerateProgram(body []ir.Op) []runtime.Instruction {
 			emit(&output, runtime.Instruction{Kind: runtime.JMPIF, Args: []int{labelAddr}})
 		case *ir.Print:
 			emit(&output, runtime.Instruction{Kind: runtime.PRINT, Args: nil})
+		case *ir.Dup:
+			emit(&output, runtime.Instruction{Kind: runtime.DUP, Args: nil})
 		default:
-			fmt.Printf("unhandled op: %v\n", op)
+			fmt.Printf("CODE-GEN: unhandled op: %v\n", op)
 		}
 	}
 	return output
