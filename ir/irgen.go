@@ -159,6 +159,10 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 			if err := p.compileIF(l); err != nil {
 				return err
 			}
+		case token.WHILE:
+			if err := p.compileWHILE(l); err != nil {
+				return err
+			}
 		//case token.LET:
 		//	p.compileBINDING(l)
 		case token.PRINT: p.emit(&Print{})
@@ -232,6 +236,47 @@ func (p *IrGen) compileIF(l *lexer.Lexer) error {
 		l.CurrentPoint = savePoint
 		p.emit(&Label{ Label: else_label })
 	}
+
+	return nil
+}
+
+func (p *IrGen) compileWHILE(l *lexer.Lexer) error {
+	top_label := p.allocateLabel()
+	out_label := p.allocateLabel()
+
+	p.emit(&Label{ Label: top_label })
+	
+	var err error
+	var tok token.Token
+	
+	// condition
+	for {
+		tok = l.NextToken() // expect OCurly
+		if tok.Type == token.OCURLY {
+			break
+		}
+		err = p.compileToken(l, tok)
+		if err != nil {
+			return err
+		}
+	}
+	p.emit(&JmpIfNotLabel{ Label: out_label })
+
+	// body
+	for {
+		tok = l.NextToken() // expect OCurly
+		if tok.Type == token.CCURLY {
+			break
+		}
+		err = p.compileToken(l, tok)
+		if err != nil {
+			return err
+		}
+
+	}
+
+	p.emit(&JmpLabel{ Label: top_label })
+	p.emit(&Label{ Label: out_label })
 
 	return nil
 }

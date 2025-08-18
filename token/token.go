@@ -6,10 +6,10 @@ type Type string
 const (
 	IF     Type = "if"
 	ELSE   Type = "else"
-	END    Type = "end"
 	PRINT  Type = "print"
 	SHL    Type = "shr"
 	SHR    Type = "shl"
+	WHILE  Type = "while"
 	DUP    Type = "dup"
 	// TODO: Token should represent meaning of token.
 	//       For example, ADD has to be PLUS, SUB has to be MINUS, and so on.
@@ -35,9 +35,9 @@ var keywords = map[string]Type{
 	"dup":   DUP,
 	"shl":   SHL,
 	"shr":   SHR,
+	"while": WHILE,
 	"if":    IF,
 	"else":  ELSE,
-	"end":   END,
 }
 
 // Token represent the lexer token
