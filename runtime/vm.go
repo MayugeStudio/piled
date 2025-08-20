@@ -158,6 +158,8 @@ func (vm *VM) Run() {
 			vm.push(b)
 			vm.push(c)
 			vm.push(a)
+		case DROP:
+			vm.pop()
 
 		case NOP: // do nothing
 		}

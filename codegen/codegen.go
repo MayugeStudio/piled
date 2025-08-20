@@ -72,6 +72,8 @@ func GenerateProgram(body []ir.Op) []runtime.Instruction {
 			emit(&output, runtime.Instruction{Kind: runtime.SWAP, Args: nil})
 		case *ir.Rot:
 			emit(&output, runtime.Instruction{Kind: runtime.ROT, Args: nil})
+		case *ir.Drop:
+			emit(&output, runtime.Instruction{Kind: runtime.DROP, Args: nil})
 		default:
 			fmt.Printf("CODE-GEN: unhandled op: %v\n", op)
 		}

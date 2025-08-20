@@ -122,6 +122,14 @@ func Test_CompileProgram(t *testing.T) {
 				&Rot{},
 			},
 		},
+		{
+			"drop",
+			"69 drop",
+			[]Op{
+				num(69),
+				&Drop{},
+			},
+		},
 	}
 
 	for _, tt := range tests {

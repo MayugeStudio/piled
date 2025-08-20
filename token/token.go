@@ -15,6 +15,7 @@ const (
 	DUP  Type = "dup"
 	SWAP Type = "swap"
 	ROT  Type = "rot"
+	DROP Type = "drop"
 
 	// TODO: Token should represent meaning of token.
 	//       For example, ADD has to be PLUS, SUB has to be MINUS, and so on.
@@ -35,10 +36,12 @@ const (
 	EOF    Type = "EOF"
 )
 
+// TODO: Introduce Punctuations
 var keywords = map[string]Type{
 	"print": PRINT,
 	"dup":   DUP,
 	"swap":  SWAP,
+	"drop":  DROP,
 	"rot":   ROT,
 	"shl":   SHL,
 	"shr":   SHR,
@@ -62,5 +65,3 @@ func LookupIdentifier(in string) Type {
 		return IDENT
 	}
 }
-
-// TODO: Introduce Punctuations

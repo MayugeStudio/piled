@@ -11,6 +11,7 @@ const (
 	DUP  InstructionKind = 0x02
 	SWAP InstructionKind = 0x03
 	ROT  InstructionKind = 0x04
+	DROP InstructionKind = 0x05
 
 	// Arithmetic
 	ADD InstructionKind = 0x10

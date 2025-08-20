@@ -121,6 +121,14 @@ func (p *Rot) String() string {
 	return "Rot()"
 }
 
+// -------------------- Drop --------------------
+
+type Drop struct{}
+
+func (p *Drop) String() string {
+	return "Drop()"
+}
+
 // -------------------- IrGen --------------------
 
 type IrGen struct {
@@ -196,6 +204,8 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 		p.emit(&Swap{})
 	case token.ROT:
 		p.emit(&Rot{})
+	case token.DROP:
+		p.emit(&Drop{})
 	//case token.SHL:
 	//case token.SHR:
 	case token.OCURLY:
