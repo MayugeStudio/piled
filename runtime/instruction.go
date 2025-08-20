@@ -42,4 +42,3 @@ type Instruction struct {
 	Kind InstructionKind
 	Args []int
 }
-

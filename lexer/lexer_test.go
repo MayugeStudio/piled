@@ -159,12 +159,12 @@ func TestParsePoint(t *testing.T) {
 	savedPoint := l.CurrentPoint
 
 	tok = l.NextToken()
-	if tok.Literal !=  "1" {
+	if tok.Literal != "1" {
 		t.Fatalf("got = %q, want = %q", tok.Literal, "1")
 	}
 
 	tok = l.NextToken()
-	if tok.Literal !=  "2" {
+	if tok.Literal != "2" {
 		t.Fatalf("got = %q, want = %q", tok.Literal, "2")
 	}
 
@@ -172,8 +172,7 @@ func TestParsePoint(t *testing.T) {
 	l.CurrentPoint = savedPoint
 
 	tok = l.NextToken()
-	if tok.Literal !=  "1" {
+	if tok.Literal != "1" {
 		t.Fatalf("got = %q, want = %q", tok.Literal, "1")
 	}
 }
-

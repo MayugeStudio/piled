@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"piled/ir"
 	"piled/codegen"
+	"piled/ir"
 	"piled/lexer"
 	"strings"
 )
@@ -52,12 +52,11 @@ func (*Command_Compile) Execute(argv []string, pl PiledLogger) int {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 		return CommandError
 	}
-	
+
 	program := codegen.GenerateProgram(g.Ops)
 
-
 	pl.Info("generating bytecode to %s...", outfile)
-	if err := codegen.Write(outpath + ".pdb", program); err != nil {
+	if err := codegen.Write(outpath+".pdb", program); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 		return CommandError
 	}

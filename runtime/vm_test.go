@@ -118,7 +118,7 @@ func TestVM_Run(t *testing.T) {
 			[]Instruction{
 				inst(PUSH, 0),
 				inst(PUSH, 1),
-				inst(JMP,  4),
+				inst(JMP, 4),
 				inst(PUSH, 34),
 				inst(PUSH, 2),
 			},
@@ -127,10 +127,10 @@ func TestVM_Run(t *testing.T) {
 		{
 			"jmpif",
 			[]Instruction{
-				inst(PUSH,  0),
+				inst(PUSH, 0),
 				inst(JMPIF, 3),
-				inst(PUSH,  35),
-				inst(PUSH,  34),
+				inst(PUSH, 35),
+				inst(PUSH, 34),
 			},
 			[]int{34}, "",
 		},

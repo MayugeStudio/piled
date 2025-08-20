@@ -1,12 +1,12 @@
 package main
 
 import (
-	"testing"
-	"strings"
-	"path/filepath"
+	"bytes"
 	"os"
 	"os/exec"
-	"bytes"
+	"path/filepath"
+	"strings"
+	"testing"
 )
 
 func TestGoldenFiles(t *testing.T) {

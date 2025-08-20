@@ -24,67 +24,67 @@ func TestCodegen_Compile(t *testing.T) {
 	}{
 		{
 			name: "single literal",
-			in:   &ir.Number{ Value: 42 },
+			in:   &ir.Number{Value: 42},
 			want: inst(runtime.PUSH, 42),
 		},
 		{
 			name: "add",
-			in:   &ir.Binop{ Bkind: ir.Add },
+			in:   &ir.Binop{Bkind: ir.Add},
 			want: inst(runtime.ADD),
 		},
 		{
 			name: "sub",
-			in:   &ir.Binop{ Bkind: ir.Sub },
+			in:   &ir.Binop{Bkind: ir.Sub},
 			want: inst(runtime.SUB),
 		},
 		{
 			name: "mul",
-			in:   &ir.Binop{ Bkind: ir.Mul },
+			in:   &ir.Binop{Bkind: ir.Mul},
 			want: inst(runtime.MUL),
 		},
 		{
 			name: "div",
-			in:   &ir.Binop{ Bkind: ir.Div },
+			in:   &ir.Binop{Bkind: ir.Div},
 			want: inst(runtime.DIV),
 		},
 		{
 			name: "mod",
-			in:   &ir.Binop{ Bkind: ir.Mod },
+			in:   &ir.Binop{Bkind: ir.Mod},
 			want: inst(runtime.MOD),
 		},
 		{
 			name: "and",
-			in:   &ir.Binop{ Bkind: ir.And },
+			in:   &ir.Binop{Bkind: ir.And},
 			want: inst(runtime.AND),
 		},
 		{
 			name: "or",
-			in:   &ir.Binop{ Bkind: ir.Or },
+			in:   &ir.Binop{Bkind: ir.Or},
 			want: inst(runtime.OR),
 		},
 		{
 			name: "shift-left",
-			in:   &ir.Binop{ Bkind: ir.Shl },
+			in:   &ir.Binop{Bkind: ir.Shl},
 			want: inst(runtime.SHL),
 		},
 		{
 			name: "shift-right",
-			in:   &ir.Binop{ Bkind: ir.Shr },
+			in:   &ir.Binop{Bkind: ir.Shr},
 			want: inst(runtime.SHR),
 		},
 		{
 			name: "gt",
-			in:   &ir.Binop{ Bkind: ir.Gt },
+			in:   &ir.Binop{Bkind: ir.Gt},
 			want: inst(runtime.GT),
 		},
 		{
 			name: "lt",
-			in:   &ir.Binop{ Bkind: ir.Lt },
+			in:   &ir.Binop{Bkind: ir.Lt},
 			want: inst(runtime.LT),
 		},
 		{
 			name: "eq",
-			in:   &ir.Binop{ Bkind: ir.Eq },
+			in:   &ir.Binop{Bkind: ir.Eq},
 			want: inst(runtime.EQ),
 		},
 	}
@@ -145,7 +145,7 @@ func TestCodegen_Compile_ControlFlow(t *testing.T) {
 	}{
 		{
 			name: "if",
-			in:   []ir.Op{
+			in: []ir.Op{
 				&ir.JmpIfNotLabel{Label: 0},
 				&ir.Number{Value: 1},
 				&ir.Label{Label: 0},
@@ -158,7 +158,7 @@ func TestCodegen_Compile_ControlFlow(t *testing.T) {
 		},
 		{
 			name: "if-else",
-			in:   []ir.Op{
+			in: []ir.Op{
 				&ir.JmpIfNotLabel{Label: 0},
 				&ir.Number{Value: 1},
 				&ir.JmpLabel{Label: 1},

@@ -4,16 +4,16 @@ package token
 type Type string
 
 const (
-	IF     Type = "if"
-	ELSE   Type = "else"
-	PRINT  Type = "print"
-	SHL    Type = "shr"
-	SHR    Type = "shl"
-	WHILE  Type = "while"
+	IF    Type = "if"
+	ELSE  Type = "else"
+	PRINT Type = "print"
+	SHL   Type = "shr"
+	SHR   Type = "shl"
+	WHILE Type = "while"
 
 	// TODO: These builtin-functions should not be here.
-	DUP    Type = "dup"
-	SWAP   Type = "swap"
+	DUP  Type = "dup"
+	SWAP Type = "swap"
 
 	// TODO: Token should represent meaning of token.
 	//       For example, ADD has to be PLUS, SUB has to be MINUS, and so on.
@@ -62,4 +62,3 @@ func LookupIdentifier(in string) Type {
 }
 
 // TODO: Introduce Punctuations
-

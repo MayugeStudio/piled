@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"piled/lexer"
 	"piled/ir"
+	"piled/lexer"
 )
 
 type Command_DumpIr struct {
@@ -42,7 +42,7 @@ func (*Command_DumpIr) Execute(argv []string, pl PiledLogger) int {
 
 	g := ir.NewIrGen()
 	g.CompileProgram(l)
-	
+
 	irs := g.Ops
 
 	for _, op := range irs {

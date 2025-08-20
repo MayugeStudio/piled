@@ -13,7 +13,7 @@ func ReadBytecodeFile(path string) ([]Instruction, error) {
 	}
 
 	c := make([]Instruction, 0, 1024)
-	for ip := 0; ip<len(raw);ip++ {
+	for ip := 0; ip < len(raw); ip++ {
 		kind := InstructionKind(raw[ip])
 		switch kind {
 		case PUSH, JMP, JMPIF:
@@ -25,7 +25,7 @@ func ReadBytecodeFile(path string) ([]Instruction, error) {
 			c = append(c, Instruction{Kind: kind, Args: []int{value}})
 		default:
 			c = append(c, Instruction{Kind: kind, Args: []int{}})
-		} 
+		}
 	}
 
 	return c, nil
