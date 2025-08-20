@@ -9,6 +9,7 @@ const (
 	PUSH InstructionKind = 0x00
 	POP  InstructionKind = 0x01
 	DUP  InstructionKind = 0x02
+	SWAP InstructionKind = 0x03
 
 	// Arithmetic
 	ADD InstructionKind = 0x10

@@ -142,6 +142,15 @@ func TestVM_Run(t *testing.T) {
 			},
 			[]int{69, 69}, "",
 		},
+		{
+			"swap",
+			[]Instruction{
+				inst(PUSH, 69),
+				inst(PUSH, 420),
+				inst(SWAP),
+			},
+			[]int{420, 69}, "",
+		},
 	}
 
 	for _, tt := range tests {

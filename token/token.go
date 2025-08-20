@@ -10,7 +10,11 @@ const (
 	SHL    Type = "shr"
 	SHR    Type = "shl"
 	WHILE  Type = "while"
+
+	// TODO: These builtin-functions should not be here.
 	DUP    Type = "dup"
+	SWAP   Type = "swap"
+
 	// TODO: Token should represent meaning of token.
 	//       For example, ADD has to be PLUS, SUB has to be MINUS, and so on.
 	ADD    Type = "+"
@@ -33,6 +37,7 @@ const (
 var keywords = map[string]Type{
 	"print": PRINT,
 	"dup":   DUP,
+	"swap":  SWAP,
 	"shl":   SHL,
 	"shr":   SHR,
 	"while": WHILE,
