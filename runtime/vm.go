@@ -145,13 +145,6 @@ func (vm *VM) Run() {
 			a := vm.pop()
 			vm.push(a)
 			vm.push(a)
-		case DUP2:
-			b := vm.pop()
-			a := vm.pop()
-			vm.push(a)
-			vm.push(b)
-			vm.push(a)
-			vm.push(b)
 
 		case SWAP:
 			b := vm.pop()

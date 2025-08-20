@@ -131,6 +131,18 @@ func Test_CompileProgram(t *testing.T) {
 			},
 		},
 		{
+			"over",
+			"69 420 over",
+			[]Op{
+				num(69),
+				num(420),
+				&Swap{},
+				&Dup{},
+				&Rot{},
+				&Rot{},
+			},
+		},
+		{
 			"2dup",
 			"69 420 dup2",
 			[]Op{

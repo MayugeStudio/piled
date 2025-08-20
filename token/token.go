@@ -17,6 +17,8 @@ const (
 	ROT  Type = "rot"
 	DROP Type = "drop"
 
+	OVER Type = "over"
+
 	DUP2 Type = "dup2"
 
 	// TODO: Token should represent meaning of token.
@@ -42,9 +44,10 @@ const (
 var keywords = map[string]Type{
 	"print": PRINT,
 	"dup":   DUP,
-	"dup2":  DUP2,
 	"swap":  SWAP,
 	"drop":  DROP,
+	"dup2":  DUP2,
+	"over":  OVER,    
 	"rot":   ROT,
 	"shl":   SHL,
 	"shr":   SHR,

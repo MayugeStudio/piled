@@ -12,7 +12,6 @@ const (
 	SWAP                 = 0x03
 	ROT                  = 0x04
 	DROP                 = 0x05
-	DUP2                 = 0x06
 
 	// Arithmetic
 	ADD = 0x10
