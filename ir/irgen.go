@@ -207,6 +207,11 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 		p.emit(&Dup{})
 		p.emit(&Rot{})
 		p.emit(&Rot{})
+	case token.OVER:
+		p.emit(&Swap{})
+		p.emit(&Dup{})
+		p.emit(&Rot{})
+		p.emit(&Rot{})
 	case token.SWAP:
 		p.emit(&Swap{})
 	case token.ROT:

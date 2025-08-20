@@ -101,6 +101,10 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.DROP, "drop"),
 		},
 		{
+			"ident-over", "over",
+			tok(token.OVER, "over"),
+		},
+		{
 			"controlflow-if", "if",
 			tok(token.IF, "if"),
 		},
