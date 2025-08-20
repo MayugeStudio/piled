@@ -25,6 +25,10 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.EOF, ""),
 		},
 		{
+			"Comment", "+#this is comment",
+			tok(token.ADD, "+"),
+		},
+		{
 			"binary-operators-add", "+",
 			tok(token.ADD, "+"),
 		},

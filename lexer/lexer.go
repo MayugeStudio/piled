@@ -66,6 +66,7 @@ func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	l.skipWhitespace()
 
+	RETRY:
 	switch l.CurrentPoint.ch {
 	case '+':
 		tok.Type = token.ADD
@@ -103,6 +104,9 @@ func (l *Lexer) NextToken() token.Token {
 	case '}':
 		tok.Type = token.CCURLY
 		tok.Literal = "}"
+	case '#':
+		l.skipUntil('\n')
+		goto RETRY
 	case rune(0):
 		tok.Type = token.EOF
 	default:
@@ -116,6 +120,15 @@ func (l *Lexer) NextToken() token.Token {
 	l.nextChar()
 
 	return tok
+}
+
+func (l *Lexer) skipUntil(c rune) {
+	for l.CurrentPoint.ch != c {
+		l.nextChar()
+		if l.CurrentPoint.ch == rune(0) {
+			break
+		}
+	}
 }
 
 func (l *Lexer) nextChar() {
@@ -136,7 +149,6 @@ func (l *Lexer) nextChar() {
 	} else {
 		l.CurrentPoint.current += 1
 	}
-
 }
 
 func (l *Lexer) skipWhitespace() {
