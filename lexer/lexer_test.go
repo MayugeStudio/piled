@@ -85,6 +85,10 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.DUP, "dup"),
 		},
 		{
+			"ident-dup2", "dup2",
+			tok(token.DUP2, "dup2"),
+		},
+		{
 			"ident-swap", "swap",
 			tok(token.SWAP, "swap"),
 		},
