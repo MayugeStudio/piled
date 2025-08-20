@@ -113,6 +113,8 @@ func (p *Swap) String() string {
 	return "Swap()"
 }
 
+// -------------------- Rot --------------------
+
 type Rot struct{}
 
 func (p *Rot) String() string {
