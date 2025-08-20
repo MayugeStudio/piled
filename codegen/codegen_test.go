@@ -113,11 +113,6 @@ func TestCodegen_Compile_Stack(t *testing.T) {
 			want: inst(runtime.DUP),
 		},
 		{
-			name: "dup2",
-			in:   &ir.Dup2{},
-			want: inst(runtime.DUP2),
-		},
-		{
 			name: "swap",
 			in:   &ir.Swap{},
 			want: inst(runtime.SWAP),
@@ -151,6 +146,7 @@ func TestCodegen_Compile_Stack(t *testing.T) {
 		})
 	}
 }
+
 
 func TestCodegen_Compile_ControlFlow(t *testing.T) {
 	tests := []struct {

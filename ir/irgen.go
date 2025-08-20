@@ -105,14 +105,6 @@ func (p *Dup) String() string {
 	return "Dup()"
 }
 
-// -------------------- Dup2 --------------------
-
-type Dup2 struct{}
-
-func (p *Dup2) String() string {
-	return "Dup2()"
-}
-
 // -------------------- Swap --------------------
 
 type Swap struct{}
@@ -209,7 +201,12 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 	case token.DUP:
 		p.emit(&Dup{})
 	case token.DUP2:
-		p.emit(&Dup2{})
+		p.emit(&Swap{})
+		p.emit(&Dup{})
+		p.emit(&Rot{})
+		p.emit(&Dup{})
+		p.emit(&Rot{})
+		p.emit(&Rot{})
 	case token.SWAP:
 		p.emit(&Swap{})
 	case token.ROT:

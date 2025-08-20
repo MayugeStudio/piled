@@ -68,8 +68,6 @@ func GenerateProgram(body []ir.Op) []runtime.Instruction {
 			emit(&output, runtime.Instruction{Kind: runtime.PRINT, Args: nil})
 		case *ir.Dup:
 			emit(&output, runtime.Instruction{Kind: runtime.DUP, Args: nil})
-		case *ir.Dup2:
-			emit(&output, runtime.Instruction{Kind: runtime.DUP2, Args: nil})
 		case *ir.Swap:
 			emit(&output, runtime.Instruction{Kind: runtime.SWAP, Args: nil})
 		case *ir.Rot:

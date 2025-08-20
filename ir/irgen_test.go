@@ -136,7 +136,12 @@ func Test_CompileProgram(t *testing.T) {
 			[]Op{
 				num(69),
 				num(420),
-				&Dup2{},
+				&Swap{},
+				&Dup{},
+				&Rot{},
+				&Dup{},
+				&Rot{},
+				&Rot{},
 			},
 		},
 	}
