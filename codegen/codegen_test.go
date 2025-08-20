@@ -147,7 +147,6 @@ func TestCodegen_Compile_Stack(t *testing.T) {
 	}
 }
 
-
 func TestCodegen_Compile_ControlFlow(t *testing.T) {
 	tests := []struct {
 		name string
