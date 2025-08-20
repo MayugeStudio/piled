@@ -1,11 +1,10 @@
-0 1 1000
-while swap 2dup 0 > {
+0 1 255
+while swap dup2 > {
     rot
-    rot
-    2dup +
+    dup2
+    +
     swap
-    drop
-    rot
+    print
     rot
 }
 
