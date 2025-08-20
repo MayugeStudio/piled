@@ -85,6 +85,18 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.DUP, "dup"),
 		},
 		{
+			"ident-swap", "swap",
+			tok(token.SWAP, "swap"),
+		},
+		{
+			"ident-rot", "rot",
+			tok(token.ROT, "rot"),
+		},
+		{
+			"ident-drop", "drop",
+			tok(token.DROP, "drop"),
+		},
+		{
 			"controlflow-if", "if",
 			tok(token.IF, "if"),
 		},
@@ -155,12 +167,12 @@ func TestParsePoint(t *testing.T) {
 	savedPoint := l.CurrentPoint
 
 	tok = l.NextToken()
-	if tok.Literal !=  "1" {
+	if tok.Literal != "1" {
 		t.Fatalf("got = %q, want = %q", tok.Literal, "1")
 	}
 
 	tok = l.NextToken()
-	if tok.Literal !=  "2" {
+	if tok.Literal != "2" {
 		t.Fatalf("got = %q, want = %q", tok.Literal, "2")
 	}
 
@@ -168,8 +180,7 @@ func TestParsePoint(t *testing.T) {
 	l.CurrentPoint = savedPoint
 
 	tok = l.NextToken()
-	if tok.Literal !=  "1" {
+	if tok.Literal != "1" {
 		t.Fatalf("got = %q, want = %q", tok.Literal, "1")
 	}
 }
-

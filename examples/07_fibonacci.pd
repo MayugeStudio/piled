@@ -1,0 +1,11 @@
+0 1 1000
+while swap 2dup 0 > {
+    rot
+    rot
+    2dup +
+    swap
+    drop
+    rot
+    rot
+}
+

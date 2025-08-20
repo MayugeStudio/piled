@@ -118,7 +118,7 @@ func TestVM_Run(t *testing.T) {
 			[]Instruction{
 				inst(PUSH, 0),
 				inst(PUSH, 1),
-				inst(JMP,  4),
+				inst(JMP, 4),
 				inst(PUSH, 34),
 				inst(PUSH, 2),
 			},
@@ -127,12 +127,48 @@ func TestVM_Run(t *testing.T) {
 		{
 			"jmpif",
 			[]Instruction{
-				inst(PUSH,  0),
+				inst(PUSH, 0),
 				inst(JMPIF, 3),
-				inst(PUSH,  35),
-				inst(PUSH,  34),
+				inst(PUSH, 35),
+				inst(PUSH, 34),
 			},
 			[]int{34}, "",
+		},
+		{
+			"dup",
+			[]Instruction{
+				inst(PUSH, 69),
+				inst(DUP),
+			},
+			[]int{69, 69}, "",
+		},
+		{
+			"swap",
+			[]Instruction{
+				inst(PUSH, 69),
+				inst(PUSH, 420),
+				inst(SWAP),
+			},
+			[]int{420, 69}, "",
+		},
+		{
+			"rot",
+			[]Instruction{
+				inst(PUSH, 1),
+				inst(PUSH, 2),
+				inst(PUSH, 3),
+				inst(ROT),
+			},
+			[]int{2, 3, 1}, "",
+		},
+		{
+			"drop",
+			[]Instruction{
+				inst(PUSH, 1),
+				inst(PUSH, 2),
+				inst(DROP),
+			},
+			[]int{1}, "",
 		},
 	}
 

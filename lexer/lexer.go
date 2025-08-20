@@ -8,7 +8,7 @@ import (
 // It only contains offsets, and should therefore be used together with Lexer.
 type Loc struct {
 	// InputPath holds the source file path.
-	InputPath  string
+	InputPath string
 	// LineNumber holds current line number.
 	LineNumber int
 	// LineOffset holds the offset from the beginning of the line.
@@ -19,23 +19,22 @@ type Loc struct {
 // It differs from Loc, which simply stores a position without current parsing context.
 type ParsePoint struct {
 	// ch is pointed at a character being parsed.
-	ch          rune
+	ch rune
 	// current holds current parsing offset.
-	current     int
+	current int
 	// lineStart holds the offset of the beginning of current line being parsed.
-	lineStart   int
+	lineStart int
 	// lineNumber holds the number of the current line (used for error reporting).
-	lineNumber  int
+	lineNumber int
 }
-
 
 // Lexer is the struct that has fields to lex program.
 type Lexer struct {
-	InputPath    string
+	InputPath string
 	// CurrentPoint holds current parsing position.
 	CurrentPoint ParsePoint
 	// Source is source program.
-	Source       []rune
+	Source []rune
 }
 
 // New is constructor for lexer

@@ -1,24 +1,24 @@
 package ir
 
 import (
-	"testing"
-	"reflect"
 	"piled/lexer"
+	"reflect"
+	"testing"
 )
 
 func num(v int) *Number {
-	return &Number{ Value: v }
+	return &Number{Value: v}
 }
 
 func bin(bkind BinKind) *Binop {
-	return &Binop{ Bkind: bkind }
+	return &Binop{Bkind: bkind}
 }
 
 func Test_CompileProgram(t *testing.T) {
-	tests := []struct{
+	tests := []struct {
 		name string
 		in   string
-		want  []Op
+		want []Op
 	}{
 		{
 			"Number",
@@ -34,7 +34,7 @@ func Test_CompileProgram(t *testing.T) {
 			[]Op{
 				num(1),
 				num(1),
-				&Binop{ Bkind: Add },
+				&Binop{Bkind: Add},
 				&Print{},
 			},
 		},
@@ -44,7 +44,7 @@ func Test_CompileProgram(t *testing.T) {
 			[]Op{
 				num(1),
 				num(1),
-				&Binop{ Bkind: Sub },
+				&Binop{Bkind: Sub},
 				&Print{},
 			},
 		},
@@ -54,7 +54,7 @@ func Test_CompileProgram(t *testing.T) {
 			[]Op{
 				num(1),
 				num(1),
-				&Binop{ Bkind: Mul },
+				&Binop{Bkind: Mul},
 				&Print{},
 			},
 		},
@@ -64,7 +64,7 @@ func Test_CompileProgram(t *testing.T) {
 			[]Op{
 				num(1),
 				num(1),
-				&Binop{ Bkind: Div },
+				&Binop{Bkind: Div},
 				&Print{},
 			},
 		},
@@ -73,9 +73,9 @@ func Test_CompileProgram(t *testing.T) {
 			"1 if {34} print",
 			[]Op{
 				num(1),
-				&JmpIfNotLabel{ Label: 0 },
+				&JmpIfNotLabel{Label: 0},
 				num(34),
-				&Label{ Label: 0 },
+				&Label{Label: 0},
 				&Print{},
 			},
 		},
@@ -84,12 +84,12 @@ func Test_CompileProgram(t *testing.T) {
 			"1 if {34} else {35} print",
 			[]Op{
 				num(1),
-				&JmpIfNotLabel{ Label: 0 },
+				&JmpIfNotLabel{Label: 0},
 				num(34),
-				&JmpLabel{ Label: 1 },
-				&Label{ Label: 0 },
+				&JmpLabel{Label: 1},
+				&Label{Label: 0},
 				num(35),
-				&Label{ Label: 1 },
+				&Label{Label: 1},
 				&Print{},
 			},
 		},
@@ -101,6 +101,33 @@ func Test_CompileProgram(t *testing.T) {
 				&Dup{},
 				&Print{},
 				&Print{},
+			},
+		},
+		{
+			"swap",
+			"69 420 swap",
+			[]Op{
+				num(69),
+				num(420),
+				&Swap{},
+			},
+		},
+		{
+			"rot",
+			"1 2 3 rot",
+			[]Op{
+				num(1),
+				num(2),
+				num(3),
+				&Rot{},
+			},
+		},
+		{
+			"drop",
+			"69 drop",
+			[]Op{
+				num(69),
+				&Drop{},
 			},
 		},
 	}
@@ -129,11 +156,11 @@ func Test_compileIF_SingleIF(t *testing.T) {
 	// if is already found by compileProgram
 	in := "{1 1 +}"
 	want := []Op{
-		&JmpIfNotLabel{ Label: 0 },
+		&JmpIfNotLabel{Label: 0},
 		num(1),
 		num(1),
 		bin(Add),
-		&Label{ Label: 0 },
+		&Label{Label: 0},
 	}
 	l := lexer.New("test.piled", in)
 	g := NewIrGen()
@@ -153,5 +180,3 @@ func Test_compileIF_SingleIF(t *testing.T) {
 }
 
 func Test_compileBINDING(t *testing.T) {}
-
-

@@ -9,6 +9,9 @@ const (
 	PUSH InstructionKind = 0x00
 	POP  InstructionKind = 0x01
 	DUP  InstructionKind = 0x02
+	SWAP InstructionKind = 0x03
+	ROT  InstructionKind = 0x04
+	DROP InstructionKind = 0x05
 
 	// Arithmetic
 	ADD InstructionKind = 0x10
@@ -41,4 +44,3 @@ type Instruction struct {
 	Kind InstructionKind
 	Args []int
 }
-

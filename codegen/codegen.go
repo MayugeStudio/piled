@@ -5,23 +5,24 @@ import "os"
 import "piled/ir"
 import "piled/runtime"
 
-
 // GenerateProgram generate instruction from source code.
 // TODO: Make GenerateProgram output program into file directly
-//       ex. func GenerateProgram(output strings.Builder, [])
+//
+//	ex. func GenerateProgram(output strings.Builder, [])
 func GenerateProgram(body []ir.Op) []runtime.Instruction {
 	output := make([]runtime.Instruction, 0)
 	labelMap := make(map[int]int)
 	// Prefinding Labels
-	for ip := 0; ip<len(body); ip++ {
+	for ip := 0; ip < len(body); ip++ {
 		switch v := body[ip].(type) {
-			case *ir.Label: {
+		case *ir.Label:
+			{
 				labelMap[v.Label] = ip
 			}
 		}
 	}
 
-	for ip := 0; ip<len(body); ip++ {
+	for ip := 0; ip < len(body); ip++ {
 		op := body[ip]
 		switch v := op.(type) {
 		case *ir.Number:
@@ -67,6 +68,12 @@ func GenerateProgram(body []ir.Op) []runtime.Instruction {
 			emit(&output, runtime.Instruction{Kind: runtime.PRINT, Args: nil})
 		case *ir.Dup:
 			emit(&output, runtime.Instruction{Kind: runtime.DUP, Args: nil})
+		case *ir.Swap:
+			emit(&output, runtime.Instruction{Kind: runtime.SWAP, Args: nil})
+		case *ir.Rot:
+			emit(&output, runtime.Instruction{Kind: runtime.ROT, Args: nil})
+		case *ir.Drop:
+			emit(&output, runtime.Instruction{Kind: runtime.DROP, Args: nil})
 		default:
 			fmt.Printf("CODE-GEN: unhandled op: %v\n", op)
 		}
@@ -75,7 +82,7 @@ func GenerateProgram(body []ir.Op) []runtime.Instruction {
 }
 
 func emit(output *[]runtime.Instruction, i runtime.Instruction) {
-	 *output = append(*output, i)
+	*output = append(*output, i)
 }
 
 // Write output an array of instruction to specified filepath
