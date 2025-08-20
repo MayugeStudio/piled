@@ -113,6 +113,12 @@ func (p *Swap) String() string {
 	return "Swap()"
 }
 
+type Rot struct{}
+
+func (p *Rot) String() string {
+	return "Rot()"
+}
+
 // -------------------- IrGen --------------------
 
 type IrGen struct {
@@ -186,6 +192,8 @@ func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
 		p.emit(&Dup{})
 	case token.SWAP:
 		p.emit(&Swap{})
+	case token.ROT:
+		p.emit(&Rot{})
 	//case token.SHL:
 	//case token.SHR:
 	case token.OCURLY:

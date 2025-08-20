@@ -117,6 +117,11 @@ func TestCodegen_Compile_Stack(t *testing.T) {
 			in:   &ir.Swap{},
 			want: inst(runtime.SWAP),
 		},
+		{
+			name: "rot",
+			in:   &ir.Rot{},
+			want: inst(runtime.ROT),
+		},
 	}
 
 	for _, tt := range tests {

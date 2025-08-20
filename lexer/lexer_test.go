@@ -89,6 +89,10 @@ func TestLexerNextToken(t *testing.T) {
 			tok(token.SWAP, "swap"),
 		},
 		{
+			"ident-rot", "rot",
+			tok(token.ROT, "rot"),
+		},
+		{
 			"controlflow-if", "if",
 			tok(token.IF, "if"),
 		},

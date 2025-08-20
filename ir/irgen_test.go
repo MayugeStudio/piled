@@ -112,6 +112,16 @@ func Test_CompileProgram(t *testing.T) {
 				&Swap{},
 			},
 		},
+		{
+			"rot",
+			"1 2 3 rot",
+			[]Op{
+				num(1),
+				num(2),
+				num(3),
+				&Rot{},
+			},
+		},
 	}
 
 	for _, tt := range tests {

@@ -10,6 +10,7 @@ const (
 	POP  InstructionKind = 0x01
 	DUP  InstructionKind = 0x02
 	SWAP InstructionKind = 0x03
+	ROT  InstructionKind = 0x04
 
 	// Arithmetic
 	ADD InstructionKind = 0x10
