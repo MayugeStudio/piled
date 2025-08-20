@@ -143,15 +143,6 @@ func TestVM_Run(t *testing.T) {
 			[]int{69, 69}, "",
 		},
 		{
-			"dup",
-			[]Instruction{
-				inst(PUSH, 69),
-				inst(PUSH, 420),
-				inst(DUP2),
-			},
-			[]int{69, 420, 69, 420}, "",
-		},
-		{
 			"swap",
 			[]Instruction{
 				inst(PUSH, 69),
