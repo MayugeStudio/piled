@@ -130,6 +130,15 @@ func Test_CompileProgram(t *testing.T) {
 				&Drop{},
 			},
 		},
+		{
+			"2dup",
+			"69 420 dup2",
+			[]Op{
+				num(69),
+				num(420),
+				&Dup2{},
+			},
+		},
 	}
 
 	for _, tt := range tests {

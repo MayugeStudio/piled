@@ -161,7 +161,7 @@ func (l *Lexer) readNumeric() token.Token {
 func (l *Lexer) readIdentifier() string {
 	out := ""
 
-	for isAlpha(l.CurrentPoint.ch) {
+	for isAlpha(l.CurrentPoint.ch) || isDigit(l.CurrentPoint.ch) {
 		out += string(l.CurrentPoint.ch)
 		l.nextChar()
 	}
