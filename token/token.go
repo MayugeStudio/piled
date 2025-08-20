@@ -47,7 +47,7 @@ var keywords = map[string]Type{
 	"swap":  SWAP,
 	"drop":  DROP,
 	"dup2":  DUP2,
-	"over":  OVER,    
+	"over":  OVER,
 	"rot":   ROT,
 	"shl":   SHL,
 	"shr":   SHR,

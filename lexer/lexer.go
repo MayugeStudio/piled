@@ -66,7 +66,7 @@ func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	l.skipWhitespace()
 
-	RETRY:
+RETRY:
 	switch l.CurrentPoint.ch {
 	case '+':
 		tok.Type = token.ADD
