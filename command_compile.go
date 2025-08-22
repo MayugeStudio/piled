@@ -31,13 +31,13 @@ func (*Command_Compile) Execute(argv []string, pl PiledLogger) int {
 		fmt.Fprintf(os.Stderr, "ERROR: filename is not provided\n")
 		return CommandError
 	}
-	filename := argv[0]
+	inputPath := argv[0]
 
-	outpath := strings.TrimSuffix(filename, filepath.Ext(filename))
+	outpath := strings.TrimSuffix(inputPath, filepath.Ext(inputPath))
 	outfile := outpath + ".pdb"
 
-	pl.Info("reading %s ...", filename)
-	source, err := ReadSourceFromFile(filename)
+	pl.Info("reading %s ...", inputPath)
+	source, err := ReadSourceFromFile(inputPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 		return CommandError
@@ -45,8 +45,7 @@ func (*Command_Compile) Execute(argv []string, pl PiledLogger) int {
 	pl.Info("reading file successfully")
 
 	pl.Info("compiling program ...")
-	// TODO: Rename filename to inputPath
-	l := lexer.New(filename, source)
+	l := lexer.New(inputPath, source)
 	g := ir.NewIrGen()
 	if err := g.CompileProgram(l); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err)

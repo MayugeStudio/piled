@@ -28,17 +28,16 @@ func (*Command_DumpToken) Execute(argv []string, pl PiledLogger) int {
 		fmt.Fprintf(os.Stderr, "ERROR: filename is not provided\n")
 		return CommandError
 	}
-	filename := argv[0]
+	inputPath := argv[0]
 
-	pl.Info("reading %s ...", filename)
-	source, err := ReadSourceFromFile(filename)
+	pl.Info("reading %s ...", inputPath)
+	source, err := ReadSourceFromFile(inputPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error during reading source file: %s", err)
 		return CommandError
 	}
 
-	// TODO: Rename filename to inputPath
-	l := lexer.New(filename, source)
+	l := lexer.New(inputPath, source)
 	DumpTokens(l)
 
 	return CommandSuccess
