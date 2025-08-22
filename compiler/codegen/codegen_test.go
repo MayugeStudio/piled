@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"piled/ir"
+	"piled/compiler/ir"
 	"piled/runtime"
 )
 

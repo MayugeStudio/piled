@@ -2,8 +2,8 @@ package ir
 
 import (
 	"fmt"
-	"piled/lexer"
-	"piled/token"
+	"piled/compiler/lexer"
+	"piled/compiler/token"
 	"strconv"
 )
 

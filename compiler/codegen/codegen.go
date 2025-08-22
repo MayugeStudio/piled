@@ -2,7 +2,7 @@ package codegen
 
 import "fmt"
 import "os"
-import "piled/ir"
+import "piled/compiler/ir"
 import "piled/runtime"
 
 // GenerateProgram generate instruction from source code.

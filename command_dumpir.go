@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"piled/ir"
-	"piled/lexer"
+	"piled/compiler/ir"
+	"piled/compiler/lexer"
 )
 
 type Command_DumpIr struct {

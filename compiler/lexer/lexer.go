@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	"piled/token"
+	"piled/compiler/token"
 )
 
 // Loc represents a location in the source code.
