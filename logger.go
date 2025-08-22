@@ -1,7 +1,9 @@
 package main
 
-import "io"
-import "fmt"
+import (
+	"io"
+	"fmt"
+)
 
 // LogLevel represent log level of PiledLogger
 type LogLevel string

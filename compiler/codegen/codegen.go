@@ -1,9 +1,11 @@
 package codegen
 
-import "fmt"
-import "os"
-import "piled/compiler/ir"
-import "piled/runtime"
+import (
+	"fmt"
+	"os"
+	"piled/compiler/ir"
+	"piled/runtime"
+)
 
 // GenerateProgram generate instruction from source code.
 // TODO: Make GenerateProgram output program into file directly

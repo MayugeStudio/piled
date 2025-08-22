@@ -1,8 +1,10 @@
 package runtime
 
-import "fmt"
-import "io"
-import "os"
+import (
+	"fmt"
+	"io"
+	"os"
+)
 
 // ReadBytecodeFile returns a slice of Instruction and error
 // This function is helper function
