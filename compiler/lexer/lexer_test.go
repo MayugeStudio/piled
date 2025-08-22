@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"piled/token"
+	"piled/compiler/token"
 )
 
 func tok(t token.Type, lit string) token.Token {

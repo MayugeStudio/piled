@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"os"
-	"piled/codegen"
-	"piled/ir"
-	"piled/lexer"
+	"piled/compiler/codegen"
+	"piled/compiler/ir"
+	"piled/compiler/lexer"
 	"piled/runtime"
-	"piled/token"
+	"piled/compiler/token"
 )
 
 func DumpTokens(l *lexer.Lexer) {

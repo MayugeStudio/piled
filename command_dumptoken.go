@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"piled/lexer"
+	"piled/compiler/lexer"
 )
 
 type Command_DumpToken struct {

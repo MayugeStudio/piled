@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"piled/codegen"
-	"piled/ir"
-	"piled/lexer"
+	"piled/compiler/codegen"
+	"piled/compiler/ir"
+	"piled/compiler/lexer"
 	"strings"
 )
 

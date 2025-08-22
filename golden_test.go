@@ -23,7 +23,7 @@ func TestGoldenFiles(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			// compile piled into .pdb
-			cmd := exec.Command("./piled.exe", "compile", inputfile)
+			cmd := exec.Command("./piled", "compile", inputfile)
 			var out bytes.Buffer
 			cmd.Stdout = &out
 			cmd.Stderr = &out
@@ -34,7 +34,7 @@ func TestGoldenFiles(t *testing.T) {
 			}
 
 			// run .pdb file
-			cmd = exec.Command("./piled.exe", "run", binaryfile)
+			cmd = exec.Command("./piled", "run", binaryfile)
 			cmd.Stdout = &out
 			cmd.Stderr = &out
 			out.Reset()
