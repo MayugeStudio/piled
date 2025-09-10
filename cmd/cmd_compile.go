@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
 	"path/filepath"
 	"piled/compiler/codegen"
 	"piled/compiler/ir"
@@ -24,40 +22,40 @@ func (*Command_Compile) Usage(programName string) []string {
 	}
 }
 
-func (*Command_Compile) Execute(argv []string, pl PiledLogger) int {
+func (*Command_Compile) Execute(argv []string) int {
 	argv = argv[1:] // skip program name
 	argv = argv[1:] // skip command name
 	if len(argv) == 0 {
-		fmt.Fprintf(os.Stderr, "ERROR: filename is not provided\n")
-		return CommandError
+		Log(ERROR, "ERROR: filename is not provided")
+		return -1
 	}
 	inputPath := argv[0]
 
 	outpath := strings.TrimSuffix(inputPath, filepath.Ext(inputPath))
 	outfile := outpath + ".pdb"
 
-	pl.Info("reading %s ...", inputPath)
+	Log(INFO, "reading %s ...", inputPath)
 	source, err := ReadSourceFromFile(inputPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-		return CommandError
+		Log(ERROR, "Error: %s", err)
+		return -1
 	}
-	pl.Info("reading file successfully")
+	Log(INFO, "reading file successfully")
 
-	pl.Info("compiling program ...")
+	Log(INFO, "compiling program ...")
 	l := lexer.New(inputPath, source)
 	g := ir.NewIrGen()
 	if err := g.CompileProgram(l); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-		return CommandError
+		Log(INFO, "Error: %s", err)
+		return -1
 	}
 
 	program := codegen.GenerateProgram(g.Ops)
 
-	pl.Info("generating bytecode to %s...", outfile)
+	Log(INFO, "generating bytecode to %s...", outfile)
 	if err := codegen.Write(outpath+".pdb", program); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-		return CommandError
+		Log(ERROR, "Error: %s", err)
+		return -1
 	}
-	return CommandSuccess
+	return 0
 }

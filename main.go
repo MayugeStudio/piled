@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"piled/cmd"
 )
 
 func runREPL() int {
@@ -33,14 +34,13 @@ cmd:
 	return 0
 }
 
-var commands []SubCommand
+var commands []cmd.SubCommand
 
 func main() {
-	pl := PiledLogger{w: os.Stdout}
-	commands = append(commands, &Command_DumpToken{})
-	commands = append(commands, &Command_DumpIr{})
-	commands = append(commands, &Command_Run{})
-	commands = append(commands, &Command_Compile{})
+	commands = append(commands, &cmd.Command_DumpToken{})
+	commands = append(commands, &cmd.Command_DumpIr{})
+	commands = append(commands, &cmd.Command_Run{})
+	commands = append(commands, &cmd.Command_Compile{})
 
 	argv := os.Args
 
@@ -56,11 +56,11 @@ func main() {
 
 	for _, command := range commands {
 		if command.Name() == command_name {
-			os.Exit(command.Execute(os.Args, pl))
+			os.Exit(command.Execute(os.Args))
 		}
 	}
 
 	fmt.Fprintf(os.Stderr, "Invalid command was provided: %s\n", command_name)
 
-	os.Exit(CommandError)
+	os.Exit(-1)
 }

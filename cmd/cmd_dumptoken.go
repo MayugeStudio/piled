@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
 	"piled/compiler/lexer"
 )
 
@@ -21,24 +19,24 @@ func (*Command_DumpToken) Usage(programName string) []string {
 	}
 }
 
-func (*Command_DumpToken) Execute(argv []string, pl PiledLogger) int {
+func (*Command_DumpToken) Execute(argv []string) int {
 	argv = argv[1:] // skip program name
 	argv = argv[1:] // skip command name
 	if len(argv) == 0 {
-		fmt.Fprintf(os.Stderr, "ERROR: filename is not provided\n")
-		return CommandError
+		Log(ERROR, "ERROR: filename is not provided")
+		return -1
 	}
 	inputPath := argv[0]
 
-	pl.Info("reading %s ...", inputPath)
+	Log(INFO, "reading %s ...", inputPath)
 	source, err := ReadSourceFromFile(inputPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error during reading source file: %s", err)
-		return CommandError
+		Log(ERROR, "error during reading source file: %s", err)
+		return -1
 	}
 
 	l := lexer.New(inputPath, source)
 	DumpTokens(l)
 
-	return CommandSuccess
+	return 0
 }
