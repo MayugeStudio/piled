@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-func tok(t token.Type, lit string) token.Token {
-	return token.Token{
+func tok(t Type, lit string) Token {
+	return Token{
 		Type:    t,
 		Literal: lit,
 	}
@@ -16,112 +16,112 @@ func TestLexerNextToken(t *testing.T) {
 	tests := []struct {
 		name string
 		in   string
-		want token.Token
+		want Token
 	}{
 		{
 			"EOF", "",
-			tok(token.EOF, ""),
+			tok(EOF, ""),
 		},
 		{
 			"Comment", "+#this is comment",
-			tok(token.ADD, "+"),
+			tok(ADD, "+"),
 		},
 		{
 			"binary-operators-add", "+",
-			tok(token.ADD, "+"),
+			tok(ADD, "+"),
 		},
 		{
 			"binary-operators-sub", "-",
-			tok(token.SUB, "-"),
+			tok(SUB, "-"),
 		},
 		{
 			"binary-operators-mul", "*",
-			tok(token.MUL, "*"),
+			tok(MUL, "*"),
 		},
 		{
 			"binary-operators-div", "/",
-			tok(token.DIV, "/"),
+			tok(DIV, "/"),
 		},
 		{
 			"binary-operators-modulo", "%",
-			tok(token.MOD, "%"),
+			tok(MOD, "%"),
 		},
 		{
 			"binary-operators-and", "&",
-			tok(token.AND, "&"),
+			tok(AND, "&"),
 		},
 		{
 			"binary-operators-or", "|",
-			tok(token.OR, "|"),
+			tok(OR, "|"),
 		},
 		{
 			"comparison-operators-gt", ">",
-			tok(token.GT, ">"),
+			tok(GT, ">"),
 		},
 		{
 			"comparison-operators-lt", "<",
-			tok(token.LT, "<"),
+			tok(LT, "<"),
 		},
 		{
 			"comparison-operators-gt", "=",
-			tok(token.EQ, "="),
+			tok(EQ, "="),
 		},
 		{
 			"number", "12",
-			tok(token.NUMBER, "12"),
+			tok(NUMBER, "12"),
 		},
 		{
 			"ident-print", "print",
-			tok(token.PRINT, "print"),
+			tok(PRINT, "print"),
 		},
 		{
 			"ident-shl", "shl",
-			tok(token.SHL, "shl"),
+			tok(SHL, "shl"),
 		},
 		{
 			"ident-shr", "shr",
-			tok(token.SHR, "shr"),
+			tok(SHR, "shr"),
 		},
 		{
 			"ident-dup", "dup",
-			tok(token.DUP, "dup"),
+			tok(DUP, "dup"),
 		},
 		{
 			"ident-dup2", "dup2",
-			tok(token.DUP2, "dup2"),
+			tok(DUP2, "dup2"),
 		},
 		{
 			"ident-swap", "swap",
-			tok(token.SWAP, "swap"),
+			tok(SWAP, "swap"),
 		},
 		{
 			"ident-rot", "rot",
-			tok(token.ROT, "rot"),
+			tok(ROT, "rot"),
 		},
 		{
 			"ident-drop", "drop",
-			tok(token.DROP, "drop"),
+			tok(DROP, "drop"),
 		},
 		{
 			"ident-over", "over",
-			tok(token.OVER, "over"),
+			tok(OVER, "over"),
 		},
 		{
 			"controlflow-if", "if",
-			tok(token.IF, "if"),
+			tok(IF, "if"),
 		},
 		{
 			"controlflow-else", "else",
-			tok(token.ELSE, "else"),
+			tok(ELSE, "else"),
 		},
 		{
 			"controlflow-while", "while",
-			tok(token.WHILE, "while"),
+			tok(WHILE, "while"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := New("test.piled", tt.in)
+			l := NewLexer("test.piled", tt.in)
 			tok := l.NextToken()
 			if !reflect.DeepEqual(tok, tt.want) {
 				t.Errorf("got = %v, want = %v\n", tok, tt.want)
@@ -134,32 +134,32 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 	tests := []struct {
 		name string
 		in   string
-		want []token.Token
+		want []Token
 	}{
 		{
 			"two-items",
 			"1234 print",
-			[]token.Token{
-				tok(token.NUMBER, "1234"),
-				tok(token.PRINT, "print"),
+			[]Token{
+				tok(NUMBER, "1234"),
+				tok(PRINT, "print"),
 			},
 		},
 		{
 			"three-items",
 			"1 1 +",
-			[]token.Token{
-				tok(token.NUMBER, "1"),
-				tok(token.NUMBER, "1"),
-				tok(token.ADD, "+"),
+			[]Token{
+				tok(NUMBER, "1"),
+				tok(NUMBER, "1"),
+				tok(ADD, "+"),
 			},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := New("test.piled", tt.in)
-			got := make([]token.Token, 0)
-			for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
+			l := NewLexer("test.piled", tt.in)
+			got := make([]Token, 0)
+			for tok := l.NextToken(); tok.Type != EOF; tok = l.NextToken() {
 				got = append(got, tok)
 			}
 
@@ -171,8 +171,8 @@ func TestLexerNextTokenMultiple(t *testing.T) {
 }
 
 func TestParsePoint(t *testing.T) {
-	l := New("test.piled", "1 2")
-	var tok token.Token
+	l := NewLexer("test.piled", "1 2")
+	var tok Token
 
 	savedPoint := l.CurrentPoint
 
