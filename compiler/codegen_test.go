@@ -1,10 +1,9 @@
-package codegen
+package compiler
 
 import (
 	"reflect"
 	"testing"
 
-	"piled/compiler/ir"
 	"piled/runtime"
 )
 
@@ -19,79 +18,79 @@ func TestCodegen_Compile(t *testing.T) {
 	// TODO: Separate TestCodegen_Compile from Binop tests
 	tests := []struct {
 		name string
-		in   ir.Op
+		in   Op
 		want runtime.Instruction
 	}{
 		{
 			name: "single literal",
-			in:   &ir.Number{Value: 42},
+			in:   &Number{Value: 42},
 			want: inst(runtime.PUSH, 42),
 		},
 		{
 			name: "add",
-			in:   &ir.Binop{Bkind: ir.Add},
+			in:   &Binop{Bkind: Add},
 			want: inst(runtime.ADD),
 		},
 		{
 			name: "sub",
-			in:   &ir.Binop{Bkind: ir.Sub},
+			in:   &Binop{Bkind: Sub},
 			want: inst(runtime.SUB),
 		},
 		{
 			name: "mul",
-			in:   &ir.Binop{Bkind: ir.Mul},
+			in:   &Binop{Bkind: Mul},
 			want: inst(runtime.MUL),
 		},
 		{
 			name: "div",
-			in:   &ir.Binop{Bkind: ir.Div},
+			in:   &Binop{Bkind: Div},
 			want: inst(runtime.DIV),
 		},
 		{
 			name: "mod",
-			in:   &ir.Binop{Bkind: ir.Mod},
+			in:   &Binop{Bkind: Mod},
 			want: inst(runtime.MOD),
 		},
 		{
 			name: "and",
-			in:   &ir.Binop{Bkind: ir.And},
+			in:   &Binop{Bkind: And},
 			want: inst(runtime.AND),
 		},
 		{
 			name: "or",
-			in:   &ir.Binop{Bkind: ir.Or},
+			in:   &Binop{Bkind: Or},
 			want: inst(runtime.OR),
 		},
 		{
 			name: "shift-left",
-			in:   &ir.Binop{Bkind: ir.Shl},
+			in:   &Binop{Bkind: Shl},
 			want: inst(runtime.SHL),
 		},
 		{
 			name: "shift-right",
-			in:   &ir.Binop{Bkind: ir.Shr},
+			in:   &Binop{Bkind: Shr},
 			want: inst(runtime.SHR),
 		},
 		{
 			name: "gt",
-			in:   &ir.Binop{Bkind: ir.Gt},
+			in:   &Binop{Bkind: Gt},
 			want: inst(runtime.GT),
 		},
 		{
 			name: "lt",
-			in:   &ir.Binop{Bkind: ir.Lt},
+			in:   &Binop{Bkind: Lt},
 			want: inst(runtime.LT),
 		},
 		{
 			name: "eq",
-			in:   &ir.Binop{Bkind: ir.Eq},
+			in:   &Binop{Bkind: Eq},
 			want: inst(runtime.EQ),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GenerateProgram([]ir.Op{tt.in})[0]
+			got := GenerateProgram([]Op{tt.in})[0]
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got = %v, want = %v", got, tt.want)
@@ -104,34 +103,34 @@ func TestCodegen_Compile(t *testing.T) {
 func TestCodegen_Compile_Stack(t *testing.T) {
 	tests := []struct {
 		name string
-		in   ir.Op
+		in   Op
 		want runtime.Instruction
 	}{
 		{
 			name: "dup",
-			in:   &ir.Dup{},
+			in:   &Dup{},
 			want: inst(runtime.DUP),
 		},
 		{
 			name: "swap",
-			in:   &ir.Swap{},
+			in:   &Swap{},
 			want: inst(runtime.SWAP),
 		},
 		{
 			name: "rot",
-			in:   &ir.Rot{},
+			in:   &Rot{},
 			want: inst(runtime.ROT),
 		},
 		{
 			name: "drop",
-			in:   &ir.Drop{},
+			in:   &Drop{},
 			want: inst(runtime.DROP),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			program := GenerateProgram([]ir.Op{tt.in})
+			program := GenerateProgram([]Op{tt.in})
 
 			if len(program) == 0 {
 				t.Errorf("got = %v, want = %v", program, tt.want)
@@ -150,15 +149,15 @@ func TestCodegen_Compile_Stack(t *testing.T) {
 func TestCodegen_Compile_ControlFlow(t *testing.T) {
 	tests := []struct {
 		name string
-		in   []ir.Op
+		in   []Op
 		want []runtime.Instruction
 	}{
 		{
 			name: "if",
-			in: []ir.Op{
-				&ir.JmpIfNotLabel{Label: 0},
-				&ir.Number{Value: 1},
-				&ir.Label{Label: 0},
+			in: []Op{
+				&JmpIfNotLabel{Label: 0},
+				&Number{Value: 1},
+				&Label{Label: 0},
 			},
 			want: []runtime.Instruction{
 				inst(runtime.JMPIF, 2),
@@ -168,13 +167,13 @@ func TestCodegen_Compile_ControlFlow(t *testing.T) {
 		},
 		{
 			name: "if-else",
-			in: []ir.Op{
-				&ir.JmpIfNotLabel{Label: 0},
-				&ir.Number{Value: 1},
-				&ir.JmpLabel{Label: 1},
-				&ir.Label{Label: 0},
-				&ir.Number{Value: 0},
-				&ir.Label{Label: 1},
+			in: []Op{
+				&JmpIfNotLabel{Label: 0},
+				&Number{Value: 1},
+				&JmpLabel{Label: 1},
+				&Label{Label: 0},
+				&Number{Value: 0},
+				&Label{Label: 1},
 			},
 			want: []runtime.Instruction{
 				inst(runtime.JMPIF, 3),

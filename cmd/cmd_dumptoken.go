@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"piled/compiler/lexer"
+	"piled/compiler"
 )
 
 type Command_DumpToken struct {
@@ -35,7 +35,7 @@ func (*Command_DumpToken) Execute(argv []string) int {
 		return -1
 	}
 
-	l := lexer.New(inputPath, source)
+	l := compiler.NewLexer(inputPath, source)
 	DumpTokens(l)
 
 	return 0

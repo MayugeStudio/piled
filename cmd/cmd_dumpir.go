@@ -2,8 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"piled/compiler/ir"
-	"piled/compiler/lexer"
+	"piled/compiler"
 )
 
 type Command_DumpIr struct {
@@ -37,9 +36,9 @@ func (*Command_DumpIr) Execute(argv []string) int {
 		return -1
 	}
 
-	l := lexer.New(inputPath, source)
+	l := compiler.NewLexer(inputPath, source)
 
-	g := ir.NewIrGen()
+	g := compiler.NewIrGen()
 	g.CompileProgram(l)
 
 	irs := g.Ops
