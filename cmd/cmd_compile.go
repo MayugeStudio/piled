@@ -2,9 +2,7 @@ package cmd
 
 import (
 	"path/filepath"
-	"piled/compiler/codegen"
-	"piled/compiler/ir"
-	"piled/compiler/lexer"
+	"piled/compiler"
 	"strings"
 )
 
@@ -43,17 +41,17 @@ func (*Command_Compile) Execute(argv []string) int {
 	Log(INFO, "reading file successfully")
 
 	Log(INFO, "compiling program ...")
-	l := lexer.New(inputPath, source)
-	g := ir.NewIrGen()
+	l := compiler.NewLexer(inputPath, source)
+	g := compiler.NewIrGen()
 	if err := g.CompileProgram(l); err != nil {
 		Log(INFO, "Error: %s", err)
 		return -1
 	}
 
-	program := codegen.GenerateProgram(g.Ops)
+	program := compiler.GenerateProgram(g.Ops)
 
 	Log(INFO, "generating bytecode to %s...", outfile)
-	if err := codegen.Write(outpath+".pdb", program); err != nil {
+	if err := compiler.Write(outpath+".pdb", program); err != nil {
 		Log(ERROR, "Error: %s", err)
 		return -1
 	}

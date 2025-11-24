@@ -1,4 +1,4 @@
-package token
+package compiler
 
 // Type used to represent type of token
 type Type string

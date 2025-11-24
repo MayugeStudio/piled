@@ -1,10 +1,9 @@
-package codegen
+package compiler
 
 import (
 	"reflect"
 	"testing"
 
-	"piled/compiler/ir"
 	"piled/runtime"
 )
 

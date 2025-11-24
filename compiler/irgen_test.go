@@ -1,7 +1,6 @@
-package ir
+package compiler
 
 import (
-	"piled/compiler/lexer"
 	"reflect"
 	"testing"
 )

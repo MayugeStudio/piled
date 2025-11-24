@@ -3,29 +3,26 @@ package main
 import (
 	"fmt"
 	"os"
-	"piled/compiler/codegen"
-	"piled/compiler/ir"
-	"piled/compiler/lexer"
+	"piled/compiler"
 	"piled/runtime"
-	"piled/compiler/token"
 )
 
-func DumpTokens(l *lexer.Lexer) {
+func DumpTokens(l *compiler.Lexer) {
 	i := 0
-	for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
+	for tok := l.NextToken(); tok.Type != compiler.EOF; tok = l.NextToken() {
 		fmt.Printf("token[%d] = %v\n", i, tok)
 		i++
 	}
 }
 
 func RunSource(inputPath string, source string) error {
-	l := lexer.New(inputPath, source)
-	g := ir.NewIrGen()
+	l := compiler.NewLexer(inputPath, source)
+	g := compiler.NewIrGen()
 	if err := g.CompileProgram(l); err != nil {
 		return err
 	}
 
-	program := codegen.GenerateProgram(g.Ops)
+	program := compiler.GenerateProgram(g.Ops)
 	vm := runtime.NewVM(program)
 	vm.Run()
 	return nil

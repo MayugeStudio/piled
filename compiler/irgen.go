@@ -1,9 +1,7 @@
-package ir
+package compiler
 
 import (
 	"fmt"
-	"piled/compiler/lexer"
-	"piled/compiler/token"
 	"strconv"
 )
 
@@ -140,12 +138,12 @@ func NewIrGen() *IrGen {
 	return &IrGen{Ops: make([]Op, 0)}
 }
 
-func (p *IrGen) CompileProgram(l *lexer.Lexer) error {
-	var tok token.Token
+func (p *IrGen) CompileProgram(l *Lexer) error {
+	var tok Token
 	var err error
-	for tok.Type != token.EOF {
+	for tok.Type != EOF {
 		tok := l.NextToken()
-		if tok.Type == token.EOF {
+		if tok.Type == EOF {
 			break
 		}
 
@@ -158,71 +156,71 @@ func (p *IrGen) CompileProgram(l *lexer.Lexer) error {
 }
 
 // TODO: Report invalid Ident through diagnostics
-func (p *IrGen) compileToken(l *lexer.Lexer, tok token.Token) error {
+func (p *IrGen) compileToken(l *Lexer, tok Token) error {
 	switch tok.Type {
 	// Literals
-	case token.NUMBER:
+	case NUMBER:
 		value, _ := strconv.Atoi(tok.Literal)
 		p.emit(&Number{Value: value})
-	case token.IDENT:
+	case IDENT:
 	// Binops
-	case token.ADD:
+	case ADD:
 		p.emitBin(Add)
-	case token.SUB:
+	case SUB:
 		p.emitBin(Sub)
-	case token.MUL:
+	case MUL:
 		p.emitBin(Mul)
-	case token.DIV:
+	case DIV:
 		p.emitBin(Div)
-	case token.MOD:
+	case MOD:
 		p.emitBin(Mod)
-	case token.AND:
+	case AND:
 		p.emitBin(And)
-	case token.OR:
+	case OR:
 		p.emitBin(Or)
-	case token.GT:
+	case GT:
 		p.emitBin(Gt)
-	case token.LT:
+	case LT:
 		p.emitBin(Lt)
-	case token.EQ:
+	case EQ:
 		p.emitBin(Eq)
-	case token.IF:
+	case IF:
 		if err := p.compileIF(l); err != nil {
 			return err
 		}
-	case token.WHILE:
+	case WHILE:
 		if err := p.compileWHILE(l); err != nil {
 			return err
 		}
-	//case token.LET:
+	//case LET:
 	//	p.compileBINDING(l)
-	case token.PRINT:
+	case PRINT:
 		p.emit(&Print{})
-	case token.DUP:
+	case DUP:
 		p.emit(&Dup{})
-	case token.DUP2:
+	case DUP2:
 		p.emit(&Swap{})
 		p.emit(&Dup{})
 		p.emit(&Rot{})
 		p.emit(&Dup{})
 		p.emit(&Rot{})
 		p.emit(&Rot{})
-	case token.OVER:
+	case OVER:
 		p.emit(&Swap{})
 		p.emit(&Dup{})
 		p.emit(&Rot{})
 		p.emit(&Rot{})
-	case token.SWAP:
+	case SWAP:
 		p.emit(&Swap{})
-	case token.ROT:
+	case ROT:
 		p.emit(&Rot{})
-	case token.DROP:
+	case DROP:
 		p.emit(&Drop{})
-	//case token.SHL:
-	//case token.SHR:
-	case token.OCURLY:
-	case token.CCURLY:
-	case token.EOF:
+	//case SHL:
+	//case SHR:
+	case OCURLY:
+	case CCURLY:
+	case EOF:
 	default:
 		return fmt.Errorf("IR-GEN: unhandled token: %v %v", tok, p.Ops)
 	}
@@ -237,18 +235,18 @@ func (p *IrGen) allocateLabel() int {
 
 }
 
-func (p *IrGen) compileIF(l *lexer.Lexer) error {
+func (p *IrGen) compileIF(l *Lexer) error {
 	else_label := p.allocateLabel()
 	p.emit(&JmpIfNotLabel{Label: else_label})
 
 	// Parse if block
 	var err error
 	tok := l.NextToken() // expect OCurly
-	if tok.Type == token.OCURLY {
+	if tok.Type == OCURLY {
 		for {
 			// TODO: Introduce an Expect(TokenType) helper method in the lexer to easily return errors.
 			tok = l.NextToken() // expect OCurly
-			if tok.Type == token.CCURLY {
+			if tok.Type == CCURLY {
 				break
 			}
 			err = p.compileToken(l, tok)
@@ -263,15 +261,15 @@ func (p *IrGen) compileIF(l *lexer.Lexer) error {
 	// Parse else block (if it exists)
 	savePoint := l.CurrentPoint
 	tok = l.NextToken() // expect else
-	if tok.Type == token.ELSE {
+	if tok.Type == ELSE {
 		out_label := p.allocateLabel()
 		p.emit(&JmpLabel{Label: out_label})
 		p.emit(&Label{Label: else_label})
 		tok := l.NextToken() // expect OCurly
-		if tok.Type == token.OCURLY {
+		if tok.Type == OCURLY {
 			for {
 				tok = l.NextToken()
-				if tok.Type == token.CCURLY {
+				if tok.Type == CCURLY {
 					break
 				}
 				err = p.compileToken(l, tok)
@@ -291,19 +289,19 @@ func (p *IrGen) compileIF(l *lexer.Lexer) error {
 	return nil
 }
 
-func (p *IrGen) compileWHILE(l *lexer.Lexer) error {
+func (p *IrGen) compileWHILE(l *Lexer) error {
 	top_label := p.allocateLabel()
 	out_label := p.allocateLabel()
 
 	p.emit(&Label{Label: top_label})
 
 	var err error
-	var tok token.Token
+	var tok Token
 
 	// condition
 	for {
 		tok = l.NextToken() // expect OCurly
-		if tok.Type == token.OCURLY {
+		if tok.Type == OCURLY {
 			break
 		}
 		err = p.compileToken(l, tok)
@@ -316,7 +314,7 @@ func (p *IrGen) compileWHILE(l *lexer.Lexer) error {
 	// body
 	for {
 		tok = l.NextToken() // expect OCurly
-		if tok.Type == token.CCURLY {
+		if tok.Type == CCURLY {
 			break
 		}
 		err = p.compileToken(l, tok)
@@ -332,7 +330,7 @@ func (p *IrGen) compileWHILE(l *lexer.Lexer) error {
 	return nil
 }
 
-func (p *IrGen) compileBINDING(l *lexer.Lexer) {
+func (p *IrGen) compileBINDING(l *Lexer) {
 }
 
 func (p *IrGen) emit(ir Op) {

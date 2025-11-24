@@ -1,10 +1,8 @@
-package lexer
+package compiler
 
 import (
 	"reflect"
 	"testing"
-
-	"piled/compiler/token"
 )
 
 func tok(t token.Type, lit string) token.Token {

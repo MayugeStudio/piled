@@ -1,8 +1,4 @@
-package lexer
-
-import (
-	"piled/compiler/token"
-)
+package compiler
 
 // Loc represents a location in the source code.
 // It only contains offsets, and should therefore be used together with Lexer.
@@ -37,8 +33,8 @@ type Lexer struct {
 	Source []rune
 }
 
-// New is constructor for lexer
-func New(inputPath string, source string) *Lexer {
+// NewLexer is constructor for lexer
+func NewLexer(inputPath string, source string) *Lexer {
 	point := ParsePoint{
 		ch:         rune(0),
 		current:    0,
@@ -62,59 +58,59 @@ func New(inputPath string, source string) *Lexer {
 }
 
 // NextToken provide token by reading source code character by character
-func (l *Lexer) NextToken() token.Token {
-	var tok token.Token
+func (l *Lexer) NextToken() Token {
+	var tok Token
 	l.skipWhitespace()
 
 RETRY:
 	switch l.CurrentPoint.ch {
 	case '+':
-		tok.Type = token.ADD
+		tok.Type = ADD
 		tok.Literal = "+"
 	case '-':
-		tok.Type = token.SUB
+		tok.Type = SUB
 		tok.Literal = "-"
 	case '*':
-		tok.Type = token.MUL
+		tok.Type = MUL
 		tok.Literal = "*"
 	case '/':
-		tok.Type = token.DIV
+		tok.Type = DIV
 		tok.Literal = "/"
 	case '%':
-		tok.Type = token.MOD
+		tok.Type = MOD
 		tok.Literal = "%"
 	case '&':
-		tok.Type = token.AND
+		tok.Type = AND
 		tok.Literal = "&"
 	case '|':
-		tok.Type = token.OR
+		tok.Type = OR
 		tok.Literal = "|"
 	case '>':
-		tok.Type = token.GT
+		tok.Type = GT
 		tok.Literal = ">"
 	case '<':
-		tok.Type = token.LT
+		tok.Type = LT
 		tok.Literal = "<"
 	case '=':
-		tok.Type = token.EQ
+		tok.Type = EQ
 		tok.Literal = "="
 	case '{':
-		tok.Type = token.OCURLY
+		tok.Type = OCURLY
 		tok.Literal = "{"
 	case '}':
-		tok.Type = token.CCURLY
+		tok.Type = CCURLY
 		tok.Literal = "}"
 	case '#':
 		l.skipUntil('\n')
 		goto RETRY
 	case rune(0):
-		tok.Type = token.EOF
+		tok.Type = EOF
 	default:
 		if isDigit(l.CurrentPoint.ch) {
 			return l.readNumeric()
 		}
 		tok.Literal = l.readIdentifier()
-		tok.Type = token.LookupIdentifier(tok.Literal)
+		tok.Type = LookupIdentifier(tok.Literal)
 	}
 
 	l.nextChar()
@@ -157,15 +153,15 @@ func (l *Lexer) skipWhitespace() {
 	}
 }
 
-func (l *Lexer) readNumeric() token.Token {
+func (l *Lexer) readNumeric() Token {
 	out := ""
 	for isDigit(l.CurrentPoint.ch) {
 		out += string(l.CurrentPoint.ch)
 		l.nextChar()
 	}
 
-	return token.Token{
-		Type:    token.NUMBER,
+	return Token{
+		Type:    NUMBER,
 		Literal: out,
 	}
 
