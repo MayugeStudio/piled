@@ -1,7 +1,7 @@
 package compiler
 
 import (
-  "fmt"
+	"fmt"
 )
 
 // Loc represents a location in the source code.
@@ -103,9 +103,9 @@ func (l *Lexer) NextToken() Token {
 	case '}':
 		tok.Type = CCURLY
 		tok.Literal = "}"
-  case ';':
-    tok.Type = COMMENT_START
-    tok.Literal = ";"
+	case ';':
+		tok.Type = COMMENT_START
+		tok.Literal = ";"
 	case rune(0):
 		tok.Type = EOF
 	default:
@@ -115,11 +115,11 @@ func (l *Lexer) NextToken() Token {
 		tok.Literal = l.readIdentifier()
 		tok.Type = LookupIdentifier(tok.Literal)
 
-    // TODO: Implement IDENT
-    if tok.Type == IDENT {
-      fmt.Printf("ERROR:%d:%d: unknown token '%s' is found\n", l.CurrentPoint.lineNumber, l.CurrentPoint.lineStart, tok.Literal)
-    }
-    return tok
+		// TODO: Implement IDENT
+		if tok.Type == IDENT {
+			fmt.Printf("ERROR:%d:%d: unknown token '%s' is found\n", l.CurrentPoint.lineNumber, l.CurrentPoint.lineStart, tok.Literal)
+		}
+		return tok
 	}
 
 	l.nextChar()
@@ -180,7 +180,7 @@ func (l *Lexer) readIdentifier() string {
 
 	for isAlpha(l.CurrentPoint.ch) || isDigit(l.CurrentPoint.ch) {
 		out += string(l.CurrentPoint.ch)
-    l.nextChar()
+		l.nextChar()
 	}
 	return out
 }

@@ -34,9 +34,8 @@ cmd:
 	return 0
 }
 
-
-
 var commands []cmd.SubCommand
+
 func main() {
 	commands = append(commands, &cmd.Command_DumpToken{})
 	commands = append(commands, &cmd.Command_DumpIr{})
@@ -55,7 +54,7 @@ func main() {
 	for len(argv) > 0 {
 		arg := argv[0]
 		argv = argv[1:]
-		if (arg == "--help" || arg == "-h") {
+		if arg == "--help" || arg == "-h" {
 			fmt.Println("Usage: ")
 			for _, command := range commands {
 				fmt.Print("  ")

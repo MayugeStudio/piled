@@ -217,9 +217,9 @@ func (p *IrGen) compileToken(l *Lexer, tok Token) error {
 	case DROP:
 		p.emit(&Drop{})
 
-  case COMMENT_START:
-    // Skip characters until newline is found.
-    l.skipUntil('\n')
+	case COMMENT_START:
+		// Skip characters until newline is found.
+		l.skipUntil('\n')
 	//case SHL:
 	//case SHR:
 	case OCURLY:

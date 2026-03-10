@@ -155,16 +155,16 @@ func Test_CompileProgram(t *testing.T) {
 				&Rot{},
 			},
 		},
-    {
-      "Comment",
-      "1 1 + print ; Output the sum of 1 and 1",
-      []Op{
-        num(1),
-        num(1),
-        &Binop{ Bkind: Add },
-        &Print{},
-      },
-    },
+		{
+			"Comment",
+			"1 1 + print ; Output the sum of 1 and 1",
+			[]Op{
+				num(1),
+				num(1),
+				&Binop{Bkind: Add},
+				&Print{},
+			},
+		},
 	}
 
 	for _, tt := range tests {
