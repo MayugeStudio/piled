@@ -86,7 +86,7 @@ func emit(output *[]runtime.Instruction, i runtime.Instruction) {
 	*output = append(*output, i)
 }
 
-// Write output an array of instruction to specified filepath
+// Write writes an array of instructions to specified filepath
 func Write(path string, insts []runtime.Instruction) error {
 	out := make([]byte, 0, 1024)
 	for _, inst := range insts {
