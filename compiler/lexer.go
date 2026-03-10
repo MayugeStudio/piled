@@ -62,7 +62,6 @@ func (l *Lexer) NextToken() Token {
 	var tok Token
 	l.skipWhitespace()
 
-RETRY:
 	switch l.CurrentPoint.ch {
 	case '+':
 		tok.Type = ADD
@@ -100,9 +99,9 @@ RETRY:
 	case '}':
 		tok.Type = CCURLY
 		tok.Literal = "}"
-	case '#':
-		l.skipUntil('\n')
-		goto RETRY
+  case ';':
+    tok.Type = COMMENT_START
+    tok.Literal = ";"
 	case rune(0):
 		tok.Type = EOF
 	default:

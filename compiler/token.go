@@ -33,11 +33,12 @@ const (
 	GT     Type = ">"
 	LT     Type = "<"
 	EQ     Type = "="
-	OCURLY Type = "{"
-	CCURLY Type = "}"
-	IDENT  Type = "IDENT"
-	NUMBER Type = "NUMBER"
-	EOF    Type = "EOF"
+	OCURLY        Type = "{"
+	CCURLY        Type = "}"
+  COMMENT_START Type = ";"
+	IDENT         Type = "IDENT"
+	NUMBER        Type = "NUMBER"
+	EOF           Type = "EOF"
 )
 
 // TODO: Introduce Punctuations
