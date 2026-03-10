@@ -23,7 +23,7 @@ func TestLexerNextToken(t *testing.T) {
 			tok(EOF, ""),
 		},
 		{
-			"Comment", "+#this is comment",
+			"Comment", "+;this is comment",
 			tok(ADD, "+"),
 		},
 		{

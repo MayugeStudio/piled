@@ -1,5 +1,9 @@
 package compiler
 
+import (
+	"fmt"
+)
+
 // Loc represents a location in the source code.
 // It only contains offsets, and should therefore be used together with Lexer.
 type Loc struct {
@@ -62,7 +66,6 @@ func (l *Lexer) NextToken() Token {
 	var tok Token
 	l.skipWhitespace()
 
-RETRY:
 	switch l.CurrentPoint.ch {
 	case '+':
 		tok.Type = ADD
@@ -100,9 +103,9 @@ RETRY:
 	case '}':
 		tok.Type = CCURLY
 		tok.Literal = "}"
-	case '#':
-		l.skipUntil('\n')
-		goto RETRY
+	case ';':
+		tok.Type = COMMENT_START
+		tok.Literal = ";"
 	case rune(0):
 		tok.Type = EOF
 	default:
@@ -111,6 +114,12 @@ RETRY:
 		}
 		tok.Literal = l.readIdentifier()
 		tok.Type = LookupIdentifier(tok.Literal)
+
+		// TODO: Implement IDENT
+		if tok.Type == IDENT {
+			fmt.Printf("ERROR:%d:%d: unknown token '%s' is found\n", l.CurrentPoint.lineNumber, l.CurrentPoint.lineStart, tok.Literal)
+		}
+		return tok
 	}
 
 	l.nextChar()
